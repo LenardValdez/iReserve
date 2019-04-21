@@ -25,11 +25,10 @@ class RoomRequest extends FormRequest
     public function rules()
     {
 	//VALIDATE
-        return [
-	'room_id' => 'required|unique:rooms',
-    'room_desc' => 'required',
-	'isSpecial' => 'required|min:0|max:1'
-
+    return [
+	    'room_id' => 'required|unique:rooms',
+        'room_desc' => 'required',
+	    'isSpecial' => 'required|min:0|max:1'
 	];
     }
 }
