@@ -38,7 +38,7 @@
 
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" href="{{ route('roomdisplay') }}"> All Rooms  </a>
-				    <a class="dropdown-item" href="{{ route('addroom') }}"> Add Rooms  </a>
+				                    <a class="dropdown-item" href="{{ route('addroom') }}"> Add Rooms  </a>
                                 </div>
                             </li>
 		</ul>
