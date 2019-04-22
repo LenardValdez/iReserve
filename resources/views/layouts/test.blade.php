@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="css/skin-blue.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 
-    @if (Auth::role())
+    @if (Auth::role()==0)
         @yield('AdminStyle')
     @endif
     

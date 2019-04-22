@@ -174,7 +174,7 @@
             </div> <!--END OF ROW-->
        
         <!--add room-->
-        @if (Auth::role())
+        @if (Auth::role()==0)
             @include('pages.adminfunctions.addroom')
         @endif
         <!--end of add room button-->
