@@ -23,6 +23,15 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        return view('Dashboard');
+        //return view('Dashboard');
+        $role = Auth::role();
+    
+        if ($role == '0'){
+            return view('pages.reservation');
+        } elseif ($role == '1'){
+            return 'dashboards.user_dash';
+        } else {
+            return 'dashboards.security_dash';
+        }
     }
 }
