@@ -8,17 +8,33 @@
           <li class="user-header">
             <img src="img/admin.jpg" class="img-circle" alt="User Image"> <!--USER IMAGE-->
             <p>
-              LERMA PANTORILLA
-              <small>ACADEMICS DEPT. | ADMIN</small> <!--NAME AND ROLE OF USER-->
+              {{{Auth::user()->name }}}
+              <small>
+                @if (Auth()->user()->roles == 0)
+                Room Manager<!--NAME AND ROLE OF USER-->
+                @elseif(Auth()->user()->roles == 1)
+                User<!--NAME AND ROLE OF USER-->
+                @else
+                Security<!--NAME AND ROLE OF USER-->
+                @endif
+              </small> <!--NAME AND ROLE OF USER-->
             </p>
           </li>
 
           <li class="user-footer">
-            <div class="pull-left">
-              <a href="http://isims.iacademy.edu.ph" target="_blank" class="btn btn-default btn-flat">iSIMS</a>
-            </div>
+            @if (Auth()->user()->roles == 0 or Auth()->user()->roles == 1 )
+              <div class="pull-left">
+                <a href="http://isims.iacademy.edu.ph" target="_blank" class="btn btn-default btn-flat">iSIMS</a>
+              </div>
+            @endif
             <div class="pull-right">
-              <a href="landing.php" class="btn btn-default btn-flat">Sign out</a>
+              <a class="btn btn-default btn-flat" href="{{ route('logout') }}"
+              onclick="event.preventDefault();
+                            document.getElementById('logout-form').submit();">
+               {{ __('Logout') }}</a>
+               <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                  @csrf
+              </form>
             </div>
           </li>
         </ul>

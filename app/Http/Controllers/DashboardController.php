@@ -24,7 +24,7 @@ class DashboardController extends Controller
     public function index()
     {
         //return view('Dashboard');
-        $role = Auth()->user()->role;
+        $role = Auth()->user()->roles;
     
         if ($role == 0){
             return view('pages.requests');

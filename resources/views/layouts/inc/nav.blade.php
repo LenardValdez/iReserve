@@ -7,14 +7,15 @@
   <div class="navbar-custom-menu">
     <ul class="nav navbar-nav">
 
-      <!--NOTIFICATIONS-->
-      @include('layouts.inc.notifications')
-      </li>
-      <!--END OF NOTIFICATIONS-->
+      @if (Auth()->user()->roles == 0 or Auth()->user()->roles == 1 )
+        <!--NOTIFICATIONS-->
+        @include('layouts.inc.notifications')
+        <!--END OF NOTIFICATIONS-->
+      @endif
 
       <!--USER INFO+LOGOUT-->
       @include('layouts.inc.info')
-      </li> <!--END OF USER INFO+LOGOUT-->
+      <!--END OF USER INFO+LOGOUT-->
     </ul>
   </div>
 </nav> <!--END OF NAVBAR-->

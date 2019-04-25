@@ -14,12 +14,12 @@
 
 @section('sidebar')
     <ul class="sidebar-menu" data-widget="tree">
-    @if (Auth()->user()->role == 0)
+    @if (Auth()->user()->roles == 0)
         <li class="header">MENU</li>
         <li class="active"><a href={{ URL::route('Dashboard') }}><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
         <li class="#"><a href={{URL::route('Reserve')}}><i class="fa fa-building"></i> <span>Room Reservation</span></a></li>
         <li class="#"><a href={{URL::route('History')}}><i class="fa fa-history"></i> <span>Reservation History</span></a></li>
-    @else (Auth()->user()->role == 1)
+    @elseif (Auth()->user()->roles == 1)
         <li class="header">MENU</li>
         <li class="#"><a href={{ URL::route('Dashboard') }}><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
         <li class="active"><a href={{URL::route('Reserve')}}><i class="fa fa-building"></i> <span>Room Reservation</span></a></li>
