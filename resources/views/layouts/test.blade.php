@@ -6,19 +6,20 @@
     <title>iRESERVE</title>
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
-    <link rel="stylesheet" href="css/font-awesome.min.css">
-    <link rel="stylesheet" href="css/ionicons.min.css">
-    <link rel="stylesheet" href="css/daterangepicker.css">
-    <link rel="stylesheet" href="css/bootstrap-datepicker.min.css">
-    <link rel="stylesheet" href="css/AdminLTE.min.css">
-    <link rel="stylesheet" href="css/skin-blue.min.css">
+    <link rel="stylesheet" href="css//font/font-awesome.min.css">
+    <link rel="stylesheet" href="css/adminlte_css/ionicons.min.css">
+    <link rel="stylesheet" href="css/adminlte_css/daterangepicker.css">
+    <link rel="stylesheet" href="css/adminlte_css/bootstrap-datepicker.min.css">
+    <link rel="stylesheet" href="css/adminlte_css/AdminLTE.min.css">
+    <link rel="stylesheet" href="css/adminlte_css/skin-blue.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 
-    @if (Auth::user()->role == 0)
+    @if (Auth()->user()->role == 0)
         @yield('AdminStyle')
     @endif
     
     @yield('script')
+    
   </head>
 
   <body class="hold-transition skin-blue sidebar-mini fixed">
@@ -26,18 +27,18 @@
 
       <!--START OF HEADER-->
       <header class="main-header">
-        <a href="admindash.html" class="logo">
+        <a href="{{ URL::route('Dashboard') }}" class="logo">
           <span class="logo-mini"><img src="img/iacademy_shield.png" style="width: 25px;" class="img-circle" alt="iACADEMY"></span>
           <span class="logo-md"><img src="img/iacademy_shield.png" style="width: 25px;" class="img-circle" alt="iACADEMY"> iRESERVE</span>
         </a>
 
         <!--START OF NAVBAR-->
-        @include('inc.nav')
-        </nav> <!--END OF NAVBAR-->
+        @include('layouts.inc.nav')
+        <!--END OF NAVBAR-->
       </header> <!--END OF HEADER-->
 
       <!--SIDEBAR-->
-      @include('inc.sidebar')
+      @include('layouts.inc.sidebar')
       <!--END OF SIDEBAR-->
 
       <!--CONTENT WRAPPER-->

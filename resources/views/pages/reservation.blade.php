@@ -14,6 +14,76 @@
     </style>
 @endsection
 
+@section('script')
+<script src="js/adminlte_js/jquery.min.js"></script>
+<script src="js/adminlte_js/bootstrap.min.js"></script>
+<script src="js/adminlte_js/moment.min.js"></script> <!--DATE FORMAT BEING USED BY DATERANGEPICKER-->
+<script src="js/adminlte_js/select2.full.min.js"></script> <!--JS FOR MULTIPLE SELECT FORM INPUT-->
+<script src="js/adminlte_js/daterangepicker.js"></script> <!--JS FOR DATE AND TIME RANGE-->
+<script src="js/adminlte_js/jquery.slimscroll.min.js"></script>
+<script src="js/adminlte_js/adminlte.min.js"></script>
+<script src="js/adminlte_js/fullcalendar.min.js"></script> <!--CHANGE FORM DATE AND TIME FORMAT TO ISO8601 STRING USING moment().toISOString()-->
+<script src="js/adminlte_js/fullcalendar-scheduler.min.js"></script>
+
+<script>
+  $(function () {
+    $('.select2').select2();
+
+    $('#reservationPeriod').daterangepicker({
+      timePicker: true,
+      startDate: moment().startOf('hour'),
+      endDate: moment().startOf('hour').add(32, 'hour'),
+      locale: {
+        format: 'M/DD hh:mm A'
+      }
+    });
+  });
+
+  /*$('#reservationForm').on('submit', function(e){
+    $('#formReview').modal('show');
+    e.preventDefault();
+  });*/
+
+  $(function() {
+    $('#calendar').fullCalendar({
+      schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
+      header: {
+        left: 'today prev,next',
+        center: 'title',
+        right: 'timelineDay,timelineWeek,month'
+      },
+      businessHours: {
+        dow: [ 1, 2, 3, 4 ,5, 6],
+
+        start: '07:00',
+        end: '22:00',
+      },
+      defaultView: 'timelineDay',
+      resourceGroupField: 'floorNum',
+      resources: [
+        { id: '801', floorNum: '8th Floor', title: 801 },
+        { id: '802', floorNum: '8th Floor', title: 802 },
+        { id: '803', floorNum: '8th Floor', title: 803 },
+        { id: '804', floorNum: '8th Floor', title: 804 },
+        { id: '805', floorNum: '8th Floor', title: 805 },
+        { id: '806', floorNum: '8th Floor', title: 806 },
+        { id: '901', floorNum: '9th Floor', title: 901 },
+        { id: '902', floorNum: '9th Floor', title: 902 },
+        { id: '903', floorNum: '9th Floor', title: 903 },
+        { id: '904', floorNum: '9th Floor', title: 904 },
+        { id: '905', floorNum: '9th Floor', title: 905 },
+        { id: '906', floorNum: '9th Floor', title: 906 },
+        { id: '907', floorNum: '9th Floor', title: 907 }
+      ],
+      /*modal for each cell - security and room manager-exclusive function*/
+      select: function(startDate, endDate, jsEvent, view, resource) {
+        alert('Reserved from ' + startDate.format() + ' to ' + endDate.format() + ' - Room ' + resource.id);
+      }
+    });
+  });
+</script>
+@endsection
+
 @section('content')
     <!--CONTENT WRAPPER-->
     <div class="content-wrapper">
@@ -174,7 +244,7 @@
             </div> <!--END OF ROW-->
        
         <!--add room-->
-        @if (Auth::user()->role == 0)
+        @if (Auth()->user()->role == 0)
             @include('pages.adminfunctions.addroom')
         @endif
         <!--end of add room button-->

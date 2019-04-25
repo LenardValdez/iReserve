@@ -24,14 +24,14 @@ class DashboardController extends Controller
     public function index()
     {
         //return view('Dashboard');
-        $role = Auth::role();
+        $role = Auth()->user()->role;
     
         if ($role == '0'){
-            return view('pages.reservation');
+            return view('pages.requests');
         } elseif ($role == '1'){
-            return 'dashboards.user_dash';
+            return view('pages.reservation');
         } else {
-            return 'dashboards.security_dash';
+            return view('pages.reservation');
         }
     }
 }
