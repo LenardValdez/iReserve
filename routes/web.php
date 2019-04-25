@@ -11,13 +11,14 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'DashboardController@index');
 
 Auth::routes();
 
 Route::get('/Dashboard', 'DashboardController@index')->name('Dashboard');
+Route::view('/History', 'pages.history')->name('History');
+Route::view('/Reserve', 'pages.reservation')->name('Reserve');
+
 
 
 Route::get('/room/display', 'RoomController@index')->name('roomdisplay'); //Display all rooms

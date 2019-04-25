@@ -6,12 +6,16 @@
     <title>iRESERVE</title>
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
-    <link rel="stylesheet" href="css//font/font-awesome.min.css">
-    <link rel="stylesheet" href="css/adminlte_css/ionicons.min.css">
-    <link rel="stylesheet" href="css/adminlte_css/daterangepicker.css">
-    <link rel="stylesheet" href="css/adminlte_css/bootstrap-datepicker.min.css">
-    <link rel="stylesheet" href="css/adminlte_css/AdminLTE.min.css">
-    <link rel="stylesheet" href="css/adminlte_css/skin-blue.min.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/ionicons.min.css">
+    <link rel="stylesheet" href="css/select2.min.css">
+    <link rel="stylesheet" href="css/daterangepicker.css">
+    <link rel="stylesheet" href="css/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" href="css/bootstrap-datepicker.min.css">
+    <link rel="stylesheet" href="css/AdminLTE.min.css">
+    <link rel="stylesheet" href="css/skin-blue.min.css">
+    <link rel="stylesheet" href="css/fullcalendar.min.css">
+    <link rel="stylesheet" href="css/fullcalendar-scheduler.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 
     @if (Auth()->user()->role == 0)
@@ -38,7 +42,8 @@
       </header> <!--END OF HEADER-->
 
       <!--SIDEBAR-->
-      @include('layouts.inc.sidebar')
+      @include('layouts.inc.sidebarinfo')
+      @yield('sidebar')
       <!--END OF SIDEBAR-->
 
       <!--CONTENT WRAPPER-->

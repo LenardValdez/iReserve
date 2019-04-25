@@ -20,12 +20,12 @@
 <!--
   FOLLOWING LINES ARE PLACEHOLDERS
 -->
-    <ul class="sidebar-menu" data-widget="tree">
+    {{-- <ul class="sidebar-menu" data-widget="tree">
       @if (Auth()->user()->role == 0)
         <li class="header">MENU</li>
         <li class="active"><a href={{ URL::route('Dashboard') }}><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
-        <li class="#"><a href="add.html"><i class="fa fa-building"></i> <span>Room Reservation</span></a></li>
-        <li class="#"><a href="history.html"><i class="fa fa-history"></i> <span>Reservation History</span></a></li>
+        <li class="#"><a href={{URL::route('Reserve')}}><i class="fa fa-building"></i> <span>Room Reservation</span></a></li>
+        <li class="#"><a href={{URL::route('History')}}><i class="fa fa-history"></i> <span>Reservation History</span></a></li>
       @elseif(Auth()->user()->role == 1)
         <li class="header">MENU</li>
         <li class="active"><a href="studentdash.html"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
@@ -36,6 +36,5 @@
         <li class="#"><a href="sechistory.html"><i class="fa fa-history"></i> <span>Reservation History</span></a></li>
       @endif
     </ul>
-  </section>
-</aside>
+  </section>--}}
 <!--END OF SIDEBAR-->

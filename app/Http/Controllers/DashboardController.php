@@ -26,9 +26,9 @@ class DashboardController extends Controller
         //return view('Dashboard');
         $role = Auth()->user()->role;
     
-        if ($role == '0'){
+        if ($role == 0){
             return view('pages.requests');
-        } elseif ($role == '1'){
+        } elseif ($role == 1){
             return view('pages.reservation');
         } else {
             return view('pages.reservation');
