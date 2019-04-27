@@ -2,7 +2,7 @@
 <li class="dropdown user user-menu">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
           <img src="img/admin.jpg" class="user-image" alt="User Image"> <!--USER IMAGE-->
-          <span class="hidden-xs">LERMA PANTORILLA</span> <!--NAME OF USER-->
+          <span class="hidden-xs">{{{Auth::user()->name }}}</span> <!--NAME OF USER-->
         </a>
         <ul class="dropdown-menu">
           <li class="user-header">
