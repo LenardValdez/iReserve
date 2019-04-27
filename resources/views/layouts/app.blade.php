@@ -30,7 +30,7 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
 		
-		<ul class="navbar-nav ml-auto">
+		{{-- <ul class="navbar-nav ml-auto">
  			<li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ __('Rooms') }}
@@ -41,7 +41,7 @@
 				                    <a class="dropdown-item" href="{{ route('addroom') }}"> Add Rooms  </a>
                                 </div>
                             </li>
-		</ul>
+		</ul> --}}
 
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
