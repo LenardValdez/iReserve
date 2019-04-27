@@ -32,7 +32,7 @@ class DashboardController extends Controller
         } elseif ($role == 1){
             return view('pages.reservation');
         } else {
-            return view('pages.reservation');
+            return view('pages.history');
         }
     }
 }
