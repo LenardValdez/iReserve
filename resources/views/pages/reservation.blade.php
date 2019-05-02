@@ -228,7 +228,7 @@
                 </div> <!--END OF CONTENT BOX-->
 
                 <!--add-delete room-->
-                @if (Auth()->user()->role == 0)
+                @if (Auth()->user()->roles == 0)
                     @include('pages.adminfunctions.addroom')
                 @endif
                 <!--end of add-delete room button-->
