@@ -17,34 +17,19 @@
     <link rel="stylesheet" href="css/fullcalendar.min.css">
     <link rel="stylesheet" href="css/fullcalendar-scheduler.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
-
-    @if (Auth()->user()->role == 0)
-        @yield('AdminStyle')
-    @endif
     
     @yield('script')
     
   </head>
-
-  <body class="hold-transition skin-blue sidebar-mini fixed">
+  <body class="hold-transition skin-blue layout-top-nav fixed">
     <div class="wrapper">
 
       <!--START OF HEADER-->
       <header class="main-header">
-        <a href="{{ URL::route('Dashboard') }}" class="logo">
-          <span class="logo-mini"><img src="img/iacademy_shield.png" style="width: 25px;" class="img-circle" alt="iACADEMY"></span>
-          <span class="logo-md"><img src="img/iacademy_shield.png" style="width: 25px;" class="img-circle" alt="iACADEMY"> iRESERVE</span>
-        </a>
-
         <!--START OF NAVBAR-->
         @include('layouts.inc.nav')
         <!--END OF NAVBAR-->
       </header> <!--END OF HEADER-->
-
-      <!--SIDEBAR-->
-      @include('layouts.inc.sidebarinfo')
-      @yield('sidebar')
-      <!--END OF SIDEBAR-->
 
       <!--CONTENT WRAPPER-->
       @yield('content')

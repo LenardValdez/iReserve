@@ -12,20 +12,19 @@
   <script src="js/adminlte_js/adminlte.min.js"></script>
 @endsection
 
-@section('sidebar')
-    <ul class="sidebar-menu" data-widget="tree">
+@section('menu')
+<div class="collapse navbar-collapse pull-left" id="navbar-collapse">
+  <ul class="nav navbar-nav">
     @if (Auth()->user()->roles == 0)
-        <li class="header">MENU</li>
-        <li class="active"><a href={{ URL::route('Dashboard') }}><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
-        <li class="#"><a href={{URL::route('Reserve')}}><i class="fa fa-building"></i> <span>Room Reservation</span></a></li>
-        <li class="#"><a href={{URL::route('History')}}><i class="fa fa-history"></i> <span>Reservation History</span></a></li>
+      <li class="active"><a href={{ URL::route('Dashboard') }}>Dashboard</a></li>
+      <li class="#"><a href={{URL::route('Reserve')}}>Room Reservation</a></li>
+      <li class="#"><a href={{URL::route('History')}}>Reservation History</a></li>
     @elseif (Auth()->user()->roles == 1)
-        <li class="header">MENU</li>
-        <li class="#"><a href={{ URL::route('Dashboard') }}><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
-        <li class="active"><a href={{URL::route('Reserve')}}><i class="fa fa-building"></i> <span>Room Reservation</span></a></li>
+      <li class="active"><a href={{ URL::route('Dashboard') }}>Dashboard</a></li>
+      <li class="#"><a href={{URL::route('Reserve')}}>Room Reservation</a></li>
     @endif
-    <ul class="sidebar-menu" data-widget="tree">
-    </aside> 
+  </ul>
+</div>
 @endsection
 
 @section('content')
@@ -43,16 +42,17 @@
 
         <!--ACTUAL CONTENT-->
         <section class="content container-fluid">
-          <div class="col-md-12">
-            <div class="box box-primary">
-              <div class="box-header with-border">
-                <h3 class="box-title">Pending Requests</h3>
-                <div class="box-tools pull-right">
-                  <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-                  </button>
-                  <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="box box-primary">
+                <div class="box-header with-border">
+                  <h3 class="box-title">Pending Requests</h3>
+                  <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                    </button>
+                    <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                  </div>
                 </div>
-              </div>
 
               <div class="box-body">
                 <!--SPECIAL ROOM REQUEST INFORMATION MODAL-->
@@ -178,11 +178,12 @@
                 </div>
               </div><!--END OF BOX-BODY-->
 
-              <div class="box-footer clearfix">
-                <a href="history.html" class="btn btn-sm btn-default btn-flat pull-right">View Full History</a>
-              </div>
-            </div><!--END OF CONTENT BOX-->
-          </div><!--END OF COLUMN-->  
+                <div class="box-footer clearfix">
+                  <a href="history.html" class="btn btn-sm btn-default btn-flat pull-right">View Full History</a>
+                </div>
+              </div><!--END OF CONTENT BOX-->
+            </div><!--END OF COLUMN--> 
+          </div><!--END OF ROW-->
         </section><!--END OF ACTUAL CONTENT-->
       </div><!--END OF CONTENT WRAPPER-->
 @endsection

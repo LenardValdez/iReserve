@@ -1,33 +1,18 @@
 @extends('layouts.test')
 
-@section('AdminStyle')
-    <style>
-        .btn-circle {
-          width: 60px;
-          height: 60px;
-          padding: 10px 16px;
-          border-radius: 35px;
-          font-size: 24px;
-          line-height: 1.33;
-          color: steelblue;
-        }
-    </style>
-@endsection
-
-@section('sidebar')
-    <ul class="sidebar-menu" data-widget="tree">
-    @if (Auth()->user()->roles == 0)
-        <li class="header">MENU</li>
-        <li class="#"><a href={{ URL::route('Dashboard') }}><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
-        <li class="active"><a href={{URL::route('Reserve')}}><i class="fa fa-building"></i> <span>Room Reservation</span></a></li>
-        <li class="#"><a href={{URL::route('History')}}><i class="fa fa-history"></i> <span>Reservation History</span></a></li>
-    @elseif (Auth()->user()->roles == 1)
-        <li class="header">MENU</li>
-        <li class="#"><a href={{ URL::route('Dashboard') }}><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
-        <li class="active"><a href={{URL::route('Reserve')}}><i class="fa fa-building"></i> <span>Room Reservation</span></a></li>
-    @endif
-    <ul class="sidebar-menu" data-widget="tree">
-    </aside> 
+@section('menu')
+<div class="collapse navbar-collapse pull-left" id="navbar-collapse">
+    <ul class="nav navbar-nav">
+        @if (Auth()->user()->roles == 0)
+        <li class="#"><a href={{ URL::route('Dashboard') }}>Dashboard</a></li>
+        <li class="active"><a href={{URL::route('Reserve')}}>Room Reservation</a></li>
+        <li class="#"><a href={{URL::route('History')}}>Reservation History</a></li>
+        @elseif (Auth()->user()->roles == 1)
+        <li class="#"><a href={{ URL::route('Dashboard') }}>Dashboard</a></li>
+        <li class="active"><a href={{URL::route('Reserve')}}>Room Reservation</a></li>
+        @endif
+    </ul>
+</div>
 @endsection
 
 @section('script')
@@ -55,11 +40,6 @@
     });
   });
 
-  /*$('#reservationForm').on('submit', function(e){
-    $('#formReview').modal('show');
-    e.preventDefault();
-  });*/
-
   $(function() {
     $('#calendar').fullCalendar({
       schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
@@ -74,6 +54,7 @@
         start: '07:00',
         end: '22:00',
       },
+      height: '800',
       defaultView: 'timelineDay',
       resourceGroupField: 'floorNum',
       resources: [
@@ -243,8 +224,15 @@
                         </div>
                     </div>
                     </div>
-                </div> <!--END OF BOX-BODY-->  
+                </div> <!--END OF BOX-BODY-->
                 </div> <!--END OF CONTENT BOX-->
+
+                <!--add-delete room-->
+                @if (Auth()->user()->role == 0)
+                    @include('pages.adminfunctions.addroom')
+                @endif
+                <!--end of add-delete room button-->
+
             </div> <!--END OF COLUMN-->
 
             <div class="col-md-7">
@@ -258,12 +246,6 @@
                 </div>
             </div> <!--END OF COLUMN-->
             </div> <!--END OF ROW-->
-       
-        <!--add room-->
-        @if (Auth()->user()->role == 0)
-            @include('pages.adminfunctions.addroom')
-        @endif
-        <!--end of add room button-->
 
         </section><!--END OF ACTUAL CONTENT-->
     </div><!--END OF CONTENT WRAPPER-->
