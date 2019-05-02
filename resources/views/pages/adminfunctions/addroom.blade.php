@@ -57,9 +57,9 @@
           <form role="form" id="roomDataForm">
             <div class="form-group">
               <label>Room Number: </label>
-              <select class="form-control select2" id="room_ID" required>
+              <select class="form-control select2" id="room_id" required>
                 @foreach ($rooms as $room)
-                  <option>{{$room->room_id}}</option>
+                  <option>{{$room}}</option>
                 @endforeach                
                 {{-- <optgroup label="8th Floor">
                   <option>801</option>
