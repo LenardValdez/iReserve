@@ -82,8 +82,8 @@ class RoomController extends Controller
      * @param  \App\Room  $room
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Room $room)
+    public function destroy(Request $request)
     {
-        //
+        Room::destroy($request->room_id);
     }
 }
