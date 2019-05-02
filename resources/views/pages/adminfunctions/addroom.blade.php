@@ -7,23 +7,40 @@
           </div>
         </div>
         <div class="box-body">
-          <form role="form" id="roomDataForm">
+          <form role="form" id="roomDataForm" method="POST" action="{{ route('processaddroom') }}">
+            @csrf
               <div class="form-group">
-                <label for="roomNumber">Room Number: </label>
-                <input type="text" class="form-control" name="formName" placeholder="Enter room number" required>
+                <label for="room_id">Room Number: </label>
+                <input type="text" class="form-control{{ $errors->has('room_id') ? ' is-invalid' : '' }}" placeholder="Enter room number" name="room_id" value="{{ old('room_id') }}" required autofocus>
+                @if ($errors->has('room_id'))
+                  <span class="invalid-feedback" role="alert">
+                      <strong>{{ $errors->first('room_id') }}</strong>
+                  </span>
+                @endif
               </div>
               <div class="form-group">
-                <label for="roomName">Room Name: </label>
-                <input type="text" class="form-control" name="formName" placeholder="Enter room name">
+                <label for="room_desc">Room Name: </label>
+                <input type="text" id="room_desc" class="form-control{{ $errors->has('room_desc') ? ' is-invalid' : '' }}" name="room_desc" value="{{ old('room_desc') }}" placeholder="Enter room name" required autofocus>
+                @if ($errors->has('room_desc'))
+                  <span class="invalid-feedback" role="alert">
+                      <strong>{{ $errors->first('room_desc') }}</strong>
+                  </span>
+                @endif
               </div>
               <div class="form-group">
-                <div class="checkbox">
-                  <label>
-                    <input type="checkbox" value="1">Special Room
-                  </label>
-                </div>
+                <label for="isSpecial">Category: </label>
+                  <select class="form-control">
+                    <option selected disabled>Select room category</option>
+                    <option value="0">Ordinary Room</option>
+                    <option value="1">Special Room</option>
+                  </select>
+                  @if ($errors->has('isSpecial'))
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $errors->first('isSpecial') }}</strong>
+                    </span>
+                  @endif
               </div>
-              <button type="submit" data-toggle="modal" data-target="#successRoomModal" data-dismiss="modal" class="btn btn-primary pull-right">Add</button>
+              <button type="submit" data-toggle="modal" data-target="#successRoomModal" data-dismiss="modal" class="btn btn-primary pull-right">{{ __('Add') }}</button>
           </form>
         </div>
       </div>
