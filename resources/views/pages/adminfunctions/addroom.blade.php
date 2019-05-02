@@ -29,7 +29,7 @@
               </div>
               <div class="form-group">
                 <label for="isSpecial">Category: </label>
-                  <select class="form-control">
+                  <select class="form-control{{ $errors->has('isSpecial') ? ' is-invalid' : '' }}" name="isSpecial">
                     <option selected disabled>Select room category</option>
                     <option value="0">Ordinary Room</option>
                     <option value="1">Special Room</option>
@@ -58,7 +58,10 @@
             <div class="form-group">
               <label>Room Number: </label>
               <select class="form-control select2" id="room_ID" required>
-                <optgroup label="8th Floor">
+                @foreach ($rooms as $room)
+                  <option>{{$room->room_id}}</option>
+                @endforeach                
+                {{-- <optgroup label="8th Floor">
                   <option>801</option>
                   <option>802</option>
                   <option>803</option>
@@ -75,7 +78,7 @@
                   <option>905</option>
                   <option>906</option>
                   <option>907</option>
-                </optgroup>
+                </optgroup> --}}
               </select>
             </div>
             <button type="button" data-target="#confirmRoomDeletion" data-toggle="modal" class="btn btn-danger pull-right">Delete</button>
