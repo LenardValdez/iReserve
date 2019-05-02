@@ -106,7 +106,7 @@
                     <form role="form" id="reservationForm">
                     <div class="form-group">
                         <label for="formName">Name: </label>
-                        <input type="text" class="form-control" id="userName" placeholder="Lerma Pantorilla" disabled>
+                        <input type="text" class="form-control" id="userName" placeholder={{ Auth::user()->name }} disabled>
                     </div>
 
                     <div class="form-group">
