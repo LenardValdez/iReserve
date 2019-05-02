@@ -1,13 +1,13 @@
 @extends('layouts.test')
 
 @section('script')
-  <script src="js/jquery.min.js"></script>
-  <script src="js/bootstrap.min.js"></script>
-  <script src="js/moment.min.js"></script>
-  <script src="js/jquery.slimscroll.min.js"></script>
-  <script src="js/adminlte.min.js"></script>
-  <script src="js/fullcalendar.min.js"></script>
-  <script src="js/fullcalendar-scheduler.min.js"></script>
+  <script src="js/adminlte_js/jquery.min.js"></script>
+  <script src="js/adminlte_js/bootstrap.min.js"></script>
+  <script src="js/adminlte_js/moment.min.js"></script>
+  <script src="js/adminlte_js/jquery.slimscroll.min.js"></script>
+  <script src="js/adminlte_js/adminlte.min.js"></script>
+  <script src="js/adminlte_js/fullcalendar.min.js"></script>
+  <script src="js/adminlte_js/fullcalendar-scheduler.min.js"></script>
   <script>
     $(function() {
       $('#calendar').fullCalendar({
