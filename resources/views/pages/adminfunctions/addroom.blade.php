@@ -16,6 +16,13 @@
                 <label for="roomName">Room Name: </label>
                 <input type="text" class="form-control" name="formName" placeholder="Enter room name">
               </div>
+              <div class="form-group">
+                <div class="checkbox">
+                  <label>
+                    <input type="checkbox" value="1">Special Room
+                  </label>
+                </div>
+              </div>
               <button type="submit" data-toggle="modal" data-target="#successRoomModal" data-dismiss="modal" class="btn btn-primary pull-right">Add</button>
           </form>
         </div>
