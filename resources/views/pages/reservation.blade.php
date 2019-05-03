@@ -229,7 +229,7 @@
 
                 <!--add-delete room-->
                 @if (Auth()->user()->roles == 0)
-                    @include('pages.adminfunctions.addroom')
+                    @include('pages.adminfunctions.adddel')
                 @endif
                 <!--end of add-delete room button-->
 

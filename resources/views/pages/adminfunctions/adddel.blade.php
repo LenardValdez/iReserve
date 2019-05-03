@@ -58,9 +58,9 @@
             <div class="form-group">
               <label>Room Number: </label>
               <select class="form-control select2" id="room_id" required>
-                @foreach ($rooms as $room)
+                {{-- @foreach ($rooms as $room)
                   <option>{{$room}}</option>
-                @endforeach 
+                @endforeach --}} 
                 {{-- <optgroup label="8th Floor">
                   <option>801</option>
                   <option>802</option>

@@ -19,9 +19,6 @@ Route::get('/Dashboard', 'DashboardController@index')->name('Dashboard');
 Route::view('/History', 'pages.history')->name('History');
 Route::view('/Reserve', 'pages.reservation')->name('Reserve');
 
-
-
-/* Route::get('/room/display', 'RoomController@index')->name('roomdisplay'); //Display all rooms */
 Route::get('/Reserve/add', 'RoomController@create')->name('addroom'); //Display form to add room
 Route::post('/Reserve/add', 'RoomController@store')->name('processaddroom'); //Process ng form to add room
 Route::get('/Reserve/delete', 'RoomController@roomList')->name('delroom'); //Display form to del room
