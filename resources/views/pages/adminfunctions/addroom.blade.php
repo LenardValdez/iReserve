@@ -19,8 +19,8 @@
                 @endif
               </div>
               <div class="form-group">
-                <label for="room_desc">Room Name: </label>
-                <input type="text" id="room_desc" class="form-control{{ $errors->has('room_desc') ? ' is-invalid' : '' }}" name="room_desc" value="{{ old('room_desc') }}" placeholder="Enter room name" required autofocus>
+                <label for="room_desc">Room Description: </label>
+                <input type="text" id="room_desc" class="form-control{{ $errors->has('room_desc') ? ' is-invalid' : '' }}" name="room_desc" value="{{ old('room_desc') }}" placeholder="Enter room description" required autofocus>
                 @if ($errors->has('room_desc'))
                   <span class="invalid-feedback" role="alert">
                       <strong>{{ $errors->first('room_desc') }}</strong>
@@ -60,7 +60,7 @@
               <select class="form-control select2" id="room_id" required>
                 @foreach ($rooms as $room)
                   <option>{{$room}}</option>
-                @endforeach                
+                @endforeach 
                 {{-- <optgroup label="8th Floor">
                   <option>801</option>
                   <option>802</option>

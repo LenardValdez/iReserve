@@ -24,5 +24,5 @@ Route::view('/Reserve', 'pages.reservation')->name('Reserve');
 Route::get('/room/display', 'RoomController@index')->name('roomdisplay'); //Display all rooms
 Route::get('/room/add', 'RoomController@create')->name('addroom'); //Display form to add room
 Route::post('/room/add', 'RoomController@store')->name('processaddroom'); //Process ng form to add room
-/* Route::get('/Reserve', 'RoomController@destroy')->name('delroom'); //Display form to del room */
+Route::get('/Reserve', 'RoomController@roomList')->name('delroom'); //Display form to del room
 Route::post('/Reserve','RoomController@destroy')->name('processdelroom'); //Process ng form to del room

@@ -82,10 +82,15 @@ class RoomController extends Controller
      * @param  \App\Room  $room
      * @return \Illuminate\Http\Response
      */
-    public function destroy(RoomRequest $request, Room $rooms)
+    public function destroy(Request $request)
     {
-        $rooms = ;
-        Room::destroy($request->room_id);
+        Request::destroy($request->room_id);
         return redirect()->back()->with('status',"The room is now deleted");
+    }
+
+    public function roomList(Room $rooms)
+    {
+        $rooms = Room::all();
+        return view('pages.adminfunctions.addroom');
     }
 }
