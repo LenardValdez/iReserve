@@ -16,7 +16,6 @@ class RoomController extends Controller
     public function index()
     {
         //
-	return view('rooms/home');
     }
 
     /**
@@ -27,7 +26,6 @@ class RoomController extends Controller
     public function create()
     {
         //
-	return view('rooms/new');
     }
 
     /**
@@ -88,9 +86,9 @@ class RoomController extends Controller
         return redirect()->back()->with('status',"The room is now deleted");
     }
 
-    public function roomList(Room $rooms)
+    public function roomList()
     {
-        $rooms = Room::room_id();
-        return view('pages.adminfunctions.addroom')->with("rooms", $rooms);
+        $rooms = Room::get();
+        return view('pages.adminfunctions.adddel')->with("rooms", $rooms);
     }
 }

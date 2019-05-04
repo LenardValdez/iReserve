@@ -54,16 +54,17 @@
           </div>
         </div>
         <div class="box-body">
-          <form role="form" id="roomDataForm">
+          <form role="form" id="roomIdDelForm" method="POST" action="{{ route('processdelroom') }}">
+            @csrf
             <div class="form-group">
               <label>Room Number: </label>
               <select class="form-control select2" id="room_id" required>
-                {{-- @foreach ($rooms as $room)
-                  <option>{{$room}}</option>
-                @endforeach --}} 
+                @foreach ($rooms as $room)
+                  <option>{{$room->room_id}}</option>
+                @endforeach
                 {{-- <optgroup label="8th Floor">
                   <option>801</option>
-                  <option>802</option>
+                  <option>802</option>"
                   <option>803</option>
                   <option>804</option>
                   <option>805</option>
