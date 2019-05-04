@@ -39,7 +39,7 @@ class RoomController extends Controller
     public function store(RoomRequest $request)
     {
         Room::create($request->validated());
-	return redirect()->back()->with('status',"The room is now saved.");
+	    return redirect()->back()->with('status',"The room is now saved.");
     }
 
     /**

@@ -47,11 +47,6 @@
               <div class="box box-primary">
                 <div class="box-header with-border">
                   <h3 class="box-title">Pending Requests</h3>
-                  <div class="box-tools pull-right">
-                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-                    </button>
-                    <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
-                  </div>
                 </div>
 
               <div class="box-body">
@@ -179,7 +174,7 @@
               </div><!--END OF BOX-BODY-->
 
                 <div class="box-footer clearfix">
-                  <a href="history.html" class="btn btn-sm btn-default btn-flat pull-right">View Full History</a>
+                  <a href={{URL::route('History')}} class="btn btn-sm btn-default btn-flat pull-right">View Full History</a>
                 </div>
               </div><!--END OF CONTENT BOX-->
             </div><!--END OF COLUMN--> 
