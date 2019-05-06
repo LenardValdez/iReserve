@@ -82,7 +82,8 @@ class RoomController extends Controller
      */
     public function destroy(Request $request)
     {
-        Request::destroy($request->room_id);
+        $delete = Room::where('room_id',$request->room_id)->first();
+        $delete->delete();
         return redirect()->back()->with('status',"The room is now deleted");
     }
 

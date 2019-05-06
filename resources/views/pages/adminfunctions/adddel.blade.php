@@ -58,7 +58,8 @@
             @csrf
             <div class="form-group">
               <label>Room Number: </label>
-              <select class="form-control select2" id="room_id" required>
+              <select class="form-control select2" id="room_id" name="room_id" required>
+                <option selected disabled>Select room to be deleted</option>
                 @foreach ($rooms as $room)
                   <option>{{$room->room_id}}</option>
                 @endforeach
@@ -98,7 +99,7 @@
                   </div>
                   <div class="modal-footer">
                       <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Revise</button>
-                      <button type="submit" class="btn btn-danger" data-target="#successRoomModal" data-dismiss="modal" data-toggle="modal">Delete</button>
+                      <button type="submit" class="btn btn-danger" data-target="#successRoomModal" data-dismiss="modal" data-toggle="modal" onclick="$('#roomIdDelForm').submit()">Delete</button>
                   </div>
                 </div>
               </div>
