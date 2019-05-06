@@ -16,4 +16,6 @@ class RegForm extends Model
         'form_id',
         'updated_at',
     ];
+
+    protected $primaryKey = 'form_id';
 }
