@@ -88,7 +88,7 @@ class RoomController extends Controller
 
     public function roomList()
     {
-        $rooms = Room::get();
-        return view('pages.adminfunctions.adddel')->with("rooms", $rooms);
+        $rooms = Room::all();
+        return view('pages.reservation')->with("rooms", $rooms);
     }
 }

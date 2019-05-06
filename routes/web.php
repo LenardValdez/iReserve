@@ -17,9 +17,9 @@ Auth::routes();
 
 Route::get('/Dashboard', 'DashboardController@index')->name('Dashboard');
 Route::view('/History', 'pages.history')->name('History');
-Route::view('/Reserve', 'pages.reservation')->name('Reserve');
+Route::get('/Reserve', 'RoomController@roomList')->name('Reserve');
 
 /* Route::get('/Reserve/add', 'RoomController@create')->name('addroom'); //Display form to add room */
 Route::post('/Reserve/add', 'RoomController@store')->name('processaddroom'); //Process ng form to add room
-Route::get('/Reserve', 'RoomController@roomList')->name('delroom'); //Display form to del room
+// Route::get('/Reserve/del', 'RoomController@roomList')->name('delroom'); //Display form to del room
 Route::post('/Reserve','RoomController@destroy')->name('processdelroom'); //Process ng form to del room
