@@ -23,3 +23,5 @@ Route::get('/Reserve', 'RoomController@roomList')->name('Reserve');
 Route::post('/Reserve/add', 'RoomController@store')->name('processaddroom'); //Process ng form to add room
 // Route::get('/Reserve/del', 'RoomController@roomList')->name('delroom'); //Display form to del room
 Route::post('/Reserve','RoomController@destroy')->name('processdelroom'); //Process ng form to del room
+/* Route::get('/example/approve/:RegidForm', 'SomeController@approve');
+Route::get('/example/decline/:id', 'SomeController@decline'); */

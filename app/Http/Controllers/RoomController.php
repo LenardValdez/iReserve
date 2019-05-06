@@ -92,4 +92,12 @@ class RoomController extends Controller
         $rooms = Room::all();
         return view('pages.reservation')->with("rooms", $rooms);
     }
+
+    /* /reg_form/approve/1 */
+
+   /*  public function approve(int $id) {
+        $reg_form->status = 'cvbj';
+        $reg_form->save();
+        return refi
+    } */
 }
