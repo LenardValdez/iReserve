@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\User;
 
 class ReservationsController extends Controller
 {
@@ -81,4 +82,11 @@ class ReservationsController extends Controller
     {
         //
     }
+
+    public function userList()
+    {
+        $users = User::get();
+        return view('pages.reservation')->with("users", $users);
+    }
+
 }

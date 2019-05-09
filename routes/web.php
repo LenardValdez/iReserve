@@ -14,11 +14,11 @@ Auth::routes();
 
 Route::get('/', 'DashboardController@index');
 
-Route::get('/Dashboard', 'DashboardController@index')->name('Dashboard');
-Route::view('/History', 'pages.history')->name('History');
-Route::get('/Reserve', 'RoomController@roomList')->name('Reserve');
+Route::get('/dashboard', 'DashboardController@index')->name('Dashboard');
+Route::view('/history', 'pages.history')->name('History');
+Route::get('/reserve', 'RoomController@roomList')->name('Reserve');
 
-Route::post('/Reserve/add', 'RoomController@store')->name('processaddroom'); //Process ng form to add room
-Route::post('/Reserve','RoomController@destroy')->name('processdelroom'); //Process ng form to del room
+Route::post('/reserve/add', 'RoomController@store')->name('processaddroom'); //Process ng form to add room
+Route::post('/reserve','RoomController@destroy')->name('processdelroom'); //Process ng form to del room
 /* Route::get('/example/approve/:RegidForm', 'SomeController@approve');
 Route::get('/example/decline/:id', 'SomeController@decline'); */

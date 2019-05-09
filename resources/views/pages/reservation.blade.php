@@ -4,12 +4,12 @@
 <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
     <ul class="nav navbar-nav">
         @if (Auth()->user()->roles == 0)
-        <li class="#"><a href={{ URL::route('Dashboard') }}>Dashboard</a></li>
-        <li class="active"><a href={{URL::route('Reserve')}}>Room Reservation</a></li>
-        <li class="#"><a href={{URL::route('History')}}>Reservation History</a></li>
+        <li class="#"><a href={{ URL::route('dashboard') }}>Dashboard</a></li>
+        <li class="active"><a href={{URL::route('reserve')}}>Room Reservation</a></li>
+        <li class="#"><a href={{URL::route('history')}}>Reservation History</a></li>
         @elseif (Auth()->user()->roles == 1)
-        <li class="#"><a href={{ URL::route('Dashboard') }}>Dashboard</a></li>
-        <li class="active"><a href={{URL::route('Reserve')}}>Room Reservation</a></li>
+        <li class="#"><a href={{ URL::route('dashboard') }}>Dashboard</a></li>
+        <li class="active"><a href={{URL::route('reserve')}}>Room Reservation</a></li>
         @endif
     </ul>
 </div>
@@ -128,13 +128,18 @@
                     <div class="form-group">
                         <label>People Involved: </label>
                         <select class="form-control select2" id="peopleInvolved" multiple="multiple" data-placeholder="Enter name" required>
-                        <option>Miqaela Nicole Banguilan</option>
+                            @foreach ($users as $user)
+                                @if ($user->user_id != Auth()->user()->user_id)
+                                    <option>{{$user->name}}</option>
+                                @endif
+                            @endforeach
+                            {{-- <option>Miqaela Nicole Banguilan</option>
                         <option>Nicole Kaye Bilon</option>
                         <option>Rhej Christian Laurel</option>
                         <option>Amiel Roseller Saballo </option>
                         <option>Lenard Valdez</option>
                         <option>Janzon Jon Victorio</option>
-                        <option>Marikit Valmadrid</option>
+                        <option>Marikit Valmadrid</option> --}}
                         </select>
                     </div>
 

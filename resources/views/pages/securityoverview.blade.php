@@ -53,8 +53,8 @@
 @section('menu')
 <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
     <ul class="nav navbar-nav">
-      <li class="active"><a href={{ URL::route('Dashboard') }}>Room Overview</a></li>
-      <li><a href={{URL::route('History')}}>Reservation History</a></li>
+      <li class="active"><a href={{ URL::route('dashboard') }}>Room Overview</a></li>
+      <li><a href={{URL::route('sistory')}}>Reservation History</a></li>
     </ul>      
 </div>
 @endsection
