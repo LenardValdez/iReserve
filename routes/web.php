@@ -12,7 +12,7 @@
 */
 Auth::routes();
 
-Route::view('/', 'auth.login');
+Route::get('/', 'DashboardController@index');
 
 Route::get('/Dashboard', 'DashboardController@index')->name('Dashboard');
 Route::view('/History', 'pages.history')->name('History');

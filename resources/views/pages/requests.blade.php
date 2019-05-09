@@ -15,11 +15,11 @@
 @section('menu')
 <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
   <ul class="nav navbar-nav">
-    @if ($roles == 0)
+    @if ($role == 0)
       <li class="active"><a href={{ URL::route('Dashboard') }}>Dashboard</a></li>
       <li class="#"><a href={{URL::route('Reserve')}}>Room Reservation</a></li>
       <li class="#"><a href={{URL::route('History')}}>Reservation History</a></li>
-    @elseif ($roles == 1)
+    @elseif ($role == 1)
       <li class="active"><a href={{ URL::route('Dashboard') }}>Dashboard</a></li>
       <li class="#"><a href={{URL::route('Reserve')}}>Room Reservation</a></li>
     @endif

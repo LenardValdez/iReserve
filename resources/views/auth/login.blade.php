@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.login')
 
 {{-- @section('content')
 <div class="container">
@@ -71,6 +71,16 @@
     </div>
 </div>
 @endsection --}}
+
+@section('scripts')
+    <script src="js/adminlte_js/jquery.min.js"></script>
+    <script src="js/adminlte_js/bootstrap.min.js"></script>
+    <script>
+    $(document).ready(function(){
+        $('[data-toggle="popover"]').popover();   
+    });
+    </script>
+@endsection
 
 @section('content')
     <div class="login-logo">

@@ -17,7 +17,7 @@
       <div class="navbar-custom-menu">
         <ul class="nav navbar-nav">
           <!--NOTIFICATIONS-->
-          @if ($roles == 0 or $roles == 1 )
+          @if ($role == 0 or $role == 1 )
           <!--NOTIFICATIONS-->
           @include('layouts.inc.notifications')
           <!--END OF NOTIFICATIONS-->

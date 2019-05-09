@@ -30,7 +30,7 @@ class DashboardController extends Controller
         if ($role == 0){
             return view('pages.requests')->with($role);
         } elseif ($role == 1){
-            return view('pages.History')->with($role);
+            return view('pages.history')->with($role);
         } else {
             return view('pages.securityoverview')->with($role);
         }
