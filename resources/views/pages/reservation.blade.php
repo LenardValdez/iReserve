@@ -112,7 +112,7 @@
                     <div class="form-group">
                         <label>Room Number: </label>
                         <select class="form-control" id="room_ID" required>
-                            <option selected disabled>Select a room</option>
+                            <option selected disabled>Select an available room</option>
                             @foreach ($descriptions as $description)
                               <optgroup label="{{$description}}">
                                 @foreach ($rooms as $room)
