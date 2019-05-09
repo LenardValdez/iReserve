@@ -10,6 +10,7 @@ class RegForm extends Model
         'stime_res',
         'etime_res',
         'purpose',
+        'room_id',
     ];
 
     protected $hidden = [
