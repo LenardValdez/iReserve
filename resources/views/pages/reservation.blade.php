@@ -104,9 +104,10 @@
                 
                 <div class="box-body">
                     <form role="form" id="reservationForm">
+                    @csrf
                     <div class="form-group">
                         <label for="formName">Name: </label>
-                        <input type="text" class="form-control" id="userName" placeholder={{ Auth::user()->name }} disabled>
+                        <input type="text" class="form-control" id="userName" placeholder="{{{Auth::user()->name}}}" value="{{{Auth::user()->name}}}" disabled>
                     </div>
 
                     <div class="form-group">
@@ -129,17 +130,10 @@
                         <label>People Involved: </label>
                         <select class="form-control select2" id="peopleInvolved" multiple="multiple" data-placeholder="Enter name" required>
                             @foreach ($users as $user)
-                                @if ($user->user_id != Auth()->user()->user_id)
+                                @if ($user->user_id != Auth()->user()->user_id and $user->roles == 1)
                                     <option>{{$user->name}}</option>
                                 @endif
                             @endforeach
-                            {{-- <option>Miqaela Nicole Banguilan</option>
-                        <option>Nicole Kaye Bilon</option>
-                        <option>Rhej Christian Laurel</option>
-                        <option>Amiel Roseller Saballo </option>
-                        <option>Lenard Valdez</option>
-                        <option>Janzon Jon Victorio</option>
-                        <option>Marikit Valmadrid</option> --}}
                         </select>
                     </div>
 
