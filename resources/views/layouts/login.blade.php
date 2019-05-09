@@ -16,7 +16,7 @@
 </head>
 
 <body class="hold-transition login-page" style="overflow-y: hidden;">
-    <div class="login-box">
+    <div class="login-box center-block">
         @yield('content')
     </div>
 </body>

@@ -20,8 +20,20 @@
               </div>
               <div class="form-group">
                 <label for="room_desc">Room Description: </label>
-                <input type="text" id="room_desc" class="form-control{{ $errors->has('room_desc') ? ' is-invalid' : '' }}" name="room_desc" value="{{ old('room_desc') }}" placeholder="Enter room description" required autofocus>
-                @if ($errors->has('room_desc'))
+                <select id="room_desc" class="form-control{{ $errors->has('room_desc') ? ' is-invalid' : '' }}" name="room_desc" value="{{ old('room_desc') }}" required autofocus>
+                  <option selected disabled>Select room category</option>
+                  <option value="6th Floor">6th Floor</option>
+                  <option value="7th Floor">7th Floor</option>
+                  <option value="8th Floor">8th Floor</option>
+                  <option value="CL 8th Floor">CL 8th Floor</option>
+                  <option value="9th Floor">9th Floor</option>
+                  <option value="CL 10th Floor">CL 10th Floor</option>
+                  <option value="Lower Penthouse">Lower Penthouse</option>
+                  <option value="Upper Penthouse">Upper Penthouse</option>
+                  <option value="Drawing Room 10th Floor">Drawing Room 10th Floor</option>
+                  <option value="Others">Others</option>
+                </select>
+                  @if ($errors->has('room_desc'))
                   <span class="invalid-feedback" role="alert">
                       <strong>{{ $errors->first('room_desc') }}</strong>
                   </span>
@@ -60,8 +72,14 @@
               <label>Room Number: </label>
               <select class="form-control" id="room_id" name="room_id" required>
                 <option selected disabled>Select room to be deleted</option>
-                @foreach ($rooms as $room)
-                  <option>{{$room->room_id}}</option>
+                @foreach ($descriptions as $description)
+                  <optgroup label="{{$description}}">
+                    @foreach ($rooms as $room)
+                      @if ($description == $room->room_desc)
+                        <option>{{$room->room_id}}</option>
+                      @endif
+                    @endforeach
+                  </optgroup>
                 @endforeach
                 {{-- <optgroup label="8th Floor">
                   <option>801</option>
