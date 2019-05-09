@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('content')
+{{-- @section('content')
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
@@ -70,4 +70,49 @@
         </div>
     </div>
 </div>
+@endsection --}}
+
+@section('content')
+    <div class="login-logo">
+        <a href="#"><img src="img/iacademy_shield.png" style="width: 40px; padding-bottom: 10px;" class="img-circle" alt="iACADEMY"> iRESERVE</a>
+    </div>
+        <!-- /.login-logo -->
+    <div class="login-box-body">
+        <p class="login-box-msg">Sign in using your iACADEMY email</p>
+
+        <form method="POST" action="{{ route('login') }}">
+            @csrf
+            <div class="form-group has-feedback">
+                <input id="email" type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" placeholder="Email" required autofocus>
+                <span class="fa fa-envelope form-control-feedback"></span>
+                @if ($errors->has('email'))
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $errors->first('email') }}</strong>
+                    </span>
+                @endif
+            </div>
+
+            <div class="form-group has-feedback">
+                <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" placeholder="Password" required>
+                <span class="fa fa-lock form-control-feedback"></span>
+                @if ($errors->has('password'))
+                <span class="invalid-feedback" role="alert">
+                    <strong>{{ $errors->first('password') }}</strong>
+                </span>
+                @endif
+            </div>
+
+            <div class="row">
+            <div class="col-xs-6 pull-left">
+                    <small id="loginError" class="text-danger"></small>
+                </div>
+                <div class="col-xs-4 pull-right">
+                    <button type="submit" class="btn btn-primary btn-block btn-flat">{{ __('Login') }}</button>
+                </div>
+            </div>
+        </form>
+
+    <div class="login-box-body">
+        <a href="#" class="pull-right" data-toggle="popover" data-content="Please visit the IT Department at the Mezzanine, iACADEMY Nexus.">Forgot your password?</a>
+    </div>
 @endsection

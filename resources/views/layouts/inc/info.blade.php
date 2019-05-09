@@ -10,9 +10,9 @@
       <p>
         {{{Auth::user()->name }}}
         <small>
-          @if (Auth()->user()->roles == 0)
+          @if ($roles == 0)
           Room Manager<!--NAME AND ROLE OF USER-->
-          @elseif(Auth()->user()->roles == 1)
+          @elseif($roles == 1)
           User<!--NAME AND ROLE OF USER-->
           @else
           Security<!--NAME AND ROLE OF USER-->
@@ -22,7 +22,7 @@
     </li>
 
     <li class="user-footer">
-      @if (Auth()->user()->roles == 0 or Auth()->user()->roles == 1 )
+      @if ($roles == 0 or $roles == 1 )
         <div class="pull-left">
           <a href="http://isims.iacademy.edu.ph" target="_blank" class="btn btn-default btn-flat">iSIMS</a>
         </div>

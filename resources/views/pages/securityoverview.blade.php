@@ -1,4 +1,4 @@
-@extends('layouts.test')
+@extends('layouts.app')
 
 @section('script')
   <script src="js/adminlte_js/jquery.min.js"></script>

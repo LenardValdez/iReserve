@@ -1,4 +1,4 @@
-@extends('layouts.test')
+@extends('layouts.app')
 
 @section('script')
   <script src="js/adminlte_js/jquery.min.js"></script>
@@ -17,11 +17,11 @@
 @section('menu')
 <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
   <ul class="nav navbar-nav">
-    @if (Auth()->user()->roles == 0)
+    @if ($roles == 0)
       <li class="#"><a href={{ URL::route('Dashboard') }}>Dashboard</a></li>
       <li class="#"><a href={{URL::route('Reserve')}}>Room Reservation</a></li>
       <li class="active"><a href={{URL::route('History')}}>Reservation History</a></li>
-    @elseif (Auth()->user()->roles == 1)
+    @elseif ($roles == 1)
       <li class="active"><a href={{ URL::route('Dashboard') }}>Dashboard</a></li>
       <li class="#"><a href={{URL::route('Reserve')}}>Room Reservation</a></li>
     @else
@@ -71,7 +71,7 @@
                           <h4><b>Reservation Period: </b>March 24, 2019 02:00PM - March 24, 2019 06:00PM</h4>
                           <h4><b>Reason: </b>SEAL Meeting</h4>
                         </div>
-                        @if (Auth()->user()->roles == 0 or Auth()->user()->roles == 1)
+                        @if ($roles == 0 or $roles == 1)
                         <div class="modal-footer">
                             <button type="button" class="btn btn-danger" data-target="#cancelRequestModal" data-dismiss="modal" data-toggle="modal">Cancel Reservation</button>
                         </div>
@@ -273,7 +273,7 @@
             </div><!--END OF COLUMN-->
           </div><!--END FO ROW-->
           <!--NEW ROW-->
-          @if (Auth()->user()->roles == 1)
+          @if ($roles == 1)
           <div class="row">
               <div class="col-md-12">
                 <div class="box box-solid">
