@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Room;
 use Illuminate\Http\Request;
 use App\Http\Requests\RoomRequest;
+use App\User;
 
 class RoomController extends Controller
 {
@@ -87,17 +88,12 @@ class RoomController extends Controller
         return redirect()->back()->with('status',"The room is now deleted");
     }
 
-    public function roomList()
-    {
-        $rooms = Room::get();
-        $descriptions = Room::groupBy('room_desc')->pluck('room_desc');
-        return view('pages.reservation')->with("rooms", $rooms)->with("descriptions", $descriptions);
-    }
-
-    public function userList()
+    public function list()
     {
         $users = User::get();
-        return view('pages.reservation')->with("users", $users);
+        $rooms = Room::get();
+        $descriptions = Room::groupBy('room_desc')->pluck('room_desc');
+        return view('pages.reservation')->with("rooms", $rooms)->with("descriptions", $descriptions)->with("users", $users);
     }
 
     /* /reg_form/approve/1 */
