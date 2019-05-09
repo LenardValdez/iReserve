@@ -94,6 +94,12 @@ class RoomController extends Controller
         return view('pages.reservation')->with("rooms", $rooms)->with("descriptions", $descriptions);
     }
 
+    public function userList()
+    {
+        $users = User::get();
+        return view('pages.reservation')->with("users", $users);
+    }
+
     /* /reg_form/approve/1 */
 
    /*  public function approve(int $id) {

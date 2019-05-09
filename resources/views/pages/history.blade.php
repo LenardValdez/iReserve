@@ -18,15 +18,15 @@
 <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
   <ul class="nav navbar-nav">
     @if (Auth()->user()->roles == 0)
-      <li class="#"><a href={{ URL::route('dashboard') }}>Dashboard</a></li>
-      <li class="#"><a href={{URL::route('reserve')}}>Room Reservation</a></li>
-      <li class="active"><a href={{URL::route('history')}}>Reservation History</a></li>
+      <li class="#"><a href={{ URL::route('Dashboard') }}>Dashboard</a></li>
+      <li class="#"><a href={{URL::route('Reserve')}}>Room Reservation</a></li>
+      <li class="active"><a href={{URL::route('History')}}>Reservation History</a></li>
     @elseif (Auth()->user()->roles == 1)
-      <li class="active"><a href={{ URL::route('dashboard') }}>Dashboard</a></li>
-      <li class="#"><a href={{URL::route('reserve')}}>Room Reservation</a></li>
+      <li class="active"><a href={{ URL::route('Dashboard') }}>Dashboard</a></li>
+      <li class="#"><a href={{URL::route('Reserve')}}>Room Reservation</a></li>
     @else
-      <li class="#"><a href={{ URL::route('dashboard') }}>Dashboard</a></li>
-      <li class="active"><a href={{URL::route('history')}}>Reservation History</a></li>
+      <li class="#"><a href={{ URL::route('Dashboard') }}>Dashboard</a></li>
+      <li class="active"><a href={{URL::route('History')}}>Reservation History</a></li>
     @endif
   </ul>      
 </div>
