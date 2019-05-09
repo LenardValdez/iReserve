@@ -111,25 +111,17 @@
 
                     <div class="form-group">
                         <label>Room Number: </label>
-                        <select class="form-control select2" id="room_ID" required>
-                        <optgroup label="8th Floor">
-                            <option>801</option>
-                            <option>802</option>
-                            <option>803</option>
-                            <option>804</option>
-                            <option>805</option>
-                            <option>806</option>
-                            <option>807</option>
-                        </optgroup>
-                        <optgroup label="9th Floor">
-                            <option>901</option>
-                            <option>902</option>
-                            <option>903</option>
-                            <option>904</option>
-                            <option>905</option>
-                            <option>906</option>
-                            <option>907</option>
-                        </optgroup>
+                        <select class="form-control" id="room_ID" required>
+                            <option selected disabled>Select a room</option>
+                            @foreach ($descriptions as $description)
+                              <optgroup label="{{$description}}">
+                                @foreach ($rooms as $room)
+                                  @if ($description == $room->room_desc)
+                                    <option>{{$room->room_id}}</option>
+                                  @endif
+                                @endforeach
+                              </optgroup>
+                            @endforeach
                         </select>
                     </div>
 

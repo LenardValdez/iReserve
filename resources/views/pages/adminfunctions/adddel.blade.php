@@ -71,7 +71,7 @@
             <div class="form-group">
               <label>Room Number: </label>
               <select class="form-control" id="room_id" name="room_id" required>
-                <option selected disabled>Select room to be deleted</option>
+                <option selected disabled>Select a room to be deleted</option>
                 @foreach ($descriptions as $description)
                   <optgroup label="{{$description}}">
                     @foreach ($rooms as $room)
@@ -81,15 +81,6 @@
                     @endforeach
                   </optgroup>
                 @endforeach
-                {{-- <optgroup label="8th Floor">
-                  <option>801</option>
-                  <option>802</option>"
-                  <option>803</option>
-                  <option>804</option>
-                  <option>805</option>
-                  <option>806</option>
-                  <option>807</option>
-                </optgroup> --}}
               </select>
             </div>
             <button type="button" data-target="#confirmRoomDeletion" data-toggle="modal" class="btn btn-danger pull-right">Delete</button>

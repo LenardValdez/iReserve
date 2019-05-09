@@ -90,7 +90,7 @@ class RoomController extends Controller
     public function roomList()
     {
         $rooms = Room::get();
-        $descriptions = Room::pluck('room_desc');
+        $descriptions = Room::groupBy('room_desc')->pluck('room_desc');
         return view('pages.reservation')->with("rooms", $rooms)->with("descriptions", $descriptions);
     }
 
