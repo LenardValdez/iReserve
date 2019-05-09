@@ -28,11 +28,11 @@ class DashboardController extends Controller
         $role = auth()->user()->roles;
     
         if ($role == 0){
-            return view('pages.requests')->with($role);
+            return view('pages.requests');
         } elseif ($role == 1){
-            return view('pages.history')->with($role);
+            return view('pages.history');
         } else {
-            return view('pages.securityoverview')->with($role);
+            return view('pages.securityoverview');
         }
     }
 }

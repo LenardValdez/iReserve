@@ -58,7 +58,7 @@
             @csrf
             <div class="form-group">
               <label>Room Number: </label>
-              <select class="form-control select2" id="room_id" name="room_id" required>
+              <select class="form-control" id="room_id" name="room_id" required>
                 <option selected disabled>Select room to be deleted</option>
                 @foreach ($rooms as $room)
                   <option>{{$room->room_id}}</option>
@@ -71,15 +71,6 @@
                   <option>805</option>
                   <option>806</option>
                   <option>807</option>
-                </optgroup>
-                <optgroup label="9th Floor">
-                  <option>901</option>
-                  <option>902</option>
-                  <option>903</option>
-                  <option>904</option>
-                  <option>905</option>
-                  <option>906</option>
-                  <option>907</option>
                 </optgroup> --}}
               </select>
             </div>
