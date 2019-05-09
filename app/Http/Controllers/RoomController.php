@@ -6,6 +6,7 @@ use App\Room;
 use Illuminate\Http\Request;
 use App\Http\Requests\RoomRequest;
 use App\User;
+use App\RegForm;
 
 class RoomController extends Controller
 {
@@ -98,9 +99,10 @@ class RoomController extends Controller
 
     /* /reg_form/approve/1 */
 
-   /*  public function approve(int $id) {
-        $reg_form->status = 'cvbj';
-        $reg_form->save();
-        return refi
+    /* public function approve(int $id)
+    {
+        
+        $rooms = Room:: ;
+        return ;
     } */
 }
