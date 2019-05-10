@@ -14,18 +14,19 @@ class CreateRegFormsTable extends Migration
     public function up()
     {
         Schema::create('reg_forms', function (Blueprint $table) {
-            $table->string('form_id')->primary();
+            $table->bigIncrements('form_id')->unique();
             $table->string('room_id');
             $table->foreign('room_id')
-                ->references('room_id')->on('rooms');
+                  ->references('room_id')->on('rooms');
             $table->string('user_id');
             $table->foreign('user_id')
-                ->references('user_id')->on('users');
+                  ->references('user_id')->on('users');
+            $table->string('users_involved');
             $table->dateTime('stime_res');
             $table->dateTime('etime_res');
             $table->string('purpose');
-            $table->boolean('isApproved');
-            $table->boolean('isCancelled');
+            $table->boolean('isApproved')->default(NULL)->nullable();
+            $table->boolean('isCancelled')->default(false);
             $table->timestamps();
         });
     }

@@ -10,5 +10,13 @@ class Room extends Model
         'room_id', 'room_desc', 'isSpecial'
     ];
 
-  protected $primaryKey = 'room_id';
+    protected $table ='rooms';
+    //Primary Key
+    public $primaryKey = 'room_id';
+    //Timestamps
+    public $timestamps = true;
+
+    public function form(){
+      return $this->belongsTo('App\User', 'user_id');
+  }
 }
