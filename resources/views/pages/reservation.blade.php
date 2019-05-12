@@ -50,13 +50,18 @@ $(function () {
     });
   });
 
-$('#addReservationBtn').click(function() {
-    /* when the button in the form, display the entered values in the modal */
-    $('#date').text(" {{ \Carbon\Carbon::now()->toDateString() }} ");
-    $('#room').text($('#room_id').val());
-    $('#people').text($('#peopleInvolved').val());
-    $('#range').text($('#resPeriod').val());
-    $('#reason').text($('#purpose').val());
+$(document).ready(function() {
+    $('#addReservationBtn').click(function() {
+        /* when the button in the form, display the entered values in the modal */
+        $('#date').text("{{ \Carbon\Carbon::now()->toDayDateTimeString() }}");
+        $('#room').text($('#room_id').val());
+        $('#people').text($('#peopleInvolved').val());
+        $('#range').text($('#resPeriod').val());
+        $('#reason').text($('#purpose').val());
+    });
+    $('#formConfirmed').click(function () {
+        $('#reservationForm').submit();
+    });
 });
 
 $(function() {
@@ -131,7 +136,7 @@ $(function() {
 
                     <div class="form-group">
                         <label>Room Number: </label>
-                        <select class="form-control" id="room_id" name="room_id" required>
+                        <select class="form-control{{ $errors->has('room_id') ? ' is-invalid' : '' }}" id="room_id" name="room_id" required>
                             <option selected disabled>Select an available room</option>
                             @foreach ($descriptions as $description)
                               <optgroup label="{{$description}}">
@@ -143,6 +148,11 @@ $(function() {
                               </optgroup>
                             @endforeach
                         </select>
+                        @if ($errors->has('room_id'))
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $errors->first('room_id') }}</strong>
+                        </span>
+                        @endif
                     </div>
 
                     <div class="form-group">
@@ -172,10 +182,15 @@ $(function() {
 
                     <div class="form-group">
                         <label for="reason">Purpose: </label>
-                        <textarea class="form-control" id="purpose" name="purpose" rows="3" placeholder="Enter purpose here" required></textarea>
+                        <textarea class="form-control{{ $errors->has('room_id') ? ' is-invalid' : '' }}" id="purpose" name="purpose" rows="3" placeholder="Enter purpose here" required></textarea>
+                        @if ($errors->has('purpose'))
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $errors->first('purpose') }}</strong>
+                        </span>
+                        @endif
                     </div>
                     
-                    <button type="button" data-target="#formReview" value="Submit" id="addReservationBtn" data-toggle="modal" class="btn btn-primary pull-right">Add</button>
+                    <button type="button" data-target="#formReview" value="Submit" id="addReservationBtn" data-toggle="modal" class="btn btn-primary pull-right">Submit</button>
 
                     <!--FORM REVIEW MODAL+SUBMIT-->
                     <div class="modal fade" id="formReview">
@@ -213,7 +228,7 @@ $(function() {
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Revise</button>
-                                    <button type="submit" class="btn btn-success" data-target="#successModal" data-dismiss="modal" data-toggle="modal" onclick="$('#reservationForm').submit()">Confirm</button>
+                                    <button type="submit" class="btn btn-success" id="formConfirmed" data-target="#successModal" data-dismiss="modal" data-toggle="modal">Confirm</button>
                                 </div>
                             </div>
                         </div>

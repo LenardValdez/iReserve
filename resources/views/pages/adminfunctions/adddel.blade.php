@@ -21,7 +21,7 @@
               <div class="form-group">
                 <label for="room_desc">Room Description: </label>
                 <select id="room_desc" class="form-control{{ $errors->has('room_desc') ? ' is-invalid' : '' }}" name="room_desc" value="{{ old('room_desc') }}" required autofocus>
-                  <option selected disabled>Select Room Description</option>
+                  <option selected disabled>Select room description</option>
                   <option value="6th Floor">6th Floor</option>
                   <option value="7th Floor">7th Floor</option>
                   <option value="8th Floor">8th Floor</option>
