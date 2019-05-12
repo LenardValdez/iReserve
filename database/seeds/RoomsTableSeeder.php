@@ -25,7 +25,31 @@ class RoomsTableSeeder extends Seeder
                 'room_desc' => '9th Floor',
                 'isAvailable' => true,
                 'isSpecial' => false,
-                'created_at' => '2019/05/03 11:00:23',
+                'created_at' => '2019/05/03 11:01:23',
+                'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+            ],
+            [
+                'room_id' => '903',
+                'room_desc' => '9th Floor',
+                'isAvailable' => true,
+                'isSpecial' => false,
+                'created_at' => '2019/05/03 11:02:23',
+                'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+            ],
+            [
+                'room_id' => '904',
+                'room_desc' => '9th Floor',
+                'isAvailable' => true,
+                'isSpecial' => false,
+                'created_at' => '2019/05/03 11:03:23',
+                'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+            ],
+            [
+                'room_id' => '905',
+                'room_desc' => '9th Floor',
+                'isAvailable' => true,
+                'isSpecial' => false,
+                'created_at' => '2019/05/03 11:04:23',
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
             ],
             [
@@ -33,7 +57,7 @@ class RoomsTableSeeder extends Seeder
                 'room_desc' => 'CL 10th Floor',
                 'isAvailable' => true,
                 'isSpecial' => true,
-                'created_at' => '2019/05/03 11:00:23',
+                'created_at' => '2019/05/03 11:05:23',
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
             ]
         ]);

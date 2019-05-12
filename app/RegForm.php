@@ -6,13 +6,20 @@ use Illuminate\Database\Eloquent\Model;
 
 class RegForm extends Model
 {    
+
+    protected $table ='reg_forms';
+    //Primary Key
+    public $primaryKey = 'form_id';
+    //Timestamps
+    public $timestamps = true;
+
     protected $fillable = [
+        'user_id',
+        'room_id',
+        'users_involved',
         'stime_res',
         'etime_res',
-        'purpose',
-        'users_involved',
-        'room_id',
-        'user_id'
+        'purpose'
     ];
 
     protected $hidden = [
@@ -21,12 +28,6 @@ class RegForm extends Model
         'isApproved',
         'isCancelled'
     ];
-
-    protected $table ='reg_forms';
-    //Primary Key
-    public $primaryKey = 'form_id';
-    //Timestamps
-    public $timestamps = true;
 
     public function user(){
         return $this->belongsTo('App\User', 'user_id');

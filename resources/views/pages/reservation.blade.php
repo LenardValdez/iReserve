@@ -27,20 +27,39 @@
 <script src="js/adminlte_js/fullcalendar-scheduler.min.js"></script>
 
 <script>
-  $(function () {
-    $('.select2').select2();
+$(function () {
+    $('.select2').select2({
+        tags: true,
+        tokenSeparators: [',', ' ']
+    });
 
-    $('#reservationPeriod').daterangepicker({
-      timePicker: true,
-      startDate: moment().startOf('hour'),
-      endDate: moment().startOf('hour').add(32, 'hour'),
-      locale: {
-        format: 'M/DD hh:mm A'
-      }
+    $('input.reservationPeriod').daterangepicker({
+    timePicker: true,
+    startDate: moment().startOf('hour'),
+    endDate: moment().startOf('hour').add(32, 'hour'),
+    maxDate: moment().startOf('hour').add(3, 'months'),
+    locale: {
+        format: 'YYYY-MM-DD HH:mm:ss'
+    }
+    });
+
+    $('#reservationForm').submit(function (ev, picker) {
+        [startDate, endDate] = $('.reservationPeriod').val().split(' - ');
+        $(this).find('input[name="stime_res"]').val(startDate);
+        $(this).find('input[name="etime_res"]').val(endDate);
     });
   });
 
-  $(function() {
+$('#addReservationBtn').click(function() {
+    /* when the button in the form, display the entered values in the modal */
+    $('#date').text(" {{ \Carbon\Carbon::now()->toDateString() }} ");
+    $('#room').text($('#room_id').val());
+    $('#people').text($('#peopleInvolved').val());
+    $('#range').text($('#resPeriod').val());
+    $('#reason').text($('#purpose').val());
+});
+
+$(function() {
     $('#calendar').fullCalendar({
       schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
       header: {
@@ -103,22 +122,22 @@
                 </div>
                 
                 <div class="box-body">
-                    <form role="form" id="reservationForm">
+                    <form role="form" id="reservationForm" method="POST" action="{{route('reserveroom')}}">
                     @csrf
                     <div class="form-group">
                         <label for="formName">Name: </label>
-                        <input type="text" class="form-control" id="userName" placeholder="{{{Auth::user()->name}}}" value="{{{Auth::user()->name}}}" disabled>
+                        <input type="text" class="form-control"  placeholder="{{Auth::user()->name}}" disabled>
                     </div>
 
                     <div class="form-group">
                         <label>Room Number: </label>
-                        <select class="form-control" id="room_ID" required>
+                        <select class="form-control" id="room_id" name="room_id" required>
                             <option selected disabled>Select an available room</option>
                             @foreach ($descriptions as $description)
                               <optgroup label="{{$description}}">
                                 @foreach ($rooms as $room)
                                   @if ($description == $room->room_desc)
-                                    <option>{{$room->room_id}}</option>
+                                    <option value="{{$room->room_id}}">{{$room->room_id}}</option>
                                   @endif
                                 @endforeach
                               </optgroup>
@@ -128,10 +147,10 @@
 
                     <div class="form-group">
                         <label>People Involved: </label>
-                        <select class="form-control select2" id="peopleInvolved" multiple="multiple" data-placeholder="Enter name" required>
+                        <select class="form-control select2" id="peopleInvolved" name="users_involved[]" multiple="multiple" data-placeholder="Enter name" required>
                             @foreach ($users as $user)
                                 @if ($user->user_id != Auth()->user()->user_id and $user->roles == 1)
-                                    <option>{{$user->name}}</option>
+                                    <option value="{{$user->name}}">{{$user->name}}</option>
                                 @endif
                             @endforeach
                         </select>
@@ -144,17 +163,19 @@
                             <span class="input-group-addon">
                                 <i class="fa fa-clock-o"></i>
                             </span>
-                            <input type="text" class="form-control" id="reservationPeriod" required>
+                            <input type="text" class="form-control reservationPeriod" id="resPeriod" required>
+                            <input type="hidden" name="stime_res" id="start">
+                            <input type="hidden" name="etime_res" id="end">
                         </div>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label for="reason">Purpose: </label>
-                        <textarea class="form-control" id="purpose" rows="3" placeholder="Enter purpose here" required></textarea>
+                        <textarea class="form-control" id="purpose" name="purpose" rows="3" placeholder="Enter purpose here" required></textarea>
                     </div>
                     
-                    <button type="button" data-target="#formReview" id="addReservationBtn" data-toggle="modal" class="btn btn-primary pull-right">Add</button>
+                    <button type="button" data-target="#formReview" value="Submit" id="addReservationBtn" data-toggle="modal" class="btn btn-primary pull-right">Add</button>
 
                     <!--FORM REVIEW MODAL+SUBMIT-->
                     <div class="modal fade" id="formReview">
@@ -167,15 +188,32 @@
                                     <h4 class="modal-title" id="myModalLabel">Summary of Reservation</h4>
                                 </div>
                                 <div class="modal-body">
-                                    <h4><b>Date: </b>March 20, 2019</h4>
-                                    <h4><b>Room Number: </b>901</h4>
-                                    <h4><b>People Involved: </b>Mitch Andaya</h4>
-                                    <h4><b>Reservation Period: </b>March 24, 2019 02:00PM - March 24, 2019 06:00PM</h4>
-                                    <h4><b>Reason: </b>Client Meeting</h4>
+                                    <table class="table">
+                                        <tr>
+                                            <th>Date</th>
+                                            <td id="date"></td>
+                                        </tr>
+                                        <tr>
+                                            <th>Room Number</th>
+                                            <td id="room"></td>
+                                        </tr>
+                                        <tr>
+                                            <th>People Involved</th>
+                                            <td id="people"></td>
+                                        </tr>
+                                        <tr>
+                                            <th>Reservation Period</th>
+                                            <td id="range"></td>
+                                        </tr>
+                                        <tr>
+                                            <th>Purpose</th>
+                                            <td id="reason"></td>
+                                        </tr>
+                                    </table>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Revise</button>
-                                    <button type="submit" class="btn btn-success" data-target="#successModal" data-dismiss="modal" data-toggle="modal">Confirm</button>
+                                    <button type="submit" class="btn btn-success" data-target="#successModal" data-dismiss="modal" data-toggle="modal" onclick="$('#reservationForm').submit()">Confirm</button>
                                 </div>
                             </div>
                         </div>

@@ -37,7 +37,7 @@
                   <span class="invalid-feedback" role="alert">
                       <strong>{{ $errors->first('room_desc') }}</strong>
                   </span>
-                @endif
+                  @endif
               </div>
               <div class="form-group">
                 <label for="isSpecial">Category: </label>
@@ -46,11 +46,11 @@
                     <option value="0">Ordinary Room</option>
                     <option value="1">Special Room</option>
                   </select>
-                  @if ($errors->has('isSpecial'))
-                    <span class="invalid-feedback" role="alert">
-                        <strong>{{ $errors->first('isSpecial') }}</strong>
-                    </span>
-                  @endif
+                    @if ($errors->has('isSpecial'))
+                      <span class="invalid-feedback" role="alert">
+                          <strong>{{ $errors->first('isSpecial') }}</strong>
+                      </span>
+                    @endif
               </div>
               <button type="submit" data-toggle="modal" data-target="#successRoomModal" data-dismiss="modal" class="btn btn-primary pull-right">{{ __('Add') }}</button>
           </form>
@@ -76,7 +76,7 @@
                   <optgroup label="{{$description}}">
                     @foreach ($rooms as $room)
                       @if ($description == $room->room_desc)
-                        <option>{{$room->room_id}}</option>
+                        <option value="{{$room->room_id}}">{{$room->room_id}}</option>
                       @endif
                     @endforeach
                   </optgroup>

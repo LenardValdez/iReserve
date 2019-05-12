@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Room;
-use Illuminate\Http\Request;
-use App\Http\Requests\RoomRequest;
 use App\User;
 use App\RegForm;
+use DB;
+use Illuminate\Http\Request;
+use App\Http\Requests\RoomRequest;
+
 
 class RoomController extends Controller
 {
@@ -27,7 +29,7 @@ class RoomController extends Controller
      */
     public function create()
     {
-        //
+        return view('pages.reservation');
     }
 
     /**
@@ -40,6 +42,34 @@ class RoomController extends Controller
     {
         Room::create($request->validated());
 	    return redirect()->back()->with('status',"The room is now saved.");
+    }
+
+    public function reserve(Request $request)
+    {
+        $request->validate([
+            'room_id' => 'required',
+            'users_involved' => 'nullable',
+            'stime_res' => 'required',
+            'etime_res' => 'required',
+            'purpose' => 'required'
+        ]);
+
+        $usersInvolved = $request->input('users_involved');
+        $usersInvolved = implode(', ', $usersInvolved);
+
+        $form = new RegForm([
+            'user_id' =>  Auth()->user()->user_id,
+            'room_id' => $request->get('room_id'),
+            'users_involved' => $usersInvolved,
+            'stime_res' => $request->get('stime_res'),
+            'etime_res' => $request->get('etime_res'),
+            'purpose' => $request->get('purpose')
+        ]);
+        
+        $form->save();
+        
+        return redirect()->back();
+
     }
 
     /**
@@ -86,12 +116,12 @@ class RoomController extends Controller
     {
         $delete = Room::where('room_id',$request->room_id)->first();
         $delete->delete();
-        return redirect()->back()->with('status',"The room is now deleted");
+        return redirect()->back();
     }
 
     public function list()
     {
-        $users = User::get();
+        $users = User::orderBy('name','asc')->get();
         $rooms = Room::get();
         $descriptions = Room::groupBy('room_desc')->pluck('room_desc');
         return view('pages.reservation')->with("rooms", $rooms)->with("descriptions", $descriptions)->with("users", $users);
