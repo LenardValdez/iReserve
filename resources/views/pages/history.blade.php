@@ -39,8 +39,12 @@
         <section class="content-header">
           <h1>Reservation History</h1>
           <ol class="breadcrumb">
-            <li><a href="admindash.html"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+            @if (Auth()->user()->roles == 0)
+            <li><a href={{ URL::route('Dashboard') }}><i class="fa fa-dashboard"></i> Dashboard</a></li>
             <li class="active">Reservation History</li>
+            @else 
+            <li class="active"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+            @endif
           </ol>
         </section>
 
@@ -65,11 +69,28 @@
                           <h4 class="modal-title" id="myModalLabel">Reservation Details</h4>
                         </div>
                         <div class="modal-body">
-                          <h4><b>Date: </b>March 20, 2019</h4>
-                          <h4><b>Room Number: </b>901</h4>
-                          <h4><b>People Involved: </b>Nicole Kaye Bilon, Miqaela Nicole Banguilan</h4>
-                          <h4><b>Reservation Period: </b>March 24, 2019 02:00PM - March 24, 2019 06:00PM</h4>
-                          <h4><b>Reason: </b>SEAL Meeting</h4>
+                            <table class="table">
+                                <tr>
+                                    <th>Date</th>
+                                    <td>March 20, 2019</td>
+                                </tr>
+                                <tr>
+                                    <th>Room Number</th>
+                                    <td>1005 (CL1)</td>
+                                </tr>
+                                <tr>
+                                    <th>People Involved</th>
+                                    <td>Nicole Kaye Bilon, Miqaela Nicole Banguilan</td>
+                                </tr>
+                                <tr>
+                                    <th>Reservation Period</th>
+                                    <td>March 24, 2019 02:00PM - March 24, 2019 06:00PM</td>
+                                </tr>
+                                <tr>
+                                    <th>Purpose</th>
+                                    <td>SEAL Meeting</td>
+                                </tr>
+                            </table>
                         </div>
                         @if (Auth()->user()->roles == 0 or Auth()->user()->roles == 1)
                         <div class="modal-footer">
