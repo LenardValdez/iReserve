@@ -54,8 +54,13 @@ class RoomController extends Controller
             'purpose' => 'required'
         ]);
 
-        $usersInvolved = $request->input('users_involved');
-        $usersInvolved = implode(', ', $usersInvolved);
+        if($request->has('users_involved')){
+            $usersInvolved = $request->input('users_involved');
+            $usersInvolved = implode(', ', $usersInvolved);
+        }
+        else {
+            $usersInvolved = NULL;
+        }
 
         $form = new RegForm([
             'user_id' =>  Auth()->user()->user_id,
