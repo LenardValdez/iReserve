@@ -69,6 +69,7 @@ $(function () {
 
     $('#calendar').fullCalendar({
         schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
+        themeSystem: 'bootstrap3',
         header: {
             left: 'today prev,next',
             center: 'title',
@@ -136,7 +137,7 @@ $(function () {
         <section class="content-header">
             <h1>Room Reservation</h1>
             <ol class="breadcrumb">
-            <li><a href="admindash.html"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+            <li><a href={{URL::route('Dashboard')}}><i class="fa fa-dashboard"></i> Dashboard</a></li>
             <li class="active">Room Reservation</li>
             </ol>
         </section>
@@ -144,7 +145,7 @@ $(function () {
         <!--ACTUAL CONTENT-->
         <section class="content">
             <div class="row">
-            <div class="col-md-5">
+            <div class="col-md-4">
                 <div class="box box-primary">
                 <div class="box-header with-border">
                     <h3 class="box-title">Reservation Form</h3>
@@ -303,7 +304,7 @@ $(function () {
 
             </div> <!--END OF COLUMN-->
 
-            <div class="col-md-7">
+            <div class="col-md-8">
                 <div class="box box-primary">
                 <div class="box-header with-border">
                     <h3 class="box-title">Room Availability</h3>

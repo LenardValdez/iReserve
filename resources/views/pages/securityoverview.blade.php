@@ -12,6 +12,7 @@
     $(function() {
       $('#calendar').fullCalendar({
         schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
+        themeSystem: 'bootstrap3',
         header: {
           left: 'today prev,next',
           center: 'title',

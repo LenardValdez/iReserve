@@ -25,7 +25,7 @@
       <li class="active"><a href={{ URL::route('Dashboard') }}>Dashboard</a></li>
       <li class="#"><a href={{URL::route('Reserve')}}>Room Reservation</a></li>
     @else
-      <li class="#"><a href={{ URL::route('Dashboard') }}>Dashboard</a></li>
+      <li class="#"><a href={{ URL::route('Dashboard') }}>Room Overview</a></li>
       <li class="active"><a href={{URL::route('History')}}>Reservation History</a></li>
     @endif
   </ul>      
@@ -41,6 +41,9 @@
           <ol class="breadcrumb">
             @if (Auth()->user()->roles == 0)
             <li><a href={{ URL::route('Dashboard') }}><i class="fa fa-dashboard"></i> Dashboard</a></li>
+            <li class="active">Reservation History</li>
+            @elseif (Auth()->user()->roles == 2)
+            <li><a href={{ URL::route('Dashboard') }}><i class="fa fa-building"></i> Room Overview</a></li>
             <li class="active">Reservation History</li>
             @else 
             <li class="active"><i class="fa fa-dashboard"></i> Dashboard</a></li>
