@@ -11,7 +11,7 @@
             @csrf
               <div class="form-group">
                 <label for="room_id">Room Number: </label>
-                <input type="text" class="form-control{{ $errors->has('room_id') ? ' is-invalid' : '' }}" placeholder="Enter room number" name="room_id" value="{{ old('room_id') }}" required autofocus>
+                <input type="text" class="form-control{{ $errors->has('room_id') ? ' is-invalid' : '' }}" placeholder="Enter room number" id="newroom_id" name="room_id" value="{{ old('room_id') }}" required>
                 @if ($errors->has('room_id'))
                   <span class="invalid-feedback" role="alert">
                       <strong>{{ $errors->first('room_id') }}</strong>
@@ -20,7 +20,7 @@
               </div>
               <div class="form-group">
                 <label for="room_desc">Room Description: </label>
-                <select id="room_desc" class="form-control{{ $errors->has('room_desc') ? ' is-invalid' : '' }}" name="room_desc" value="{{ old('room_desc') }}" required autofocus>
+                <select id="room_desc" class="form-control{{ $errors->has('room_desc') ? ' is-invalid' : '' }}" name="room_desc" value="{{ old('room_desc') }}" required>
                   <option selected disabled>Select room description</option>
                   <option value="6th Floor">6th Floor</option>
                   <option value="7th Floor">7th Floor</option>
@@ -41,8 +41,8 @@
               </div>
               <div class="form-group">
                 <label for="isSpecial">Category: </label>
-                  <select class="form-control{{ $errors->has('isSpecial') ? ' is-invalid' : '' }}" name="isSpecial">
-                    <option selected disabled>Select room category</option>
+                  <select class="form-control{{ $errors->has('isSpecial') ? ' is-invalid' : '' }}" id="isSpecial" name="isSpecial" required>
+                    <option value="" selected disabled>Select room category</option>
                     <option value="0">Ordinary Room</option>
                     <option value="1">Special Room</option>
                   </select>
@@ -52,7 +52,7 @@
                       </span>
                     @endif
               </div>
-              <button type="submit" data-toggle="modal" data-target="#successRoomModal" data-dismiss="modal" class="btn btn-primary pull-right">{{ __('Add') }}</button>
+              <button type="submit" id="addRoomBtn" data-toggle="modal" data-target="#successRoomModal" class="btn btn-primary pull-right">{{ __('Add') }}</button>
           </form>
         </div>
       </div>
@@ -70,8 +70,8 @@
             @csrf
             <div class="form-group">
               <label>Room Number: </label>
-              <select class="form-control" id="room_id" name="room_id" required>
-                <option selected disabled>Select a room to be deleted</option>
+              <select class="form-control" id="delroom_id" name="room_id" required>
+                <option value="" selected disabled>Select a room to be deleted</option>
                 @foreach ($descriptions as $description)
                   <optgroup label="{{$description}}">
                     @foreach ($rooms as $room)
@@ -83,7 +83,7 @@
                 @endforeach
               </select>
             </div>
-            <button type="button" data-target="#confirmRoomDeletion" data-toggle="modal" class="btn btn-danger pull-right">Delete</button>
+            <button type="button" id="delRoomBtn" data-target="#confirmRoomDeletion" data-toggle="modal" class="btn btn-danger pull-right">Delete</button>
 
             <div class="modal fade" id="confirmRoomDeletion">
               <div class="modal-dialog" role="document">

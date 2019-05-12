@@ -48,60 +48,84 @@ $(function () {
         $(this).find('input[name="stime_res"]').val(startDate);
         $(this).find('input[name="etime_res"]').val(endDate);
     });
-  });
 
-$(document).ready(function() {
-    $('#addReservationBtn').click(function() {
-        /* when the button in the form, display the entered values in the modal */
-        $('#date').text("{{ \Carbon\Carbon::now()->toDayDateTimeString() }}");
-        $('#room').text($('#room_id').val());
-        $('#people').text($('#peopleInvolved').val());
-        $('#range').text($('#resPeriod').val());
-        $('#reason').text($('#purpose').val());
-    });
-    $('#formConfirmed').click(function () {
-        $('#reservationForm').submit();
-    });
-});
+    $('#addRoomBtn').click(function(e) {
+        var checkAddRoom = $.trim($('#addroom_id').val());
+        var checkDesc = $.trim($('#room_desc').val());
+        var checkStat = $.trim($('#isSpecial').val());
 
-$(function() {
+        if(checkAddRoom === '' || checkDesc === '' || checkStat === ''){
+            e.stopPropagation();
+        }
+    });
+
+    $('#delRoomBtn').click(function(e) {
+        var checkDelRoom = $.trim($('#delroom_id').val());
+        
+        if(checkDelRoom === ''){
+            e.stopPropagation();
+        }
+    });
+
     $('#calendar').fullCalendar({
-      schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
-      header: {
-        left: 'today prev,next',
-        center: 'title',
-        right: 'timelineDay,timelineWeek,month'
-      },
-      businessHours: {
-        dow: [ 1, 2, 3, 4 ,5, 6],
+        schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
+        header: {
+            left: 'today prev,next',
+            center: 'title',
+            right: 'timelineDay,timelineWeek,month'
+        },
+        businessHours: {
+            dow: [ 1, 2, 3, 4 ,5, 6],
 
-        start: '07:00',
-        end: '22:00',
-      },
-      height: '800',
-      defaultView: 'timelineDay',
-      resourceGroupField: 'floorNum',
-      resources: [
-        { id: '801', floorNum: '8th Floor', title: 801 },
-        { id: '802', floorNum: '8th Floor', title: 802 },
-        { id: '803', floorNum: '8th Floor', title: 803 },
-        { id: '804', floorNum: '8th Floor', title: 804 },
-        { id: '805', floorNum: '8th Floor', title: 805 },
-        { id: '806', floorNum: '8th Floor', title: 806 },
-        { id: '901', floorNum: '9th Floor', title: 901 },
-        { id: '902', floorNum: '9th Floor', title: 902 },
-        { id: '903', floorNum: '9th Floor', title: 903 },
-        { id: '904', floorNum: '9th Floor', title: 904 },
-        { id: '905', floorNum: '9th Floor', title: 905 },
-        { id: '906', floorNum: '9th Floor', title: 906 },
-        { id: '907', floorNum: '9th Floor', title: 907 }
-      ],
-      /*modal for each cell - security and room manager-exclusive function*/
-      select: function(startDate, endDate, jsEvent, view, resource) {
-        alert('Reserved from ' + startDate.format() + ' to ' + endDate.format() + ' - Room ' + resource.id);
-      }
+            start: '07:00',
+            end: '22:00',
+        },
+        height: '800',
+        defaultView: 'timelineDay',
+        resourceGroupField: 'floorNum',
+        resources: [
+            { id: '801', floorNum: '8th Floor', title: 801 },
+            { id: '802', floorNum: '8th Floor', title: 802 },
+            { id: '803', floorNum: '8th Floor', title: 803 },
+            { id: '804', floorNum: '8th Floor', title: 804 },
+            { id: '805', floorNum: '8th Floor', title: 805 },
+            { id: '806', floorNum: '8th Floor', title: 806 },
+            { id: '901', floorNum: '9th Floor', title: 901 },
+            { id: '902', floorNum: '9th Floor', title: 902 },
+            { id: '903', floorNum: '9th Floor', title: 903 },
+            { id: '904', floorNum: '9th Floor', title: 904 },
+            { id: '905', floorNum: '9th Floor', title: 905 },
+            { id: '906', floorNum: '9th Floor', title: 906 },
+            { id: '907', floorNum: '9th Floor', title: 907 }
+        ],
+        /*modal for each cell - security and room manager-exclusive function*/
+        select: function(startDate, endDate, jsEvent, view, resource) {
+            alert('Reserved from ' + startDate.format() + ' to ' + endDate.format() + ' - Room ' + resource.id);
+        }
+        });
     });
-  });
+
+    $(document).ready(function() {
+        $('#addReservationBtn').click(function(e) {
+            var checkRoom = $.trim($('#room_id').val());
+            var checkPurpose = $.trim($('#purpose').val());
+            
+            if(checkRoom === '' || checkPurpose === ''){
+                e.stopPropagation();
+            }
+            else {
+            /* when the button in the form, display the entered values in the modal */
+            $('#date').text('{{ \Carbon\Carbon::now()->toDayDateTimeString() }}');
+            $('#room').text($('#room_id').val());
+            $('#people').text($('#peopleInvolved').val());
+            $('#range').text($('#resPeriod').val());
+            $('#reason').text($('#purpose').val());
+            }
+        });
+        $('#formConfirmed').click(function () {
+            $('#reservationForm').submit();
+        });
+    });
 </script>
 @endsection
 
@@ -137,7 +161,7 @@ $(function() {
                     <div class="form-group">
                         <label>Room Number: </label>
                         <select class="form-control{{ $errors->has('room_id') ? ' is-invalid' : '' }}" id="room_id" name="room_id" required>
-                            <option selected disabled>Select an available room</option>
+                            <option value="" selected disabled>Select an available room</option>
                             @foreach ($descriptions as $description)
                               <optgroup label="{{$description}}">
                                 @foreach ($rooms as $room)
@@ -263,7 +287,7 @@ $(function() {
                             <h4 class="modal-title" id="myModalLabel">Room Database Updated</h4>
                         </div>
                         <div class="modal-body">
-                            <h4>The details have been successfully added to the database and scheduler.</h4>
+                            <h4>The database and scheduler have been successfully updated.</h4>
                         </div>
                         </div>
                     </div>
