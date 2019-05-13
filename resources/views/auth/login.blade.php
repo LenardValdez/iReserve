@@ -23,21 +23,25 @@
             <div class="form-group has-feedback">
                 <input id="email" type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" placeholder="Email" required autofocus>
                 <span class="fa fa-envelope form-control-feedback"></span>
-                @if ($errors->has('email'))
-                    <span class="invalid-feedback" role="alert">
-                        <strong>{{ $errors->first('email') }}</strong>
-                    </span>
-                @endif
             </div>
 
             <div class="form-group has-feedback">
-                <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" placeholder="Password" required>
+                <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" placeholder="Password" required autofocus>
                 <span class="fa fa-lock form-control-feedback"></span>
-                @if ($errors->has('password'))
+            </div>
+
+            <div class="text-center">
+            @if ($errors->has('email'))
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $errors->first('email') }}</strong>
+                    </span>
+            @endif
+
+            @if ($errors->has('password'))
                 <span class="invalid-feedback" role="alert">
                     <strong>{{ $errors->first('password') }}</strong>
                 </span>
-                @endif
+            @endif
             </div>
 
             <div class="row">
