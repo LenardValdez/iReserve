@@ -17,7 +17,7 @@ class Room extends Model
     'room_id', 'room_desc', 'isSpecial'
   ];
 
-    public function form(){
-      return $this->belongsTo('App\Form', 'form_id');
+    public function regform(){
+      return $this->hasOne('App\RegForm', 'room_id');
   }
 }

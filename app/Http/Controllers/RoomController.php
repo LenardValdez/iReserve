@@ -73,6 +73,16 @@ class RoomController extends Controller
         
         $form->save();
         
+        if($request->get('specialReservation')=='0'){
+            $autoApprove = Room::where('room_id',$request->get('room_id'))
+                                ->where('isSpecial',false)
+                                ->first();
+            $autoApprove->load('regform');
+            $autoApprove->regform->isApproved = '1';
+            $autoApprove->isAvailable = false;
+            $autoApprove->push();
+        }
+
         return redirect()->back();
     }
 

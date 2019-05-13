@@ -44,7 +44,12 @@ $(function () {
     });
 
     $('#reservationForm').submit(function (ev, picker) {
+        var checkSpecial = $('#room_id').val().substr(0, 1);
         [startDate, endDate] = $('.reservationPeriod').val().split(' - ');
+
+        if(checkSpecial==='1' || checkSpecial==='8'){
+            $(this).find('input[name="specialReservation"]').val('1');
+        }
         $(this).find('input[name="stime_res"]').val(startDate);
         $(this).find('input[name="etime_res"]').val(endDate);
     });
@@ -110,7 +115,7 @@ $(function () {
         $('#addReservationBtn').click(function(e) {
             var checkRoom = $.trim($('#room_id').val());
             var checkPurpose = $.trim($('#purpose').val());
-            
+
             if(checkRoom === '' || checkPurpose === ''){
                 e.stopPropagation();
             }
@@ -166,7 +171,7 @@ $(function () {
                             @foreach ($descriptions as $description)
                               <optgroup label="{{$description}}">
                                 @foreach ($rooms as $room)
-                                  @if ($description == $room->room_desc)
+                                  @if ($description == $room->room_desc && $room->isAvailable)
                                     <option value="{{$room->room_id}}">{{$room->room_id}}</option>
                                   @endif
                                 @endforeach
@@ -215,6 +220,7 @@ $(function () {
                         @endif
                     </div>
                     
+                    <input type="hidden" name="specialReservation" value="0">
                     <button type="button" data-target="#formReview" value="Submit" id="addReservationBtn" data-toggle="modal" class="btn btn-primary pull-right">Submit</button>
 
                     <!--FORM REVIEW MODAL+SUBMIT-->
