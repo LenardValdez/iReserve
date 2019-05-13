@@ -138,14 +138,20 @@
                       </tr>
                     </thead>
                     <tbody>
-                      @foreach($pendingforms as $form)
-                      <tr>
-                        <td><a data-toggle="modal" href="#specialInfo{{$form->form_id}}">{{ sprintf("%07d", $form->form_id) }}</a></td>
-                        <td>{{$form->room_id}}</td>
-                        <td><span class="label label-info">Special Room</span></td>
-                        <td>{{ \Carbon\Carbon::parse($form->created_at)->toFormattedDateString() }}</td>
-                      </tr>
-                      @endforeach
+                      @if($pendingforms->isEmpty())
+                        <tr>
+                          <td colspan="4" class="text-center">No pending requests</td>
+                        </tr>
+                      @else
+                        @foreach($pendingforms as $form)
+                        <tr data-toggle="modal" data-target="#specialInfo{{$form->form_id}}">
+                          <td>{{ sprintf("%07d", $form->form_id) }}</td>
+                          <td>{{$form->room_id}}</td>
+                          <td><span class="label label-info">Special Room</span></td>
+                          <td>{{ \Carbon\Carbon::parse($form->created_at)->toFormattedDateString() }}</td>
+                        </tr>
+                        @endforeach
+                      @endif
                     </tbody>
                   </table>
                 </div>

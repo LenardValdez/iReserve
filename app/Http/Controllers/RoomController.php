@@ -90,8 +90,12 @@ class RoomController extends Controller
     {
         $specialRequest = RegForm::find($id);
         $specialRequest->isApproved = '1';
+        
+        $roomAvailability = Room::where('room_id', $specialRequest->room_id)->first();
+        $roomAvailability->isAvailable = false;
+        $roomAvailability->save();
         $specialRequest->save();
-
+        
         return redirect()->back();
     }
 
