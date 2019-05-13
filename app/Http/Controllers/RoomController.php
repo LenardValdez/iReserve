@@ -74,7 +74,24 @@ class RoomController extends Controller
         $form->save();
         
         return redirect()->back();
+    }
 
+    public function approve($id)
+    {
+        $specialRequest = RegForm::find($id);
+        $specialRequest->isApproved = '1';
+        $specialRequest->save();
+
+        return redirect()->back();
+    }
+
+    public function reject($id)
+    {
+        $specialRequest = RegForm::find($id);
+        $specialRequest->isApproved = '2';
+        $specialRequest->save();
+
+        return redirect()->back();
     }
 
     /**
@@ -129,7 +146,9 @@ class RoomController extends Controller
         $users = User::orderBy('name','asc')->get();
         $rooms = Room::get();
         $descriptions = Room::groupBy('room_desc')->pluck('room_desc');
-        return view('pages.reservation')->with("rooms", $rooms)->with("descriptions", $descriptions)->with("users", $users);
+        return view('pages.reservation')->with("rooms", $rooms)
+                                        ->with("descriptions", $descriptions)
+                                        ->with("users", $users);
     }
 
     /* /reg_form/approve/1 */

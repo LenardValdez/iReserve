@@ -50,8 +50,9 @@
                 </div>
 
               <div class="box-body">
+                @foreach($pendingforms as $form)
                 <!--SPECIAL ROOM REQUEST INFORMATION MODAL-->
-                <div class="modal fade" id="specialInfo">
+                <div class="modal fade" id="specialInfo{{$form->form_id}}">
                   <div class="modal-dialog" role="document">
                     <div class="modal-content">
                       <div class="modal-header">
@@ -64,34 +65,34 @@
                         <table class="table">
                             <tr>
                                 <th>Date</th>
-                                <td>March 20, 2019</td>
+                                <td>{{ \Carbon\Carbon::parse($form->created_at)->toDayDateTimeString() }}</td>
                             </tr>
                             <tr>
                                 <th>Room Number</th>
-                                <td>1005 (CL1)</td>
+                                <td>{{$form->room_id}}</td>
                             </tr>
                             <tr>
                                 <th>People Involved</th>
-                                <td>Nicole Kaye Bilon, Miqaela Nicole Banguilan</td>
+                                <td>{{$form->users_involved}}</td>
                             </tr>
                             <tr>
                                 <th>Reservation Period</th>
-                                <td>March 24, 2019 02:00PM - March 24, 2019 06:00PM</td>
+                                <td>{{ \Carbon\Carbon::parse($form->stime_res)->format('M d, Y h:m A')}} - {{ \Carbon\Carbon::parse($form->etime_res)->format('M d, Y h:m A')}}</td>
                             </tr>
                             <tr>
                                 <th>Purpose</th>
-                                <td>SEAL Meeting</td>
+                                <td>{{$form->purpose}}</td>
                             </tr>
                         </table>
                       </div>
                       <div class="modal-footer">
-                        <button type="button" class="btn btn-danger pull-left" data-target="#rejectModal" data-dismiss="modal" data-toggle="modal">Reject</button>
-                        <button type="button" class="btn btn-success" data-target="#approveModal" data-dismiss="modal" data-toggle="modal">Approve</button>
+                          <a type="button" href="{{ route('rejectrequest', $form->form_id) }}" class="btn btn-danger pull-left" data-target="#rejectModal" data-dismiss="modal" data-toggle="modal">Reject</a>
+                          <a type="button" href="{{ route('approverequest', $form->form_id) }}" class="btn btn-success" data-target="#approveModal" data-dismiss="modal" data-toggle="modal">Approve</a>
                       </div>
                     </div>
                   </div>
                 </div>
-
+                @endforeach
                 <!--REQUEST APPROVAL CONFIRMATION MODAL-->
                 <div class="modal fade" id="approveModal">
                   <div class="modal-dialog" role="document">
@@ -137,54 +138,14 @@
                       </tr>
                     </thead>
                     <tbody>
+                      @foreach($pendingforms as $form)
                       <tr>
-                        <td><a data-toggle="modal" href="#specialInfo">000016</a></td>
-                        <td>1005 (CL1)</td>
+                        <td><a data-toggle="modal" href="#specialInfo{{$form->form_id}}">{{ sprintf("%07d", $form->form_id) }}</a></td>
+                        <td>{{$form->room_id}}</td>
                         <td><span class="label label-info">Special Room</span></td>
-                        <td>May 1, 2019</td>
+                        <td>{{ \Carbon\Carbon::parse($form->created_at)->toFormattedDateString() }}</td>
                       </tr>
-                      <tr>
-                        <td><a data-toggle="modal" href="#specialInfo">000015</a></td>
-                        <td>1007 (MMA Lab)</td>
-                        <td><span class="label label-info">Special Room</span></td>
-                        <td>April 19, 2019</td>
-                      </tr>
-                      <tr>
-                        <td><a data-toggle="modal" href="#specialInfo">000014</a></td>
-                        <td>1005 (CL1)</td>
-                        <td><span class="label label-info">Special Room</span></td>
-                        <td>April 12, 2019</td>
-                      </tr>
-                      <tr>
-                        <td><a data-toggle="modal" href="#specialInfo">000013</a></td>
-                        <td>1007 (MMA Lab)</td>
-                        <td><span class="label label-info">Special Room</span></td>
-                        <td>April 1, 2019</td>
-                      </tr>
-                      <tr>
-                        <td><a data-toggle="modal" href="#specialInfo">000012</a></td>
-                        <td>1007 (MMA Lab)</td>
-                        <td><span class="label label-info">Special Room</span></td>
-                        <td>March 21, 2019</td>
-                      </tr>
-                      <tr>
-                        <td><a data-toggle="modal" href="#specialInfo">000011</a></td>
-                        <td>1005 (CL1)</td>
-                        <td><span class="label label-info">Special Room</span></td>
-                        <td>March 19, 2019</td>
-                      </tr>
-                      <tr>
-                        <td><a data-toggle="modal" href="#specialInfo">000010</a></td>
-                        <td>1007 (MMA Lab)</td>
-                        <td><span class="label label-info">Special Room</span></td>
-                        <td>March 13, 2019</td>
-                      </tr>
-                      <tr>
-                        <td><a data-toggle="modal" href="#specialInfo">000009</a></td>
-                        <td>1005 (CL1)</td>
-                        <td><span class="label label-info">Special Room</span></td>
-                        <td>March 11, 2019</td>
-                      </tr>
+                      @endforeach
                     </tbody>
                   </table>
                 </div>

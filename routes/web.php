@@ -22,5 +22,5 @@ Route::get('/reserve', 'RoomController@list')->name('Reserve');
 Route::post('/reserve/new', 'RoomController@reserve')->name('reserveroom');
 Route::post('/reserve/add', 'RoomController@store')->name('processaddroom'); //Process ng form to add room
 Route::post('/reserve/del','RoomController@destroy')->name('processdelroom'); //Process ng form to del room
-/* Route::get('/example/approve/:RegidForm', 'SomeController@approve');
-Route::get('/example/decline/:id', 'SomeController@decline'); */
+Route::get('/approve/{id}', 'RoomController@approve')->name('approverequest');
+Route::get('/reject/{id}', 'RoomController@reject')->name('rejectrequest');

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\RegForm;
 use App\User;
 
 class DashboardController extends Controller
@@ -28,7 +29,8 @@ class DashboardController extends Controller
         $role = auth()->user()->roles;
     
         if ($role == 0){
-            return view('pages.requests');
+            $pendingforms = RegForm::where('isApproved', 0)->get();
+            return view('pages.requests')->with("pendingforms", $pendingforms);
         } elseif ($role == 1){
             return view('pages.history');
         } else {
