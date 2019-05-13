@@ -171,7 +171,7 @@ $(function () {
                             @foreach ($descriptions as $description)
                               <optgroup label="{{$description}}">
                                 @foreach ($rooms as $room)
-                                  @if ($description == $room->room_desc && $room->isAvailable)
+                                  @if ($description == $room->room_desc)
                                     <option value="{{$room->room_id}}">{{$room->room_id}}</option>
                                   @endif
                                 @endforeach
