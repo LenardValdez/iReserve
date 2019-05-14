@@ -53,6 +53,7 @@ class RoomController extends Controller
             'etime_res' => 'required',
             'purpose' => 'required'
         ]);
+        
 
         if($request->has('users_involved')){
             $usersInvolved = $request->input('users_involved');
@@ -62,28 +63,39 @@ class RoomController extends Controller
             $usersInvolved = NULL;
         }
 
-        $form = new RegForm([
-            'user_id' =>  Auth()->user()->user_id,
-            'room_id' => $request->get('room_id'),
-            'users_involved' => $usersInvolved,
-            'stime_res' => $request->get('stime_res'),
-            'etime_res' => $request->get('etime_res'),
-            'purpose' => $request->get('purpose')
-        ]);
-        
-        $form->save();
-        
-        if($request->get('specialReservation')=='0'){
-            $autoApprove = Room::where('room_id',$request->get('room_id'))
-                                ->where('isSpecial',false)
-                                ->first();
-            $autoApprove->load('regform');
-            $autoApprove->regform->isApproved = '1';
-            $autoApprove->isAvailable = false;
-            $autoApprove->push();
+        $checkExisting = RegForm::where('room_id', $request->get('room_id'))
+                                ->where('stime_res', ">=",$request->get('stime_res'))
+                                ->where('etime_res', "<=", $request->get('etime_res'))
+                                ->count();
+
+        if($checkExisting>='1'){
+            return redirect()->back()->with('existingErr', "The room you've chosen is not available on the selected period.");
         }
 
-        return redirect()->back();
+        else {
+            $form = new RegForm([
+                'user_id' =>  Auth()->user()->user_id,
+                'room_id' => $request->get('room_id'),
+                'users_involved' => $usersInvolved,
+                'stime_res' => $request->get('stime_res'),
+                'etime_res' => $request->get('etime_res'),
+                'purpose' => $request->get('purpose')
+            ]);
+            
+            $form->save();
+            
+            if($request->get('specialReservation')=='0'){
+                $autoApprove = Room::where('room_id',$request->get('room_id'))
+                                    ->where('isSpecial',false)
+                                    ->first();
+                $autoApprove->load('regform');
+                $autoApprove->regform->isApproved = '1';
+                $autoApprove->isAvailable = false;
+                $autoApprove->push();
+            }
+
+            return redirect()->back();
+        }
     }
 
     public function approve($id)
@@ -157,9 +169,9 @@ class RoomController extends Controller
 
     public function list()
     {
-        $users = User::orderBy('name','asc')->get();
         $rooms = Room::get();
         $descriptions = Room::groupBy('room_desc')->pluck('room_desc');
+        $users = User::orderBy('name','asc')->get();
         return view('pages.reservation')->with("rooms", $rooms)
                                         ->with("descriptions", $descriptions)
                                         ->with("users", $users);
