@@ -1,17 +1,5 @@
 @extends('layouts.app')
 
-@section('script')
-  <script src="js/adminlte_js/jquery.min.js"></script>
-  <script src="js/adminlte_js/jquery-ui.min.js"></script>
-  <script src="js/adminlte_js/bootstrap.min.js"></script>
-  <script src="js/adminlte_js/moment.min.js"></script> <!--DATE FORMAT BEING USED BY DATERANGEPICKER-->
-  <script src="js/adminlte_js/daterangepicker.js"></script> <!--JS FOR MULTIPLE SELECT FORM INPUT-->
-  <script src="js/adminlte_js/bootstrap-datepicker.min.js"></script> <!--JS FOR DATE AND TIME RANGE-->
-  <script src="js/adminlte_js/dataTables.bootstrap.min.js"></script>
-  <script src="js/adminlte_js/jquery.slimscroll.min.js"></script>
-  <script src="js/adminlte_js/adminlte.min.js"></script>
-@endsection
-
 @section('menu')
 <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
   <ul class="nav navbar-nav">

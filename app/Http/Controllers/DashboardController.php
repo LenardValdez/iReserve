@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\RegForm;
 use App\User;
+use App\Room;
 
 class DashboardController extends Controller
 {
@@ -36,7 +37,12 @@ class DashboardController extends Controller
         } elseif ($role == 1){
             return view('pages.history');
         } else {
-            return view('pages.securityoverview');
+            $forms = RegForm::where('isApproved', '1')->get();
+            $rooms = Room::get();
+            $users = User::where('isActive', true)->get();
+            return view('pages.reservation')->with("forms", $forms)
+                                            ->with("rooms", $rooms)
+                                            ->with("users", $users);
         }
     }
 }

@@ -18,6 +18,19 @@
     <link rel="stylesheet" href="css/fullcalendar-scheduler.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
     
+    <script src="js/adminlte_js/jquery.min.js"></script>
+    <script src="js/adminlte_js/jquery-ui.min.js"></script>
+    <script src="js/adminlte_js/moment.min.js"></script> <!--DATE FORMAT BEING USED BY DATERANGEPICKER-->
+    <script src="js/adminlte_js/bootstrap.min.js"></script>
+    <script src="js/adminlte_js/jquery.dataTables.min.js"></script> 
+    <script src="js/adminlte_js/dataTables.bootstrap.min.js"></script>
+    <script src="js/adminlte_js/jquery.slimscroll.min.js"></script>
+    <script src="js/adminlte_js/adminlte.min.js"></script>
+    <script src="js/adminlte_js/daterangepicker.js"></script> <!--JS FOR MULTIPLE SELECT FORM INPUT-->
+    <script src="js/adminlte_js/bootstrap-datepicker.min.js"></script> <!--JS FOR DATE AND TIME RANGE-->
+    <script src="js/adminlte_js/select2.full.min.js"></script> <!--JS FOR MULTIPLE SELECT FORM INPUT-->
+    <script src="js/adminlte_js/fullcalendar.min.js"></script> <!--CHANGE FORM DATE AND TIME FORMAT TO ISO8601 STRING USING moment().toISOString()-->
+    <script src="js/adminlte_js/fullcalendar-scheduler.min.js"></script>
     @yield('script')
     
   </head>

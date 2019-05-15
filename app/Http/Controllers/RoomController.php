@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Room;
 use App\User;
 use App\RegForm;
-use DB;
+/* use DB; */
 use Illuminate\Http\Request;
 use App\Http\Requests\RoomRequest;
 
@@ -121,7 +121,8 @@ class RoomController extends Controller
         $specialRequest->save();
         
         return redirect()->back()->with('approvedAlert', "The request has been approved and added to the scheduler! 
-                                    Any existing requests with similar reservation period will be rejected.");
+                                        Any pending requests for this room number with similar reservation period will 
+                                        automatically be rejected.");
     }
 
     public function reject($id)
@@ -185,19 +186,12 @@ class RoomController extends Controller
         $forms = RegForm::where('isApproved', '1')->get();
         $rooms = Room::get();
         $descriptions = Room::groupBy('room_desc')->pluck('room_desc');
-        $users = User::orderBy('name','asc')->get();
+        $users = User::orderBy('name','asc')
+                     ->where('isActive', true)
+                     ->get();
         return view('pages.reservation')->with("forms", $forms)
                                         ->with("rooms", $rooms)
                                         ->with("descriptions", $descriptions)
                                         ->with("users", $users);
     }
-
-    /* /reg_form/approve/1 */
-
-    /* public function approve(int $id)
-    {
-        
-        $rooms = Room:: ;
-        return ;
-    } */
 }

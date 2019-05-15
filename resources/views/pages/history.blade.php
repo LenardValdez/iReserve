@@ -1,13 +1,6 @@
 @extends('layouts.app')
 
 @section('script')
-  <script src="js/adminlte_js/jquery.min.js"></script>
-  <script src="js/adminlte_js/bootstrap.min.js"></script>
-  <script src="js/adminlte_js/jquery.dataTables.min.js"></script>
-  <script src="js/adminlte_js/dataTables.bootstrap.min.js"></script>
-  <script src="js/adminlte_js/jquery.slimscroll.min.js"></script>
-  <script src="js/adminlte_js/adminlte.min.js"></script>
-  
   <script>    
     $(function () {
       $('#overallHistory').DataTable()
@@ -244,10 +237,10 @@
                         <th>Student ID</th>
                         <th>Student Name</th>
                         <th>Room</th>
-                        <th>Status</th>
                         <th>Type</th>
                         <th>Submission Date</th>
                         <th>Response Date</th>
+                        <th>Status</th>
                       </tr>
                     </thead> 
 
@@ -257,10 +250,10 @@
                         <td>201701054</td>
                         <td>Lenard Valdez</td>
                         <td>901</td>
-                        <td><span class="label label-success">Approved</span></td>
                         <td><span class="label label-primary">Normal Room</span></td>
                         <td>May 1, 2019</td>
                         <td>N/A</td>
+                        <td><span class="label label-success">Approved</span></td>
                       </tr>
 
                       <tr data-toggle="modal" data-target="#reqInfo">
@@ -268,10 +261,10 @@
                         <td>201701054</td>
                         <td>Lenard Valdez</td>
                         <td>1007 (MMA Lab)</td>
-                        <td><span class="label label-info">Pending</span></td>
                         <td><span class="label label-info">Special Room</span></td>
                         <td>April 19, 2019</td>
                         <td>N/A</td>
+                        <td><span class="label label-info">Pending</span></td>
                       </tr>
 
                       <tr data-toggle="modal" data-target="#reqInfo">
@@ -279,10 +272,10 @@
                         <td>201701054</td>
                         <td>Lenard Valdez</td>
                         <td>1005 (CL1)</td>
-                        <td><span class="label label-info">Pending</span></td>
                         <td><span class="label label-info">Special Room</span></td>
                         <td>April 12, 2019</td>
                         <td>N/A</td>
+                        <td><span class="label label-info">Pending</span></td>
                       </tr>
                     </tbody>
                   </table>
@@ -290,9 +283,8 @@
               </div><!--END OF CONTENT BOX-->
             </div><!--END OF COLUMN-->
           </div><!--END OF ROW-->
-
           @if (Auth()->user()->roles == 1)
-          <a class="btn btn-app" id="faqBtn" data-toggle="modal" data-target="#welcomeFAQModal" style="bottom: 8%; right: 2%; position: fixed;"><i class="fa fa-question-circle-o"></i>FAQ</a>
+          <a class="btn btn-app" id="faqBtn" data-toggle="modal" data-target="#welcomeFAQModal" style="bottom: 7%; left: 93.1%;"><i class="fa fa-question-circle-o"></i>FAQ</a>
           @endif
         </section><!--END OF ACTUAL CONTENT-->
       </div><!--END OF CONTENT WRAPPER-->

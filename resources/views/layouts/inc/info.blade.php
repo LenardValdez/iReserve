@@ -1,12 +1,12 @@
 <!--USER INFO+LOGOUT-->
 <li class="dropdown user user-menu">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-    <img src="img/admin.jpg" class="user-image" alt="User Image"> <!--USER IMAGE-->
+    <img src="img/user.png" class="user-image" alt="User Image"> <!--USER IMAGE-->
     <span class="hidden-xs text-uppercase">{{{Auth::user()->name}}}</span> <!--NAME OF USER-->
   </a>
   <ul class="dropdown-menu">
     <li class="user-header">
-      <img src="img/admin.jpg" class="img-circle" alt="User Image"> <!--USER IMAGE-->
+      <img src="img/user.png" class="img-circle" alt="User Image"> <!--USER IMAGE-->
       <p>
         {{{Auth::user()->name }}}
         <small>
