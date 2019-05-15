@@ -103,16 +103,8 @@ class RoomController extends Controller
         }
     }
 
-    public function approve(Request $request, $id)
+    public function approve($id)
     {
-        $request->validate([
-            'room_id' => 'required',
-            'users_involved' => 'nullable',
-            'stime_res' => 'required',
-            'etime_res' => 'required',
-            'purpose' => 'required'
-        ]);
-
         $specialRequest = RegForm::find($id);
         
         $specialRequest->isApproved = '1';
@@ -128,22 +120,9 @@ class RoomController extends Controller
         $roomAvailability->save();
         $specialRequest->save();
 
-        $checkExisting = RegForm::where('room_id', $request->get('room_id'))
-                                ->where('stime_res', '<', $request->get('etime_res'))
-                                ->where('etime_res', '>', $request->get('stime_res'))
-                                ->where('isApproved', '1')
-                                ->count();
-
-        if($checkExisting>='1')
-        {
-            return redirect()->back()->with('rejectedAlert', "The room you've tried to approve is not already occupied on the specified period."); //not working
-        }
-        else
-        {
-            return redirect()->back()->with('approvedAlert', "The request has been approved and added to the scheduler! 
+        return redirect()->back()->with('approvedAlert', "The request has been approved and added to the scheduler! 
                                         Any pending requests for this room number with similar reservation period will 
                                         automatically be rejected.");
-        }
     }
 
     public function reject($id)
