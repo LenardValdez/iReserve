@@ -120,7 +120,8 @@ class RoomController extends Controller
         $roomAvailability->save();
         $specialRequest->save();
         
-        return redirect()->back();
+        return redirect()->back()->with('approvedAlert', "The request has been approved and added to the scheduler! 
+                                    Any existing requests with similar reservation period will be rejected.");
     }
 
     public function reject($id)
@@ -129,7 +130,7 @@ class RoomController extends Controller
         $specialRequest->isApproved = '2';
         $specialRequest->save();
 
-        return redirect()->back();
+        return redirect()->back()->with('rejectedAlert', "The request has been rejected.");
     }
 
     /**

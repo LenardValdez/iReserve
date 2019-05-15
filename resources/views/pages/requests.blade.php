@@ -44,6 +44,19 @@
         <section class="content container-fluid">
           <div class="row">
             <div class="col-md-12">
+              
+              @if(session('approvedAlert'))
+              <div class="alert alert-success">
+                {{ session('approvedAlert') }}
+              </div>
+              @endif
+
+              @if(session('rejectedAlert'))
+              <div class="alert alert-danger">
+                {{ session('rejectedAlert') }}
+              </div>
+              @endif
+
               <div class="box box-primary">
                 <div class="box-header with-border">
                   <h3 class="box-title">Pending Requests</h3>
@@ -86,46 +99,13 @@
                         </table>
                       </div>
                       <div class="modal-footer">
-                          <a type="button" href="{{ route('rejectrequest', $form->form_id) }}" class="btn btn-danger pull-left" data-target="#rejectModal" data-dismiss="modal" data-toggle="modal">Reject</a>
-                          <a type="button" href="{{ route('approverequest', $form->form_id) }}" class="btn btn-success" data-target="#approveModal" data-dismiss="modal" data-toggle="modal">Approve</a>
+                          <a type="button" href="{{ route('rejectrequest', $form->form_id) }}" class="btn btn-danger pull-left">Reject</a>
+                          <a type="button" href="{{ route('approverequest', $form->form_id) }}" class="btn btn-success">Approve</a>
                       </div>
                     </div>
                   </div>
                 </div>
                 @endforeach
-                <!--REQUEST APPROVAL CONFIRMATION MODAL-->
-                <div class="modal fade" id="approveModal">
-                  <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                          <span aria-hidden="true">&times;</span>
-                        </button>
-                        <h4 class="modal-title" id="myModalLabel">Reservation Approved</h4>
-                      </div>
-                      <div class="modal-body">
-                        <h4>The request has been approved and added to the scheduler.</h4>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <!--REQUEST REJECTION CONFIRMATION MODAL-->
-                <div class="modal fade" id="rejectModal">
-                  <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                          <span aria-hidden="true">&times;</span>
-                        </button>
-                        <h4 class="modal-title" id="myModalLabel">Reservation Rejected</h4>
-                      </div>
-                      <div class="modal-body">
-                        <h4>The request has been rejected.</h4>
-                      </div>
-                    </div>
-                  </div>
-                </div>
 
                 <div class="table-responsive">
                   <table class="table no-margin table-bordered table-striped table-hover">
