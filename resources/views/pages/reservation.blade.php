@@ -143,7 +143,7 @@ $(function () {
             @endif
             <ol class="breadcrumb">
             @if(Auth()->user()->roles == 2)
-            <li class="active"><i class="fa fa-building"></i> Room Overview</a></li>
+            <li class="active"><i class="fa fa-building"></i>Room Overview</a></li>
             @else
             <li><a href={{URL::route('Dashboard')}}><i class="fa fa-dashboard"></i> Dashboard</a></li>
             <li class="active">Room Reservation</li>
@@ -183,7 +183,7 @@ $(function () {
                         </div>
 
                         <div class="form-group">
-                            <label>Room Number: </label>
+                            <label>Room Number: *</label>
                             <select class="form-control{{ $errors->has('room_id') ? ' is-invalid' : '' }}" id="room_id" name="room_id" required>
                                 <option value="" selected disabled>Select an available room</option>
                                 @foreach ($descriptions as $description)
@@ -223,7 +223,7 @@ $(function () {
                         </div>
 
                         <div class="form-group">
-                            <label>Reservation Period: </label>
+                            <label>Reservation Period: *</label>
                             <div class="form-group">
                             <div class="input-group date">
                                 <span class="input-group-addon">
@@ -238,7 +238,7 @@ $(function () {
                         </div>
 
                         <div class="form-group">
-                            <label for="reason">Purpose: </label>
+                            <label for="reason">Purpose: *</label>
                             <textarea class="form-control{{ $errors->has('room_id') ? ' is-invalid' : '' }}" id="purpose" name="purpose" rows="3" placeholder="Enter purpose here" required></textarea>
                             @if ($errors->has('purpose'))
                             <span class="invalid-feedback" role="alert">
@@ -246,7 +246,9 @@ $(function () {
                             </span>
                             @endif
                         </div>
-                        
+                        <div>
+                        <p class="text-red">* items are required</p>
+                        </div>
                         <input type="hidden" name="specialReservation" value="0">
                         <button type="button" data-target="#formReview" value="Submit" id="addReservationBtn" data-toggle="modal" class="btn btn-primary pull-right">Submit</button>
 
