@@ -207,6 +207,7 @@ $(function () {
                             <input type="hidden" name="stime_res" id="start">
                             <input type="hidden" name="etime_res" id="end">
                         </div>
+                        <small class="text-danger">{{ session('existingErr') }}</small>
                         </div>
                     </div>
 
@@ -221,7 +222,6 @@ $(function () {
                     </div>
                     
                     <input type="hidden" name="specialReservation" value="0">
-                    <small class="text-danger pull-left">{{ session('existingErr') }}</small>
                     <button type="button" data-target="#formReview" value="Submit" id="addReservationBtn" data-toggle="modal" class="btn btn-primary pull-right">Submit</button>
 
                     <!--FORM REVIEW MODAL+SUBMIT-->

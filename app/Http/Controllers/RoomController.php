@@ -64,10 +64,12 @@ class RoomController extends Controller
         }
 
         $checkExisting = RegForm::where('room_id', $request->get('room_id'))
-                                ->where('stime_res', ">=",$request->get('stime_res'))
-                                ->where('etime_res', "<=", $request->get('etime_res'))
+                                ->where('stime_res', '<', $request->get('etime_res'))
+                                ->where('etime_res', '>', $request->get('stime_res'))
+                                ->where('isApproved', '1')
                                 ->count();
 
+        
         if($checkExisting>='1'){
             return redirect()->back()->with('existingErr', "The room you've chosen is not available on the selected period.");
         }
@@ -82,6 +84,9 @@ class RoomController extends Controller
                 'purpose' => $request->get('purpose')
             ]);
             
+            if(Auth()->user()->roles == 0){
+                $form->isApproved = '1';
+            }
             $form->save();
             
             if($request->get('specialReservation')=='0'){
@@ -101,8 +106,15 @@ class RoomController extends Controller
     public function approve($id)
     {
         $specialRequest = RegForm::find($id);
-        $specialRequest->isApproved = '1';
         
+        $specialRequest->isApproved = '1';
+        $rejectSameRange = RegForm::where('form_id', '!=', $id)
+                                  ->where('room_id', $specialRequest->room_id)
+                                  ->where('stime_res', '<', $specialRequest->etime_res)
+                                  ->where('etime_res', '>', $specialRequest->stime_res)
+                                  ->where('isApproved', '0')
+                                  ->update(['isApproved' => '2']);
+
         $roomAvailability = Room::where('room_id', $specialRequest->room_id)->first();
         $roomAvailability->isAvailable = false;
         $roomAvailability->save();

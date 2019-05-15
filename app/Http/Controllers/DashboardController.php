@@ -30,7 +30,9 @@ class DashboardController extends Controller
     
         if ($role == 0){
             $pendingforms = RegForm::where('isApproved', 0)->get();
-            return view('pages.requests')->with("pendingforms", $pendingforms);
+            $users = User::get();
+            return view('pages.requests')->with("pendingforms", $pendingforms)
+                                         ->with("users", $users);
         } elseif ($role == 1){
             return view('pages.history');
         } else {

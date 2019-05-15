@@ -128,13 +128,15 @@
                 </div>
 
                 <div class="table-responsive">
-                  <table class="table no-margin">
+                  <table class="table no-margin table-bordered table-striped table-hover">
                     <thead>
                       <tr>
                         <th>Request ID</th>
-                        <th>Room</th>
-                        <th>Type</th>
-                        <th>Submission Date</th>
+                        <th>Student ID</th>
+                        <th>Student Name</th>
+                        <th>Room Number</th>
+                        <th>Date Submitted</th>
+                        <th>Room Type</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -146,9 +148,15 @@
                         @foreach($pendingforms as $form)
                         <tr data-toggle="modal" data-target="#specialInfo{{$form->form_id}}">
                           <td>{{ sprintf("%07d", $form->form_id) }}</td>
+                          <td>{{$form->user_id}}</td>
+                          @foreach($users as $user)
+                            @if($user->user_id == $form->user_id)
+                            <td>{{$user->name}}</td>
+                            @endif
+                          @endforeach
                           <td>{{$form->room_id}}</td>
-                          <td><span class="label label-info">Special Room</span></td>
                           <td>{{ \Carbon\Carbon::parse($form->created_at)->toFormattedDateString() }}</td>
+                          <td><span class="label label-info">Special Room</span></td>
                         </tr>
                         @endforeach
                       @endif

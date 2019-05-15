@@ -8,10 +8,32 @@
   <script src="js/adminlte_js/jquery.slimscroll.min.js"></script>
   <script src="js/adminlte_js/adminlte.min.js"></script>
   <script>
+  
+  <script>    
     $(function () {
       $('#overallHistory').DataTable()
     })
   </script>
+
+  @if(Auth()->user()->roles == 1)
+    <script>
+      $(window).on('load',function(){
+        if (!sessionStorage.getItem('shown-modal')){
+          $('#welcomeFAQModal').modal('show');
+          $('#faqBtn').css('z-index', '5000');
+          sessionStorage.setItem('shown-modal', 'true');
+        }
+      });
+
+      $(document).ready(function() {
+        $('#faqBtn').click(function(e) {
+          $('#faqtitle1').text('');
+          $('#faqtitle2').text('Frequently Asked Questions');
+          $('#faqsubtitle').text('');
+        });
+      });
+    </script>
+  @endif
 @endsection
 
 @section('menu')
@@ -53,6 +75,80 @@
 
         <!--ACTUAL CONTENT-->
         <section class="content container-fluid">
+          <!--NEW ROW-->
+          <div class="modal fade" id="welcomeFAQModal">
+            <div class="modal-dialog" role="document" style="top: 15%;">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                  <h2 class="modal-title text-center" id="faqtitle1">Welcome to iReserve!</h2>
+                  <h4 class="modal-title text-center" id="faqtitle2"></h4>
+                </div>
+                <div class="modal-body">
+                  <h4 id="faqsubtitle">Frequently Asked Questions</h4>
+                    <div class="box-group" id="faq">
+                      <!-- .panel class is declared so that bootstrap.js collapse plugin detects it -->
+                      <div class="panel box box-primary">
+                        <div class="box-header with-border" data-toggle="collapse" data-parent="#faq" href="#collapseOne">
+                          <h4 class="box-title text-info">How to Reserve A Room</h4>
+                        </div>
+  
+                        <div id="collapseOne" class="panel-collapse collapse in">
+                          <div class="box-body">
+                            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3
+                            wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum
+                            eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla
+                            assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred
+                            nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer
+                            farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus
+                            labore sustainable VHS.
+                          </div>
+                        </div>
+                      </div>
+  
+                      <div class="panel box box-primary">
+                        <div class="box-header with-border" data-toggle="collapse" data-parent="#faq" href="#collapseTwo">
+                          <h4 class="box-title text-info">Room Reservation Policy</h4>
+                        </div>
+  
+                        <div id="collapseTwo" class="panel-collapse collapse">
+                          <div class="box-body">
+                            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3
+                            wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum
+                            eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla
+                            assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred
+                            nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer
+                            farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus
+                            labore sustainable VHS.
+                          </div>
+                        </div>
+                      </div>
+  
+                      <div class="panel box box-primary">
+                        <div class="box-header with-border" data-toggle="collapse" data-parent="#faq" href="#collapseThree">
+                          <h4 class="box-title text-info">Contact Information</h4>
+                        </div>
+  
+                        <div id="collapseThree" class="panel-collapse collapse">
+                          <div class="box-body">
+                            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3
+                            wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum
+                            eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla
+                            assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred
+                            nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer
+                            farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus
+                            labore sustainable VHS.
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div class="row">
             <div class="col-md-12">
               <div class="box box-primary">
@@ -142,10 +238,12 @@
                     </div>
                   </div>
 
-                  <table id="overallHistory" class="table table-bordered table-striped">
+                  <table id="overallHistory" class="table table-bordered table-striped table-hover">
                     <thead>
                       <tr>
                         <th>Request ID</th>
+                        <th>Student ID</th>
+                        <th>Student Name</th>
                         <th>Room</th>
                         <th>Status</th>
                         <th>Type</th>
@@ -155,8 +253,10 @@
                     </thead> 
 
                     <tbody>
-                      <tr>
-                        <td><a data-toggle="modal" href="#reqInfo">000016</a></td>
+                      <tr data-toggle="modal" data-target="#reqInfo">
+                        <td>000016</td>
+                        <td>201701054</td>
+                        <td>Lenard Valdez</td>
                         <td>901</td>
                         <td><span class="label label-success">Approved</span></td>
                         <td><span class="label label-primary">Normal Room</span></td>
@@ -164,8 +264,10 @@
                         <td>N/A</td>
                       </tr>
 
-                      <tr>
-                        <td><a data-toggle="modal" href="#reqInfo">000015</a></td>
+                      <tr data-toggle="modal" data-target="#reqInfo">
+                        <td>000015</td>
+                        <td>201701054</td>
+                        <td>Lenard Valdez</td>
                         <td>1007 (MMA Lab)</td>
                         <td><span class="label label-info">Pending</span></td>
                         <td><span class="label label-info">Special Room</span></td>
@@ -173,211 +275,25 @@
                         <td>N/A</td>
                       </tr>
 
-                      <tr>
-                        <td><a data-toggle="modal" href="#reqInfo">000014</a></td>
+                      <tr data-toggle="modal" data-target="#reqInfo">
+                        <td>000014</td>
+                        <td>201701054</td>
+                        <td>Lenard Valdez</td>
                         <td>1005 (CL1)</td>
                         <td><span class="label label-info">Pending</span></td>
                         <td><span class="label label-info">Special Room</span></td>
                         <td>April 12, 2019</td>
                         <td>N/A</td>
                       </tr>
-
-                      <tr>
-                        <td><a data-toggle="modal" href="#reqInfo">000013</a></td>
-                        <td>914</td>
-                        <td><span class="label label-danger">Rejected</span></td>
-                        <td><span class="label label-primary">Normal Room</span></td>
-                        <td>April 11, 2019</td>
-                        <td>N/A</td>
-                      </tr>
-
-                      <tr>
-                        <td><a data-toggle="modal" href="#reqInfo">000012</a></td>
-                        <td>1006</td>
-                        <td><span class="label label-success">Approved</span></td>
-                        <td><span class="label label-info">Special Room</span></td>
-                        <td>March 15, 2019</td>
-                        <td>March 15, 2019</td>
-                      </tr>
-
-                      <tr>
-                        <td><a data-toggle="modal" href="#reqInfo">000011</a></td>
-                        <td>901</td>
-                        <td><span class="label label-danger">Rejected</span></td>
-                        <td><span class="label label-primary">Normal Room</span></td>
-                        <td>March 14, 2019</td>
-                        <td>March 15, 2019</td>
-                      </tr>
-
-                      <tr>
-                        <td><a data-toggle="modal" href="#reqInfo">000010</a></td>
-                        <td>603</td>
-                        <td><span class="label label-success">Approved</span></td>
-                        <td><span class="label label-primary">Normal Room</span></td>
-                        <td>March 12, 2019</td>
-                        <td>March 12, 2019</td>
-                      </tr>
-
-                      <tr>
-                        <td><a data-toggle="modal" href="#reqInfo">000009</a></td>
-                        <td>904</td>
-                        <td><span class="label label-success">Approved</span></td>
-                        <td><span class="label label-primary">Normal Room</span></td>
-                        <td>March 11, 2019</td>
-                        <td>March 12, 2019</td>
-                      </tr>
-                      <tr>
-                        <td><a data-toggle="modal" href="#reqInfo">000008</a></td>
-                        <td>BBCOURT</td>
-                        <td><span class="label label-success">Approved</span></td>
-                        <td><span class="label label-info">Special Room</span></td>
-                        <td>March 2, 2019</td>
-                        <td>March 2, 2019</td>
-                      </tr>
-                      <tr>
-                        <td><a data-toggle="modal" href="#reqInfo">000007</a></td>
-                        <td>1006 (CL2)</td>
-                        <td><span class="label label-danger">Rejected</span></td>
-                        <td><span class="label label-info">Special Room</span></td>
-                        <td>February 27, 2019</td>
-                        <td>February 28, 2019</td>
-                      </tr>
-                      <tr>
-                        <td><a data-toggle="modal" href="#reqInfo">000006</a></td>
-                        <td>912</td>
-                        <td><span class="label label-success">Approved</span></td>
-                        <td><span class="label label-primary">Normal Room</span></td>
-                        <td>February 20, 2019</td>
-                        <td>February 20, 2019</td>
-                      </tr>
-                      <tr>
-                        <td><a data-toggle="modal" href="#reqInfo">000005</a></td>
-                        <td>801</td>
-                        <td><span class="label label-success">Approved</span></td>
-                        <td><span class="label label-primary">Normal Room</span></td>
-                        <td>January 28, 2019</td>
-                        <td>January 29, 2019</td>
-                      </tr>
-                      <tr>
-                        <td><a data-toggle="modal" href="#reqInfo">000004</a></td>
-                        <td>901</td>
-                        <td><span class="label label-success">Approved</span></td>
-                        <td><span class="label label-primary">Normal Room</span></td>
-                        <td>January 24, 2019</td>
-                        <td>January 25, 2019</td>
-                      </tr>
-                      <tr>
-                        <td><a data-toggle="modal" href="#reqInfo">000003</a></td>
-                        <td>801</td>
-                        <td><span class="label label-success">Approved</span></td>
-                        <td><span class="label label-info">Special Room</span></td>
-                        <td>January 20, 2019</td>
-                        <td>January 20, 2019</td>
-                      </tr>
-                      <tr>
-                        <td><a data-toggle="modal" href="#reqInfo">000002</a></td>
-                        <td>601</td>
-                        <td><span class="label label-success">Approved</span></td>
-                        <td><span class="label label-primary">Normal Room</span></td>
-                        <td>January 19, 2019</td>
-                        <td>January 19, 2019</td>
-                      </tr>
-                      <tr>
-                        <td><a data-toggle="modal" href="#reqInfo">000001</a></td>
-                        <td>910</td>
-                        <td><span class="label label-success">Approved</span></td>
-                        <td><span class="label label-primary">Normal Room</span></td>
-                        <td>January 5, 2019</td>
-                        <td>January 7, 2019</td>
-                      </tr>
                     </tbody>
                   </table>
                 </div><!--END OF BOX-BODY-->
               </div><!--END OF CONTENT BOX-->
             </div><!--END OF COLUMN-->
-          </div><!--END FO ROW-->
-          <!--NEW ROW-->
+          </div><!--END OF ROW-->
+
           @if (Auth()->user()->roles == 1)
-          <div class="row">
-              <div class="col-md-12">
-                <div class="box box-solid">
-                  <div class="box-header with-border">
-                    <h3 class="box-title">Frequently Asked Questions</h3>
-                  </div>
-  
-                  <div class="box-body">
-                    <div class="box-group" id="faq">
-                      <!-- .panel class is declared so that bootstrap.js collapse plugin detects it -->
-                      <div class="panel box box-primary">
-                        <div class="box-header with-border">
-                          <h4 class="box-title">
-                            <a data-toggle="collapse" data-parent="#faq" href="#collapseOne">
-                              How to Reserve A Room
-                            </a>
-                          </h4>
-                        </div>
-  
-                        <div id="collapseOne" class="panel-collapse collapse in">
-                          <div class="box-body">
-                            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3
-                            wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum
-                            eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla
-                            assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred
-                            nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer
-                            farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus
-                            labore sustainable VHS.
-                          </div>
-                        </div>
-                      </div>
-  
-                      <div class="panel box box-primary">
-                        <div class="box-header with-border">
-                          <h4 class="box-title">
-                            <a data-toggle="collapse" data-parent="#faq" href="#collapseTwo">
-                              Room Reservation Policy
-                            </a>
-                          </h4>
-                        </div>
-  
-                        <div id="collapseTwo" class="panel-collapse collapse">
-                          <div class="box-body">
-                            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3
-                            wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum
-                            eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla
-                            assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred
-                            nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer
-                            farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus
-                            labore sustainable VHS.
-                          </div>
-                        </div>
-                      </div>
-  
-                      <div class="panel box box-primary">
-                        <div class="box-header with-border">
-                          <h4 class="box-title">
-                            <a data-toggle="collapse" data-parent="#faq" href="#collapseThree">
-                              Contact Information
-                            </a>
-                          </h4>
-                        </div>
-  
-                        <div id="collapseThree" class="panel-collapse collapse">
-                          <div class="box-body">
-                            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3
-                            wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum
-                            eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla
-                            assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred
-                            nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer
-                            farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus
-                            labore sustainable VHS.
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div><!--END OF BOX BODY-->
-                </div><!--END OF CONTENT BOX-->
-              </div><!--END OF COLUMN-->
-            </div><!--END OF ROW-->
+          <a class="btn btn-app" id="faqBtn" data-toggle="modal" data-target="#welcomeFAQModal" style="bottom: 8%; right: 2%; position: fixed;"><i class="fa fa-question-circle-o"></i>FAQ</a>
           @endif
         </section><!--END OF ACTUAL CONTENT-->
       </div><!--END OF CONTENT WRAPPER-->
