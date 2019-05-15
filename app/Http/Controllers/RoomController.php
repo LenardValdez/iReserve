@@ -182,10 +182,12 @@ class RoomController extends Controller
 
     public function list()
     {
+        $forms = RegForm::where('isApproved', '1')->get();
         $rooms = Room::get();
         $descriptions = Room::groupBy('room_desc')->pluck('room_desc');
         $users = User::orderBy('name','asc')->get();
-        return view('pages.reservation')->with("rooms", $rooms)
+        return view('pages.reservation')->with("forms", $forms)
+                                        ->with("rooms", $rooms)
                                         ->with("descriptions", $descriptions)
                                         ->with("users", $users);
     }

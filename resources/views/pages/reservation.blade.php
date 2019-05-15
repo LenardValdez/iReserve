@@ -78,37 +78,40 @@ $(function () {
         header: {
             left: 'today prev,next',
             center: 'title',
-            right: 'timelineDay,timelineWeek,month'
+            right: 'timelineDay,timelineWeek,timelineMonth'
         },
         businessHours: {
             dow: [ 1, 2, 3, 4 ,5, 6],
 
-            start: '07:00',
-            end: '22:00',
+            start: '07:30',
+            end: '21:00',
         },
         height: '800',
         defaultView: 'timelineDay',
+        resourceLabelText: 'Rooms',
         resourceGroupField: 'floorNum',
         resources: [
-            { id: '801', floorNum: '8th Floor', title: 801 },
-            { id: '802', floorNum: '8th Floor', title: 802 },
-            { id: '803', floorNum: '8th Floor', title: 803 },
-            { id: '804', floorNum: '8th Floor', title: 804 },
-            { id: '805', floorNum: '8th Floor', title: 805 },
-            { id: '806', floorNum: '8th Floor', title: 806 },
-            { id: '901', floorNum: '9th Floor', title: 901 },
-            { id: '902', floorNum: '9th Floor', title: 902 },
-            { id: '903', floorNum: '9th Floor', title: 903 },
-            { id: '904', floorNum: '9th Floor', title: 904 },
-            { id: '905', floorNum: '9th Floor', title: 905 },
-            { id: '906', floorNum: '9th Floor', title: 906 },
-            { id: '907', floorNum: '9th Floor', title: 907 }
+            @foreach($rooms as $room)
+            { id: '{{ $room->room_id }}', floorNum: '{{ $room->room_desc }}', title: '{{ $room->room_id }}' },
+            @endforeach
         ],
-        /*modal for each cell - security and room manager-exclusive function*/
-        select: function(startDate, endDate, jsEvent, view, resource) {
-            alert('Reserved from ' + startDate.format() + ' to ' + endDate.format() + ' - Room ' + resource.id);
-        }
+        events: [
+            @foreach($users as $user)
+                @foreach($forms as $form)
+                    { 
+                    @if($user->user_id == $form->user_id)
+                    title: '{{ sprintf("%07d", $form->form_id) }} | {{ $user->name }}', 
+                    resourceId: '{{ $form->room_id }}', 
+                    @endif
+                    start: moment('{{ $form->stime_res }}').format(), 
+                    end: moment('{{ $form->etime_res }}').format()
+                    },
+                @endforeach
+            @endforeach
+        ]
         });
+
+        calendar.render();
     });
 
     $(document).ready(function() {
