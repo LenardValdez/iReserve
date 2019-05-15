@@ -7,7 +7,7 @@ use App\RegForm;
 use App\User;
 use App\Room;
 
-class DashboardController extends Controller
+class PagesController extends Controller
 {
     /**
      * Create a new controller instance.

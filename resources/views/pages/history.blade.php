@@ -73,7 +73,7 @@
           @endif
 
           <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-12 ">
               <div class="box box-primary">
                 <div class="box-header with-border">
                   <h3 class="box-title">Over-all History</h3>
@@ -91,7 +91,7 @@
                           <h4 class="modal-title" id="myModalLabel">Reservation Details</h4>
                         </div>
                         <div class="modal-body">
-                            <table class="table">
+                            <table class="table-responsive">
                                 <tr>
                                     <th>Date</th>
                                     <td>March 20, 2019</td>
@@ -161,55 +161,57 @@
                     </div>
                   </div>
 
-                  <table id="overallHistory" class="table table-bordered table-striped table-hover">
-                    <thead>
-                      <tr>
-                        <th>Request ID</th>
-                        <th>Student ID</th>
-                        <th>Student Name</th>
-                        <th>Room</th>
-                        <th>Type</th>
-                        <th>Submission Date</th>
-                        <th>Response Date</th>
-                        <th>Status</th>
-                      </tr>
-                    </thead> 
+                  <div class="table-responsive">
+                    <table id="overallHistory" class="table table-bordered table-striped table-hover">
+                      <thead>
+                        <tr>
+                          <th>Request ID</th>
+                          <th>Student ID</th>
+                          <th>Student Name</th>
+                          <th>Room</th>
+                          <th>Type</th>
+                          <th>Submission Date</th>
+                          <th>Response Date</th>
+                          <th>Status</th>
+                        </tr>
+                      </thead> 
 
-                    <tbody>
-                      <tr data-toggle="modal" data-target="#reqInfo">
-                        <td>000016</td>
-                        <td>201701054</td>
-                        <td>Lenard Valdez</td>
-                        <td>901</td>
-                        <td><span class="label label-primary">Normal Room</span></td>
-                        <td>May 1, 2019</td>
-                        <td>N/A</td>
-                        <td><span class="label label-success">Approved</span></td>
-                      </tr>
+                      <tbody>
+                        <tr data-toggle="modal" data-target="#reqInfo">
+                          <td>000016</td>
+                          <td>201701054</td>
+                          <td>Lenard Valdez</td>
+                          <td>901</td>
+                          <td><span class="label label-primary">Normal Room</span></td>
+                          <td>May 1, 2019</td>
+                          <td>N/A</td>
+                          <td><span class="label label-success">Approved</span></td>
+                        </tr>
 
-                      <tr data-toggle="modal" data-target="#reqInfo">
-                        <td>000015</td>
-                        <td>201701054</td>
-                        <td>Lenard Valdez</td>
-                        <td>1007 (MMA Lab)</td>
-                        <td><span class="label label-info">Special Room</span></td>
-                        <td>April 19, 2019</td>
-                        <td>N/A</td>
-                        <td><span class="label label-info">Pending</span></td>
-                      </tr>
+                        <tr data-toggle="modal" data-target="#reqInfo">
+                          <td>000015</td>
+                          <td>201701054</td>
+                          <td>Lenard Valdez</td>
+                          <td>1007 (MMA Lab)</td>
+                          <td><span class="label label-info">Special Room</span></td>
+                          <td>April 19, 2019</td>
+                          <td>N/A</td>
+                          <td><span class="label label-info">Pending</span></td>
+                        </tr>
 
-                      <tr data-toggle="modal" data-target="#reqInfo">
-                        <td>000014</td>
-                        <td>201701054</td>
-                        <td>Lenard Valdez</td>
-                        <td>1005 (CL1)</td>
-                        <td><span class="label label-info">Special Room</span></td>
-                        <td>April 12, 2019</td>
-                        <td>N/A</td>
-                        <td><span class="label label-info">Pending</span></td>
-                      </tr>
-                    </tbody>
-                  </table>
+                        <tr data-toggle="modal" data-target="#reqInfo">
+                          <td>000014</td>
+                          <td>201701054</td>
+                          <td>Lenard Valdez</td>
+                          <td>1005 (CL1)</td>
+                          <td><span class="label label-info">Special Room</span></td>
+                          <td>April 12, 2019</td>
+                          <td>N/A</td>
+                          <td><span class="label label-info">Pending</span></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </div><!--END OF BOX-BODY-->
               </div><!--END OF CONTENT BOX-->
             </div><!--END OF COLUMN-->

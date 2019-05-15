@@ -12,9 +12,9 @@
 */
 Auth::routes();
 
-Route::get('/', 'DashboardController@index');
+Route::get('/', 'PagesController@index');
 
-Route::get('/dashboard', 'DashboardController@index')->name('Dashboard');
+Route::get('/dashboard', 'PagesController@index')->name('Dashboard');
 Route::view('/history', 'pages.history')->name('History');
 Route::get('/reserve', 'RoomController@list')->name('Reserve');
 

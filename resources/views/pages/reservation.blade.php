@@ -137,16 +137,16 @@ $(function () {
         <!--PAGE TITLE AND BREADCRUMB-->
         <section class="content-header">
             @if(Auth()->user()->roles == 2)
-            <h1>Room Overview</h1>
+                <h1>Room Overview</h1>
             @else
-            <h1>Room Reservation</h1>
+                <h1>Room Reservation</h1>
             @endif
             <ol class="breadcrumb">
             @if(Auth()->user()->roles == 2)
-            <li class="active"><i class="fa fa-building"></i>Room Overview</a></li>
+                <li class="active"><i class="fa fa-building"></i>Room Overview</a></li>
             @else
-            <li><a href={{URL::route('Dashboard')}}><i class="fa fa-dashboard"></i> Dashboard</a></li>
-            <li class="active">Room Reservation</li>
+                <li><a href={{URL::route('Dashboard')}}><i class="fa fa-dashboard"></i> Dashboard</a></li>
+                <li class="active">Room Reservation</li>
             @endif
             </ol>
         </section>
