@@ -34,8 +34,8 @@
     @yield('script')
     
   </head>
-  <body class="hold-transition skin-blue layout-top-nav fixed">
-    <div class="wrapper">
+  <body class="hold-transition skin-blue layout-top-nav fixed" style="height: auto; min-height: 100%;">
+    <div class="wrapper" style="height: auto; min-height: 100%;">
 
       <!--START OF HEADER-->
       <header class="main-header">

@@ -7,6 +7,9 @@
           <img src="img/iacademy_shield.png" style="width: 24px; display: inline-block;">
           iRESERVE
         </a>
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
+            <i class="fa fa-bars"></i>
+        </button>
       </div>
       <!--END OF NAVBAR LOGO-->
       
