@@ -7,7 +7,6 @@
   <script src="js/adminlte_js/dataTables.bootstrap.min.js"></script>
   <script src="js/adminlte_js/jquery.slimscroll.min.js"></script>
   <script src="js/adminlte_js/adminlte.min.js"></script>
-  <script>
   
   <script>    
     $(function () {
