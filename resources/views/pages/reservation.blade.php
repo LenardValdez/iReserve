@@ -183,7 +183,7 @@ $(function () {
                         </div>
 
                         <div class="form-group">
-                            <label>Room Number: *</label>
+                            <label>Room Number: <span class="text-danger">*</span></label>
                             <select class="form-control{{ $errors->has('room_id') ? ' is-invalid' : '' }}" id="room_id" name="room_id" required>
                                 <option value="" selected disabled>Select an available room</option>
                                 @foreach ($descriptions as $description)
@@ -223,7 +223,7 @@ $(function () {
                         </div>
 
                         <div class="form-group">
-                            <label>Reservation Period: *</label>
+                            <label>Reservation Period: <span class="text-danger">*</span></label>
                             <div class="form-group">
                             <div class="input-group date">
                                 <span class="input-group-addon">
@@ -238,7 +238,7 @@ $(function () {
                         </div>
 
                         <div class="form-group">
-                            <label for="reason">Purpose: *</label>
+                            <label for="reason">Purpose: <span class="text-danger">*</span></label>
                             <textarea class="form-control{{ $errors->has('room_id') ? ' is-invalid' : '' }}" id="purpose" name="purpose" rows="3" placeholder="Enter purpose here" required></textarea>
                             @if ($errors->has('purpose'))
                             <span class="invalid-feedback" role="alert">
@@ -246,10 +246,8 @@ $(function () {
                             </span>
                             @endif
                         </div>
-                        <div>
-                        <p class="text-red">* items are required</p>
-                        </div>
                         <input type="hidden" name="specialReservation" value="0">
+                        <p class="text-red pull-left"><span class="text-danger">*</span> items are required</p>
                         <button type="button" data-target="#formReview" value="Submit" id="addReservationBtn" data-toggle="modal" class="btn btn-primary pull-right">Submit</button>
 
                         <!--FORM REVIEW MODAL+SUBMIT-->
@@ -263,6 +261,9 @@ $(function () {
                                         <h4 class="modal-title" id="myModalLabel">Summary of Reservation</h4>
                                     </div>
                                     <div class="modal-body">
+                                        @if(Auth()->user()->roles == 0)
+                                        <p>Any non-admin requests for this room number with similar reservation period will be overriden.</p>
+                                        @endif
                                         <table class="table">
                                             <tr>
                                                 <th>Date</th>

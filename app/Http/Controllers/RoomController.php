@@ -85,6 +85,20 @@ class RoomController extends Controller
             ]);
             
             if(Auth()->user()->roles == 0){
+                $rejectSameRange = RegForm::where('user_id', '!=', 'admin')
+                                          ->where('room_id', $request->get('room_id'))
+                                          ->where('stime_res', '<', $request->get('etime_res'))
+                                          ->where('etime_res', '>', $request->get('stime_res'))
+                                          ->where('isApproved', '0')
+                                          ->update(['isApproved' => '2']);
+
+                $cancelSameRange = RegForm::where('user_id', '!=', 'admin')
+                                          ->where('room_id', $request->get('room_id'))
+                                          ->where('stime_res', '<', $request->get('etime_res'))
+                                          ->where('etime_res', '>', $request->get('stime_res'))
+                                          ->where('isApproved', '1')
+                                          ->update(['isCancelled' => true]);
+
                 $form->isApproved = '1';
             }
             $form->save();
