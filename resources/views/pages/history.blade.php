@@ -217,8 +217,11 @@
                               @else
                                 <td>{{ \Carbon\Carbon::parse($reservation->updated_at)->toFormattedDateString() }}</td>
                               @endif
-                              @if($reservation->isApproved == 1)
-                                <td><span class="label label-success">Approved</span></td>
+                              @if($reservation->isCancelled == 1)
+                                <td><span class="label label-warning">Cancelled</span></td>
+                              @break
+                              @elseif($reservation->isApproved == 1)
+                              <td><span class="label label-success">Approved</span></td>
                               @elseif($reservation->isApproved == 2)
                                 <td><span class="label label-danger">Rejected</span></td>
                               @else
