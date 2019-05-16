@@ -8,6 +8,8 @@ use App\RegForm;
 /* use DB; */
 use Illuminate\Http\Request;
 use App\Http\Requests\RoomRequest;
+use App\Notifications\AcceptedRequest;
+use Illuminate\Support\Facades\Auth;
 
 
 class RoomController extends Controller
@@ -120,6 +122,9 @@ class RoomController extends Controller
         $roomAvailability->save();
         $specialRequest->save();
 
+        $user = User::where('user_id', $specialRequest->user_id)->first();
+        $user->notify(new AcceptedRequest($specialRequest));
+
         return redirect()->back()->with('approvedAlert', "The request has been approved and added to the scheduler! 
                                         Any pending requests for this room number with similar reservation period will 
                                         automatically be rejected.");
@@ -193,5 +198,14 @@ class RoomController extends Controller
                                         ->with("rooms", $rooms)
                                         ->with("descriptions", $descriptions)
                                         ->with("users", $users);
+    }
+
+    public function test()
+    {
+        echo "asd";
+    
+        $user = Auth::user();
+
+        $user->notify(new AcceptedRequest(User::findOrFail(201701026)));
     }
 }

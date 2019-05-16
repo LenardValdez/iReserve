@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Notifications;
-
+use App\RegForm;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -11,14 +11,16 @@ class AcceptedRequest extends Notification
 {
     use Queueable;
 
+    public $form;
+
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($form)
     {
-        //
+        $this->form = $form;
     }
 
     /**
@@ -41,7 +43,10 @@ class AcceptedRequest extends Notification
     public function toDatabase($notifiable)
     {
         return [
-            //
+            'user_id' => $this->form->user_id,
+            'reservation_status' => $this->form->isApproved,
+            'cancel_status' => $this->form->isCancelled,
+
         ];
     }
 }
