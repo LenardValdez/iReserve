@@ -136,6 +136,9 @@ class RoomController extends Controller
         $specialRequest->isApproved = '2';
         $specialRequest->save();
 
+        $user = User::where('user_id', $specialRequest->user_id)->first();
+        $user->notify(new AcceptedRequest($specialRequest));
+
         return redirect()->back()->with('rejectedAlert', "The request has been rejected.");
     }
 
