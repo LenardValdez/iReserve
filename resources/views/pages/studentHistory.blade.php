@@ -53,19 +53,16 @@
         <section class="content-header">
           <h1>Reservation History</h1>
           <ol class="breadcrumb">
-            @if (Auth()->user()->roles == 0)
-            <li><a href={{ URL::route('Dashboard') }}><i class="fa fa-dashboard"></i> Dashboard</a></li>
-            <li class="active">Reservation History</li>
-            @else
-            <li><a href={{ URL::route('Dashboard') }}><i class="fa fa-building"></i> Room Overview</a></li>
-            <li class="active">Reservation History</li>
-            @endif
+            <li class="active"><i class="fa fa-dashboard"></i> Dashboard</a></li>
           </ol>
         </section>
 
         <!--ACTUAL CONTENT-->
         <section class="content container-fluid">
           <!--NEW ROW-->
+          @if (Auth()->user()->roles == 1)
+            @include('layouts.inc.faq')
+          @endif
 
           <div class="row">
             <div class="col-md-12">
@@ -84,7 +81,7 @@
 
                 <div class="box-body">
                   <!--NORMAL ROOM REQUEST INFORMATION MODAL-->
-                  @foreach($reservations as $reservation)
+                  @foreach($studentReservations as $reservation)
                   <div class="modal fade" id="reqInfo{{$reservation->form_id}}">
                     <div class="modal-dialog" role="document">
                       <div class="modal-content">
@@ -120,11 +117,11 @@
                         </div>
                         @if (Auth()->user()->roles == 0 or Auth()->user()->roles == 1)
                         <div class="modal-footer">
-                          @if(\Carbon\Carbon::parse($reservation->etime_res)->isPast() or $reservation->isCancelled==1 or $reservation->isApproved==2)
-                          <button type="button" class="btn btn-danger" data-target="#cancelRequestModal" data-dismiss="modal" data-toggle="modal" disabled>Cancel Reservation</button>
-                          @else
-                          <button type="button" class="btn btn-danger" data-target="#cancelRequestModal" data-dismiss="modal" data-toggle="modal">Cancel Reservation</button>
-                          @endif
+                            @if(\Carbon\Carbon::parse($reservation->etime_res)->isPast() or $reservation->isCancelled==1 or $reservation->isApproved==2)
+                            <button type="button" class="btn btn-danger" data-target="#cancelRequestModal" data-dismiss="modal" data-toggle="modal" disabled>Cancel Reservation</button>
+                            @else
+                            <button type="button" class="btn btn-danger" data-target="#cancelRequestModal" data-dismiss="modal" data-toggle="modal">Cancel Reservation</button>
+                            @endif
                         </div>
                         @endif
                       </div>
@@ -186,12 +183,12 @@
                       </thead> 
 
                       <tbody>
-                        @if($reservations->isEmpty())
+                        @if($studentReservations->isEmpty())
                           <tr>
                             <td colspan="8" class="text-center">Everything is good, no pending requests</td>
                           </tr>
                         @else
-                          @foreach($reservations as $reservation)
+                          @foreach($studentReservations as $reservation)
                             <tr data-toggle="modal" data-target="#reqInfo{{$reservation->form_id}}">
                               <td>{{ sprintf("%07d", $reservation->form_id) }}</td>
                               <td>{{$reservation->user_id}}</td>
@@ -217,9 +214,9 @@
                                 <td>{{ \Carbon\Carbon::parse($reservation->updated_at)->toFormattedDateString() }}</td>
                               @endif
                               @if($reservation->isCancelled == 1)
-                              <td><span class="label label-warning">Cancelled</span></td>
+                                <td><span class="label label-warning">Cancelled</span></td>
                               @elseif($reservation->isApproved == 1)
-                              <td><span class="label label-success">Approved</span></td>
+                                <td><span class="label label-success">Approved</span></td>
                               @elseif($reservation->isApproved == 2)
                                 <td><span class="label label-danger">Rejected</span></td>
                               @else
@@ -235,7 +232,13 @@
               </div><!--END OF CONTENT BOX-->
             </div><!--END OF COLUMN-->
           </div><!--END OF ROW-->
+          @if (Auth()->user()->roles == 1)
+            <div style="position: absolute; bottom:50px; right:10px;">
+              <div style="position:relative; top:0; left:0;">
+                  <a class="btn btn-app" id="faqBtn" data-toggle="modal" data-target="#welcomeFAQModal"><i class="fa fa-question-circle-o"></i>FAQ</a>
+              </div>
+            </div>
+          @endif
         </section><!--END OF ACTUAL CONTENT-->
       </div><!--END OF CONTENT WRAPPER-->
 @endsection
-        

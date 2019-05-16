@@ -35,13 +35,12 @@ class PagesController extends Controller
             return view('pages.requests')->with("pendingforms", $pendingforms)
                                          ->with("users", $users);
         } elseif ($role == 1){
-            $reservations = RegForm::get();
+            /* $reservations = RegForm::get(); */
             $users = User::get();
             $rooms = Room::get();
             $studentReservations = RegForm::where('user_id', Auth()->User()->user_id)->get();
 
-            return view('pages.history')->with("reservations", $reservations)
-                                        ->with("users", $users)
+            return view('pages.StudentHistory')->with("users", $users)
                                         ->with("rooms", $rooms)
                                         ->with("studentReservations", $studentReservations);
         } else {

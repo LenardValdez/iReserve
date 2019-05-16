@@ -30,6 +30,7 @@ $(function () {
     timePicker: true,
     startDate: moment().startOf('hour'),
     endDate: moment().startOf('hour').add(32, 'hour'),
+    minDate: moment(),
     maxDate: moment().startOf('hour').add(3, 'months'),
     locale: {
         format: 'YYYY-MM-DD HH:mm:ss'
@@ -39,7 +40,6 @@ $(function () {
     $('#reservationForm').submit(function (ev, picker) {
         var checkSpecial = $('#room_id').val().substr(0, 1);
         [startDate, endDate] = $('.reservationPeriod').val().split(' - ');
-
         if(checkSpecial==='1' || checkSpecial==='8'){
             $(this).find('input[name="specialReservation"]').val('1');
         }

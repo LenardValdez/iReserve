@@ -12,6 +12,27 @@ use App\Http\Requests\RoomRequest;
 class RoomController extends Controller
 {
 
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        //
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Room  $room
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Room $room)
+    {
+        //
+    }
+
     public function store(RoomRequest $request)
     {
         Room::create($request->validated());
@@ -135,16 +156,32 @@ class RoomController extends Controller
                                     ->with("studentReservations", $studentReservations);
     }
 
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  \App\Room  $room
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(Room $room)
+    {
+        //
+    }
+
     public function cancel($id)
     {
         $cancelRequest = RegForm::find($id);
         $cancelRequest->isCancelled = '1';
         $cancelRequest->save();
 
-        return redirect()->back()->with('cancelledAlert', "The request/reservations has been cancelled");
+        return redirect()->back()->with('cancelledAlert', "The request/reservation has been cancelled.");
 
     }
-
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Room  $room
+     * @return \Illuminate\Http\Response
+     */
     public function destroy(Request $request)
     {
         $delete = Room::where('room_id',$request->room_id)->first();
