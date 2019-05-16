@@ -56,9 +56,11 @@
             @if (Auth()->user()->roles == 0)
             <li><a href={{ URL::route('Dashboard') }}><i class="fa fa-dashboard"></i> Dashboard</a></li>
             <li class="active">Reservation History</li>
-            @else
+            @elseif(Auth()->user()->roles == 2)
             <li><a href={{ URL::route('Dashboard') }}><i class="fa fa-building"></i> Room Overview</a></li>
             <li class="active">Reservation History</li>
+            @else 
+            <li class="active"><i class="fa fa-building"></i> Room Overview</a></li>
             @endif
           </ol>
         </section>
@@ -120,55 +122,17 @@
                         </div>
                         @if (Auth()->user()->roles == 0 or Auth()->user()->roles == 1)
                         <div class="modal-footer">
-                          @if(\Carbon\Carbon::parse($reservation->etime_res)->isPast() or $reservation->isCancelled==1 or $reservation->isApproved==2)
-                          <button type="button" class="btn btn-danger" data-target="#cancelRequestModal" data-dismiss="modal" data-toggle="modal" disabled>Cancel Reservation</button>
-                          @else
-                          <button type="button" class="btn btn-danger" data-target="#cancelRequestModal" data-dismiss="modal" data-toggle="modal">Cancel Reservation</button>
-                          @endif
+                            @if(\Carbon\Carbon::parse($reservation->etime_res)->isPast() or $reservation->isCancelled==1 or $reservation->isApproved==2)
+                              <button type="button" class="btn btn-danger" disabled>Cancel Reservation</button>
+                            @else
+                              <a type="button" class="btn btn-danger" href="{{ route('cancelrequest', $reservation->form_id) }}">Cancel Reservation</a>
+                            @endif
                         </div>
                         @endif
                       </div>
                     </div>
                   </div>
                   @endforeach
-
-                  <!--CANCELLATION MODAL-->
-                  <div class="modal fade" id="cancelRequestModal">
-                    <div class="modal-dialog" role="document">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                          </button>
-                          <h4 class="modal-title" id="myModalLabel">Override Reservation</h4>
-                        </div>
-                        <div class="modal-body">
-                          <h4>Are you sure you want to cancel this request?</h4>
-                        </div>
-                        <div class="modal-footer">
-                          <button type="button" class="btn btn-default pull-left" data-dismiss="modal">No</button>
-                          <a type="button" href="{{ route('cancelrequest', $reservation->form_id) }}" class="btn btn-success" data-target="#successCancelModal" data-dismiss="modal" data-toggle="modal">Yes</a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!--CANCELLATION SUCCESS MODAL-->
-                  <div class="modal fade" id="successCancelModal">
-                    <div class="modal-dialog" role="document">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                          </button>
-                          <h4 class="modal-title" id="myModalLabel">Request Cancelled</h4>
-                        </div>
-                        <div class="modal-body">
-                          <h4>The request has been successfully cancelled.</h4>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
 
                   <div class="table-responsive">
                     <table id="overallHistory" class="table table-bordered table-striped table-hover">
@@ -186,6 +150,50 @@
                       </thead> 
 
                       <tbody>
+                        @if(Auth()->User()->roles == 1)
+                          @if($studentReservations->isEmpty())
+                            <tr>
+                              <td colspan="8" class="text-center">Everything is good, no pending requests</td>
+                            </tr>
+                          @else
+                            @foreach($studentReservations as $reservation)
+                              <tr data-toggle="modal" data-target="#reqInfo{{$reservation->form_id}}">
+                                <td>{{ sprintf("%07d", $reservation->form_id) }}</td>
+                                <td>{{$reservation->user_id}}</td>
+                                @foreach($users as $user)
+                                  @if($user->user_id == $reservation->user_id)
+                                    <td>{{$user->name}}</td>
+                                  @endif
+                                @endforeach
+                                <td>{{$reservation->room_id}}</td>
+                                @foreach ($rooms as $room)
+                                  @if ($room->room_id == $reservation->room_id) 
+                                    @if ($room->isSpecial)
+                                      <td><span class="label label-info">Special Room</span></td>
+                                    @else
+                                      <td><span class="label label-primary">Normal Room</span></td>
+                                    @endif
+                                  @endif
+                                @endforeach
+                                <td>{{ \Carbon\Carbon::parse($reservation->created_at)->toFormattedDateString() }}</td>
+                                @if ($reservation->isApproved==0)
+                                  <td>N/A</td> 
+                                @else
+                                  <td>{{ \Carbon\Carbon::parse($reservation->updated_at)->toFormattedDateString() }}</td>
+                                @endif
+                                @if($reservation->isCancelled == 1)
+                                  <td><span class="label label-warning">Cancelled</span></td>
+                                @elseif($reservation->isApproved == 1)
+                                  <td><span class="label label-success">Approved</span></td>
+                                @elseif($reservation->isApproved == 2)
+                                  <td><span class="label label-danger">Rejected</span></td>
+                                @else
+                                  <td><span class="label label-info">Pending</span></td>
+                                @endif
+                              </tr>
+                            @endforeach
+                          @endif
+                        @else
                         @if($reservations->isEmpty())
                           <tr>
                             <td colspan="8" class="text-center">Everything is good, no pending requests</td>
@@ -228,6 +236,7 @@
                             </tr>
                           @endforeach
                         @endif
+                        @endif
                       </tbody>
                     </table>
                   </div>
@@ -235,6 +244,13 @@
               </div><!--END OF CONTENT BOX-->
             </div><!--END OF COLUMN-->
           </div><!--END OF ROW-->
+          @if (Auth()->user()->roles == 1)
+            <div style="position: absolute; bottom:50px; right:10px;">
+              <div style="position:relative; top:0; left:0;">
+                <a class="btn btn-app" id="faqBtn" data-toggle="modal" data-target="#welcomeFAQModal"><i class="fa fa-question-circle-o"></i>FAQ</a>
+              </div>
+            </div>
+          @endif
         </section><!--END OF ACTUAL CONTENT-->
       </div><!--END OF CONTENT WRAPPER-->
 @endsection
