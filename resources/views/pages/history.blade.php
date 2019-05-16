@@ -73,7 +73,15 @@
           @endif
 
           <div class="row">
-            <div class="col-md-12 ">
+            <div class="col-md-12">
+                @if(session('cancelledAlert'))
+                <div class="alert alert-danger alert-dismissible">
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                  {{ session('cancelledAlert') }}
+                </div>
+                @endif
               <div class="box box-primary">
                 <div class="box-header with-border">
                   <h3 class="box-title">Over-all History</h3>
@@ -81,7 +89,8 @@
 
                 <div class="box-body">
                   <!--NORMAL ROOM REQUEST INFORMATION MODAL-->
-                  <div class="modal fade" id="reqInfo">
+                  @foreach($reservations as $reservation)
+                  <div class="modal fade" id="reqInfo{{$reservation->form_id}}">
                     <div class="modal-dialog" role="document">
                       <div class="modal-content">
                         <div class="modal-header">
@@ -94,23 +103,23 @@
                             <table class="table">
                                 <tr>
                                     <th>Date</th>
-                                    <td>March 20, 2019</td>
+                                    <td>{{ \Carbon\Carbon::parse($reservation->created_at)->toDayDateTimeString() }}</td>
                                 </tr>
                                 <tr>
                                     <th>Room Number</th>
-                                    <td>1005 (CL1)</td>
+                                    <td>{{$reservation->room_id}}</td>
                                 </tr>
                                 <tr>
                                     <th>People Involved</th>
-                                    <td>Nicole Kaye Bilon, Miqaela Nicole Banguilan</td>
+                                    <td>{{$reservation->users_involved}}</td>
                                 </tr>
                                 <tr>
                                     <th>Reservation Period</th>
-                                    <td>March 24, 2019 02:00PM - March 24, 2019 06:00PM</td>
+                                    <td>{{$reservation->stime_res}} - {{$reservation->etime_res}}</td>
                                 </tr>
                                 <tr>
                                     <th>Purpose</th>
-                                    <td>SEAL Meeting</td>
+                                    <td>{{$reservation->purpose}}</td>
                                 </tr>
                             </table>
                         </div>
@@ -122,6 +131,7 @@
                       </div>
                     </div>
                   </div>
+                  @endforeach
 
                   <!--CANCELLATION MODAL-->
                   <div class="modal fade" id="cancelRequestModal">
@@ -138,7 +148,7 @@
                         </div>
                         <div class="modal-footer">
                           <button type="button" class="btn btn-default pull-left" data-dismiss="modal">No</button>
-                          <button type="button" class="btn btn-success" data-target="#successCancelModal" data-dismiss="modal" data-toggle="modal">Yes</button>
+                          <a type="button" href="{{ route('cancelrequest', $reservation->form_id) }}" class="btn btn-success" data-target="#successCancelModal" data-dismiss="modal" data-toggle="modal">Yes</a>
                         </div>
                       </div>
                     </div>
@@ -183,7 +193,7 @@
                           </tr>
                         @elseif(Auth()->User()->roles==1)
                           @foreach($studentReservations as $reservation)
-                            <tr data-toggle="modal" data-target="#specialInfo{{$reservation->form_id}}">
+                            <tr data-toggle="modal" data-target="#reqInfo{{$reservation->form_id}}">
                               <td>{{ sprintf("%07d", $reservation->form_id) }}</td>
                               <td>{{$reservation->user_id}}</td>
                               @foreach($users as $user)
@@ -218,7 +228,7 @@
                           @endforeach
                         @else
                           @foreach($reservations as $reservation)
-                            <tr data-toggle="modal" data-target="#specialInfo{{$reservation->form_id}}">
+                            <tr data-toggle="modal" data-target="#reqInfo{{$reservation->form_id}}">
                               <td>{{ sprintf("%07d", $reservation->form_id) }}</td>
                               <td>{{$reservation->user_id}}</td>
                               @foreach($users as $user)
@@ -242,8 +252,11 @@
                               @else
                                 <td>{{ \Carbon\Carbon::parse($reservation->updated_at)->toFormattedDateString() }}</td>
                               @endif
-                              @if($reservation->isApproved == 1)
-                                <td><span class="label label-success">Approved</span></td>
+                              @if($reservation->isCancelled == 1)
+                              <td><span class="label label-warning">Cancelled</span></td>
+                              @break
+                              @elseif($reservation->isApproved == 1)
+                              <td><span class="label label-success">Approved</span></td>
                               @elseif($reservation->isApproved == 2)
                                 <td><span class="label label-danger">Rejected</span></td>
                               @else

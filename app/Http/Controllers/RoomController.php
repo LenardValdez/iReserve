@@ -141,7 +141,7 @@ class RoomController extends Controller
         $cancelRequest->isCancelled = '1';
         $cancelRequest->save();
 
-        return redirect()->back()->with('rejectedAlert', "The request/reservations has been cancelled");
+        return redirect()->back()->with('cancelledAlert', "The request/reservations has been cancelled");
 
     }
 
