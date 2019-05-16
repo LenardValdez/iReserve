@@ -143,7 +143,7 @@
                     <tbody>
                       @if($pendingforms->isEmpty())
                         <tr>
-                          <td colspan="4" class="text-center">No pending requests</td>
+                          <td colspan="6" class="text-center">Everything is good, no pending requests</td>
                         </tr>
                       @else
                         @foreach($pendingforms as $form)

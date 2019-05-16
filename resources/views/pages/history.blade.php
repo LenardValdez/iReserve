@@ -91,7 +91,7 @@
                           <h4 class="modal-title" id="myModalLabel">Reservation Details</h4>
                         </div>
                         <div class="modal-body">
-                            <table class="table-responsive">
+                            <table class="table">
                                 <tr>
                                     <th>Date</th>
                                     <td>March 20, 2019</td>
