@@ -7,6 +7,7 @@ use App\User;
 use App\RegForm;
 use Illuminate\Http\Request;
 use App\Http\Requests\RoomRequest;
+use App\Notifications\RoomStatus;
 
 
 class RoomController extends Controller
@@ -129,6 +130,9 @@ class RoomController extends Controller
         $roomAvailability->save();
         $specialRequest->save();
 
+        $user = User::where($specialRequest->user_id)->get()->first();
+        $user->notify(new RoomStatus($id));
+
         return redirect()->back()->with('approvedAlert', "The request has been approved and added to the scheduler! 
                                         Any pending requests for this room number with similar reservation period will 
                                         automatically be rejected.");
@@ -139,6 +143,9 @@ class RoomController extends Controller
         $specialRequest = RegForm::find($id);
         $specialRequest->isApproved = '2';
         $specialRequest->save();
+
+        $user = User::where($specialRequest->user_id)->get()->first();
+        $user->notify(new RoomStatus($id));
 
         return redirect()->back()->with('rejectedAlert', "The request has been rejected.");
     }
