@@ -35,7 +35,15 @@ class PagesController extends Controller
             return view('pages.requests')->with("pendingforms", $pendingforms)
                                          ->with("users", $users);
         } elseif ($role == 1){
-            return view('pages.history');
+            $reservations = RegForm::get();
+            $users = User::get();
+            $rooms = Room::get();
+            $studentReservations = RegForm::where('user_id', Auth()->User()->user_id)->get();
+
+            return view('pages.history')->with("reservations", $reservations)
+                                        ->with("users", $users)
+                                        ->with("rooms", $rooms)
+                                        ->with("studentReservations", $studentReservations);
         } else {
             $forms = RegForm::where('isApproved', '1')->get();
             $rooms = Room::get();

@@ -177,38 +177,81 @@
                       </thead> 
 
                       <tbody>
-                        <tr data-toggle="modal" data-target="#reqInfo">
-                          <td>000016</td>
-                          <td>201701054</td>
-                          <td>Lenard Valdez</td>
-                          <td>901</td>
-                          <td><span class="label label-primary">Normal Room</span></td>
-                          <td>May 1, 2019</td>
-                          <td>N/A</td>
-                          <td><span class="label label-success">Approved</span></td>
-                        </tr>
-
-                        <tr data-toggle="modal" data-target="#reqInfo">
-                          <td>000015</td>
-                          <td>201701054</td>
-                          <td>Lenard Valdez</td>
-                          <td>1007 (MMA Lab)</td>
-                          <td><span class="label label-info">Special Room</span></td>
-                          <td>April 19, 2019</td>
-                          <td>N/A</td>
-                          <td><span class="label label-info">Pending</span></td>
-                        </tr>
-
-                        <tr data-toggle="modal" data-target="#reqInfo">
-                          <td>000014</td>
-                          <td>201701054</td>
-                          <td>Lenard Valdez</td>
-                          <td>1005 (CL1)</td>
-                          <td><span class="label label-info">Special Room</span></td>
-                          <td>April 12, 2019</td>
-                          <td>N/A</td>
-                          <td><span class="label label-info">Pending</span></td>
-                        </tr>
+                        @if($reservations->isEmpty())
+                          <tr>
+                            <td colspan="8" class="text-center">Everything is good, no pending requests</td>
+                          </tr>
+                        @elseif(Auth()->User()->roles==1)
+                          @foreach($studentReservations as $reservation)
+                            <tr data-toggle="modal" data-target="#specialInfo{{$reservation->form_id}}">
+                              <td>{{ sprintf("%07d", $reservation->form_id) }}</td>
+                              <td>{{$reservation->user_id}}</td>
+                              @foreach($users as $user)
+                                @if($user->user_id == $reservation->user_id)
+                                  <td>{{$user->name}}</td>
+                                @endif
+                              @endforeach
+                              <td>{{$reservation->room_id}}</td>
+                              @foreach ($rooms as $room)
+                                @if ($room->room_id == $reservation->room_id) 
+                                  @if ($room->isSpecial)
+                                    <td><span class="label label-info">Special Room</span></td>
+                                  @else
+                                    <td><span class="label label-primary">Normal Room</span></td>
+                                  @endif
+                                @endif
+                              @endforeach
+                              <td>{{ \Carbon\Carbon::parse($reservation->created_at)->toFormattedDateString() }}</td>
+                              @if ($reservation->isApproved==0)
+                                <td>N/A</td> 
+                              @else
+                                <td>{{ \Carbon\Carbon::parse($reservation->updated_at)->toFormattedDateString() }}</td>
+                              @endif
+                              @if($reservation->isApproved == 1)
+                                <td><span class="label label-success">Approved</span></td>
+                              @elseif($reservation->isApproved == 2)
+                                <td><span class="label label-danger">Rejected</span></td>
+                              @else
+                                <td><span class="label label-info">Pending</span></td>
+                              @endif
+                            </tr>
+                          @endforeach
+                        @else
+                          @foreach($reservations as $reservation)
+                            <tr data-toggle="modal" data-target="#specialInfo{{$reservation->form_id}}">
+                              <td>{{ sprintf("%07d", $reservation->form_id) }}</td>
+                              <td>{{$reservation->user_id}}</td>
+                              @foreach($users as $user)
+                                @if($user->user_id == $reservation->user_id)
+                                  <td>{{$user->name}}</td>
+                                @endif
+                              @endforeach
+                              <td>{{$reservation->room_id}}</td>
+                              @foreach ($rooms as $room)
+                                @if ($room->room_id == $reservation->room_id) 
+                                  @if ($room->isSpecial)
+                                    <td><span class="label label-info">Special Room</span></td>
+                                  @else
+                                    <td><span class="label label-primary">Normal Room</span></td>
+                                  @endif
+                                @endif
+                              @endforeach
+                              <td>{{ \Carbon\Carbon::parse($reservation->created_at)->toFormattedDateString() }}</td>
+                              @if ($reservation->isApproved==0)
+                                <td>N/A</td> 
+                              @else
+                                <td>{{ \Carbon\Carbon::parse($reservation->updated_at)->toFormattedDateString() }}</td>
+                              @endif
+                              @if($reservation->isApproved == 1)
+                                <td><span class="label label-success">Approved</span></td>
+                              @elseif($reservation->isApproved == 2)
+                                <td><span class="label label-danger">Rejected</span></td>
+                              @else
+                                <td><span class="label label-info">Pending</span></td>
+                              @endif
+                            </tr>
+                          @endforeach
+                        @endif
                       </tbody>
                     </table>
                   </div>

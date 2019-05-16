@@ -5,39 +5,13 @@ namespace App\Http\Controllers;
 use App\Room;
 use App\User;
 use App\RegForm;
-/* use DB; */
 use Illuminate\Http\Request;
 use App\Http\Requests\RoomRequest;
 
 
 class RoomController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        return view('pages.reservation');
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(RoomRequest $request)
     {
         Room::create($request->validated());
@@ -148,46 +122,29 @@ class RoomController extends Controller
         return redirect()->back()->with('rejectedAlert', "The request has been rejected.");
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Room  $room
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Room $room)
+    public function historyList()
     {
-        //
+        $reservations = RegForm::get();
+        $users = User::get();
+        $rooms = Room::get();
+        $studentReservations = RegForm::where('user_id', Auth()->User()->user_id)->get();
+
+        return view('pages.history')->with("reservations", $reservations)
+                                    ->with("users", $users)
+                                    ->with("rooms", $rooms)
+                                    ->with("studentReservations", $studentReservations);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Room  $room
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Room $room)
+    public function cancel($id)
     {
-        //
+        $cancelRequest = RegForm::find($id);
+        $cancelRequest->isCancelled = '1';
+        $cancelRequest->save();
+
+        return redirect()->back()->with('rejectedAlert', "The request/reservations has been cancelled");
+
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Room  $room
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Room $room)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Room  $room
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Request $request)
     {
         $delete = Room::where('room_id',$request->room_id)->first();

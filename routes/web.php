@@ -1,4 +1,5 @@
 <?php
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,9 +16,10 @@ Auth::routes();
 Route::get('/', 'PagesController@index');
 
 Route::get('/dashboard', 'PagesController@index')->name('Dashboard');
-Route::view('/history', 'pages.history')->name('History');
+Route::get('/history', 'RoomController@historyList')->name('History');
 Route::get('/reserve', 'RoomController@list')->name('Reserve');
 
+Route::get('/history/cancel/{id}', 'RoomController@cancel')->name('cancelrequest');
 Route::post('/reserve/new', 'RoomController@reserve')->name('reserveroom');
 Route::post('/reserve/add', 'RoomController@store')->name('processaddroom'); //Process ng form to add room
 Route::post('/reserve/del','RoomController@destroy')->name('processdelroom'); //Process ng form to del room
