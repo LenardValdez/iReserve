@@ -130,8 +130,8 @@ class RoomController extends Controller
         $roomAvailability->save();
         $specialRequest->save();
 
-        $user = User::where($specialRequest->user_id)->get()->first();
-        $user->notify(new RoomStatus($id));
+        $user = User::where('user_id', $specialRequest->user_id)->get()->first();
+        $user->notify(new RoomStatus($specialRequest));
 
         return redirect()->back()->with('approvedAlert', "The request has been approved and added to the scheduler! 
                                         Any pending requests for this room number with similar reservation period will 
@@ -144,8 +144,8 @@ class RoomController extends Controller
         $specialRequest->isApproved = '2';
         $specialRequest->save();
 
-        $user = User::where($specialRequest->user_id)->get()->first();
-        $user->notify(new RoomStatus($id));
+        $user = User::where('user_id', $specialRequest->user_id)->get()->first();
+        $user->notify(new RoomStatus($specialRequest));
 
         return redirect()->back()->with('rejectedAlert', "The request has been rejected.");
     }
