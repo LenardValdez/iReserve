@@ -49,6 +49,11 @@
 @section('content')
     <!--CONTENT WRAPPER-->
     <div class="content-wrapper">
+
+        @if (Auth()->user()->roles == 1)
+          @include('layouts.inc.faq')
+        @endif
+
         <!--PAGE TITLE AND BREADCRUMB-->
         <section class="content-header">
           <h1>Reservation History</h1>
