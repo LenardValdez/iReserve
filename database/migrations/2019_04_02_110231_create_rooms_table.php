@@ -16,7 +16,6 @@ class CreateRoomsTable extends Migration
         Schema::create('rooms', function (Blueprint $table) {
             $table->string('room_id')->unique()->primary();
             $table->string('room_desc');
-            $table->boolean('isAvailable')->default(1);
             $table->boolean('isSpecial');
             $table->timestamps();
         });
