@@ -2,9 +2,38 @@
 
 @section('script')
   <script>    
-    $(function () {
-      $('#overallHistory').DataTable()
-    })
+    $(document).ready(function () {
+      $('#overallHistory').DataTable({
+        dom: 'Bfrtip',
+          lengthMenu: [
+              [ 10, 25, 50, -1 ],
+              [ '10 rows', '25 rows', '50 rows', 'Show all' ]
+          ],
+          buttons: [
+              'pageLength',
+              {
+              extend: 'pdfHtml5',
+              text: 'Export as PDF',
+              exportOptions: {
+                  modifier: {
+                      selected: null
+                  }
+              },
+              download: 'open'
+              },
+              {
+              extend: 'csvHtml5',
+              text: 'Export as CSV',
+              exportOptions: {
+                  modifier: {
+                      search: 'none'
+                  }
+              }
+              }
+          ],
+        select: true
+      });
+    });
   </script>
 
   @if(Auth()->user()->roles == 1)
@@ -158,7 +187,7 @@
                         @if(Auth()->User()->roles == 1)
                           @if($studentReservations->isEmpty())
                             <tr>
-                              <td colspan="8" class="text-center">Everything is good, no pending requests</td>
+                              <td colspan="8" class="text-center">Oops! Looks like you haven't submitted any requests yet.</td>
                             </tr>
                           @else
                             @foreach($studentReservations as $reservation)
