@@ -13,7 +13,7 @@
   <ul class="nav navbar-nav">
     @if (Auth()->user()->roles == 0)
       <li class="#"><a href={{ URL::route('Dashboard') }}>Dashboard</a></li>
-      <li class="#"><a href={{URL::route('Reserve')}}>Room Reservation</a></li>
+      <li class="#"><a href={{URL::route('Reserve')}}>Room Management</a></li>
       <li class="active"><a href={{URL::route('History')}}>Reservation History</a></li>
       <li class="#"><a id="faqBtn" data-toggle="modal" data-target="#welcomeFAQModal">FAQ</a></li>
     @elseif (Auth()->user()->roles == 1)
