@@ -7,9 +7,11 @@
             <li class="#"><a href={{ URL::route('Dashboard') }}>Dashboard</a></li>
             <li class="active"><a href={{URL::route('Reserve')}}>Room Reservation</a></li>
             <li class="#"><a href={{URL::route('History')}}>Reservation History</a></li>
+            <li class="#"><a id="faqBtn" data-toggle="modal" data-target="#welcomeFAQModal">FAQ</a></li>
         @elseif (Auth()->user()->roles == 1)
             <li class="#"><a href={{ URL::route('Dashboard') }}>Dashboard</a></li>
             <li class="active"><a href={{URL::route('Reserve')}}>Room Reservation</a></li>
+            <li class="#"><a id="faqBtn" data-toggle="modal" data-target="#welcomeFAQModal">FAQ</a></li>
         @else 
             <li class="active"><a href={{ URL::route('Dashboard') }}>Room Overview</a></li>
             <li class="#"><a href={{URL::route('History')}}>Reservation History</a></li>
@@ -134,6 +136,9 @@ $(function () {
 @section('content')
     <!--CONTENT WRAPPER-->
     <div class="content-wrapper">
+
+        @include('layouts.inc.faq')
+
         <!--PAGE TITLE AND BREADCRUMB-->
         <section class="content-header">
             @if(Auth()->user()->roles == 2)

@@ -31,6 +31,25 @@
     <script src="js/adminlte_js/select2.full.min.js"></script> <!--JS FOR MULTIPLE SELECT FORM INPUT-->
     <script src="js/adminlte_js/fullcalendar.min.js"></script> <!--CHANGE FORM DATE AND TIME FORMAT TO ISO8601 STRING USING moment().toISOString()-->
     <script src="js/adminlte_js/fullcalendar-scheduler.min.js"></script>
+
+    <script>
+      $(window).on('load',function(){
+        if (!sessionStorage.getItem('shown-modal')){
+          $('#welcomeFAQModal').modal('show');
+          $('#faqBtn').css('z-index', '5000');
+          sessionStorage.setItem('shown-modal', 'true');
+        }
+      });
+
+      $(document).ready(function() {
+        $('#faqBtn').click(function(e) {
+          $('#faqtitle1').text('');
+          $('#faqtitle2').text('Frequently Asked Questions');
+          $('#faqsubtitle').text('');
+        });
+      });
+    </script>
+
     @yield('script')
     
   </head>
