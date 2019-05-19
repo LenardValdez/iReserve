@@ -218,7 +218,7 @@ $(function () {
 
                         <div class="form-group">
                             <label>People Involved: </label>
-                            <select class="form-control select2" id="peopleInvolved" name="users_involved[]" multiple="multiple" data-placeholder="Enter name" required>
+                            <select class="form-control select2" style="width:100%!important;" id="peopleInvolved" name="users_involved[]" multiple="multiple" data-placeholder="Enter name" required>
                                 @foreach ($users as $user)
                                     @if ($user->user_id != Auth()->user()->user_id and $user->roles == 1)
                                         <option value="{{$user->name}}">{{$user->name}}</option>
