@@ -1,34 +1,13 @@
 @extends('layouts.app')
 
-@section('script')
-  @if(Auth()->user()->roles == 0)
-    <script>
-      $(window).on('load',function(){
-        if (!sessionStorage.getItem('shown-modal')){
-          $('#welcomeFAQModal').modal('show');
-          $('#faqBtn').css('z-index', '5000');
-          sessionStorage.setItem('shown-modal', 'true');
-        }
-      });
-
-      $(document).ready(function() {
-        $('#faqBtn').click(function(e) {
-          $('#faqtitle1').text('');
-          $('#faqtitle2').text('Frequently Asked Questions');
-          $('#faqsubtitle').text('');
-        });
-      });
-    </script>
-  @endif
-@endsection
-
 @section('menu')
 <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
   <ul class="nav navbar-nav">
     @if (Auth()->user()->roles == 0)
       <li class="active"><a href={{ URL::route('Dashboard') }}>Dashboard</a></li>
-      <li class="#"><a href={{URL::route('Reserve')}}>Room Reservation</a></li>
+      <li class="#"><a href={{URL::route('Reserve')}}>Room Management</a></li>
       <li class="#"><a href={{URL::route('History')}}>Reservation History</a></li>
+      <li class="#"><a id="faqBtn" data-toggle="modal" data-target="#welcomeFAQModal">FAQ</a></li>
     @elseif (Auth()->user()->roles == 1)
       <li class="active"><a href={{ URL::route('Dashboard') }}>Dashboard</a></li>
       <li class="#"><a href={{URL::route('Reserve')}}>Room Reservation</a></li>
@@ -41,9 +20,7 @@
     <!--CONTENT WRAPPER-->
     <div class="content-wrapper">
 
-        @if (Auth()->user()->roles == 0)
           @include('layouts.inc.faq')
-        @endif
         
         <!--PAGE TITLE AND BREADCRUMB-->
         <section class="content-header">
@@ -172,13 +149,6 @@
               </div><!--END OF CONTENT BOX-->
             </div><!--END OF COLUMN--> 
           </div><!--END OF ROW-->
-          @if (Auth()->user()->roles == 0)
-            <div style="position: absolute; bottom:50px; right:10px;">
-              <div style="position:relative; top:0; left:0;">
-                  <a class="btn btn-app" id="faqBtn" data-toggle="modal" data-target="#welcomeFAQModal"><i class="fa fa-question-circle-o"></i>FAQ</a>
-              </div>
-            </div>
-          @endif
         </section><!--END OF ACTUAL CONTENT-->
       </div><!--END OF CONTENT WRAPPER-->
 @endsection
