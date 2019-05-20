@@ -19,29 +19,39 @@
 
                     <div id="collapseOne" class="panel-collapse collapse in">
                         @if (Auth()->user()->roles == 0) <!--Admin FAQ-->
-                            <div class="box-body">
-                            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3
-                            wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum
-                            eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla
-                            assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred
-                            nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer
-                            farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus
-                            labore sustainable VHS.
+                            <div class="box-body" style="margin:0 20px;">
+                                <p><ul><li><strong>Step 1:</strong></li>
+                                <ul><li>Go to Room reservation tab.</li></ul><br>
+                            
+                                <li><strong>Step 2:</strong></li>
+                                <ul><li>Fill up the Room number, People Involved,
+                                Reservation Period, and Purpose sections accordingly.</li></ul>
+                            
+                                <li><strong>Step 3:</strong></li>
+                                <ul><li> the Submit button.</li></ul><br></ul>
+                            
+                                <strong>Note:
+                                You can use the calendar to see what time slot is available on the prefered room of booking.
+                                </strong></p>
                             </div>
                         @else <!--User FAQ-->
-                            <div class="box-body">
-                                Step 1:
-                                Go to Room reservation tab.
+                            <div class="box-body" style="margin:0 20px;">
+                                <p><ul><li><strong>Step 1:</strong></li>
+                                <ul><li>Go to Room reservation tab.</li></ul><br>
                             
-                                Step 2:
-                                Fill up the Room number, People Involved, 
-                                Reservation Period, and Purpose sections accordingly.
+                                <li><strong>Step 2:</strong></li>
+                                <ul><li>Fill up the Room number, People Involved,
+                                Reservation Period, and Purpose sections accordingly.</li></ul><br>
                             
-                                Step 3:
-                                Click the Submit button.
+                                <li><strong>Step 3:</strong></li>
+                                <ul><li> the Submit button.</li></ul><br>
                                 
-                                Step 4:(Special Rooms)
-                                Wait for the Room Manager's approval.
+                                <li><strong>Step 4:(Booking a Special Room)</strong></li>
+                                <ul><li>Wait for the Room Manager's approval.</li></ul><br>
+                            
+                                <li><strong>Note:
+                                 You can use the calendar to see what time slot is available on the prefered room of booking.
+                                </strong></li></ul></p>
                             </div>
                         @endif
                     </div>
@@ -54,35 +64,47 @@
 
                     <div id="collapseTwo" class="panel-collapse collapse">
                             @if (Auth()->user()->roles == 0) <!--Admin FAQ-->
-                            <div class="box-body">
-                            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3
-                            wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum
-                            eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla
-                            assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred
-                            nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer
-                            farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus
-                            labore sustainable VHS.
-                            </div>
-                        @else <!--User FAQ-->
-                            <div class="box-body">
-                                - Students that violates any rule in the student
-                                handbook will be disciplined accordingly.
+                            <div class="box-body" style="margin:0 10px;">
+                                <p><strong>As room Manager, please be aware of these policies: </strong><br>
+                                    <ul><li>Students/Faculty that violates any rule in the school
+                                handbook will be disciplined accordingly.</li></ul>
                             
-                                - Any damage occurring during the use of the room 
+                                <ul><li> Damage occurring during the use of the room 
                                     will be the responsibility of the person who made
-                                    the reservation.
+                                    the reservation.</li></ul>
                             
-                                - If a room is labeled as a "Special Room", you
-                                must wait for the approval of the Room Manager 
-                                in order to use the room.
+                                <ul><li> A room is labeled as a "Special Room", you
+                                    must wait for the approval of the Room Manager
+                                    in order to use the room.</li></ul>
                                 
-                                - Students that are not listed on "Students involved"
-                                section are not allowed on the reserved room.
+                                <ul><li> Students that are not listed on "Students involved"
+                                    section are not allowed on the reserved room.</li></ul>
                                 
-                                - Regular rooms are automatically approved.
+                                <ul><li> Regular rooms are automatically approved.</li></ul>
                                 
-                                - Students can only reserve a room on a date that
-                                is within three months.
+                                <ul><li> Users can only reserve a room on a date that
+                                    is within three months.</li></ul></p>
+                            </div>
+                            @else <!--User FAQ-->
+                            <div class="box-body" style="margin:0 10px;">
+                                <p><ul><li>Students/Faculty that violates any rule in the school
+                                handbook will be disciplined accordingly.</li></ul>
+                            
+                                <ul><li> damage occurring during the use of the room 
+                                    will be the responsibility of the person who made
+                                    the reservation.</li></ul>
+                            
+                                <ul><li> a room is labeled as a "Special Room", you
+                                    must wait for the approval of the Room Manager
+                                    in order to use the room.</li></ul>
+                                
+                                <ul><li> Students that are not listed on "Students involved"
+                                    section are not allowed on the reserved room.</li></ul>
+                                
+                                <ul><li> Regular rooms are automatically approved.</li></ul>
+                                
+                                <ul><li> Users can only reserve a room on a date that
+                                    is within three months.</li></ul></p>
                             </div>
                         @endif
                     </div>
@@ -94,14 +116,22 @@
                     </div>
 
                     <div id="collapseThree" class="panel-collapse collapse">
-                        <div class="box-body">
-                            academics@iacademy.edu.ph
-
-                            (02) 889 - 5555
-                        
-                            iAcademy Nexus Campus,
-                            7434 Yakal Street, Barangay. San Antonio,
-                            Makati City, 1203
+                        <div class="box-body" style="margin:0 10px;">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p>For Technical support:<br>
+                                    Mail: <a href="mailto:infotech@iacademy.edu.ph">infotech@iacademy.edu.ph</a><br>
+                                    Local call:<a href="tel:22232228"> 2223-2228</a><br>
+                                    External call:<a href="tel:028895555">(02)889-5555</a><br><br>
+                                </div>
+                                <div class="col-md-6">
+                                    iAcademy Nexus Campus,<br>
+                                    7434 Yakal Street, Barangay. San Antonio,<br>
+                                    Makati City, 1203<br>
+                                    Mail: <a href="mailto:academics@iacademy.edu.ph">academics@iacademy.edu.ph</a><br>
+                                    Call:<a href="tel:028895555"> (02)889-5555</a></p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     </div>

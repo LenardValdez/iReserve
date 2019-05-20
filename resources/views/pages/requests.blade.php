@@ -1,5 +1,17 @@
 @extends('layouts.app')
 
+@section('script')
+
+<script>
+  $(window).on('load',function(){
+  if (!sessionStorage.getItem('shown-modal')){
+    $('#welcomeFAQModal').modal('show');
+    sessionStorage.setItem('shown-modal', 'true');
+    }
+  });
+</script>    
+@endsection
+
 @section('menu')
 <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
   <ul class="nav navbar-nav">
@@ -8,9 +20,6 @@
       <li class="#"><a href={{URL::route('Reserve')}}>Room Management</a></li>
       <li class="#"><a href={{URL::route('History')}}>Reservation History</a></li>
       <li class="#"><a id="faqBtn" data-toggle="modal" data-target="#welcomeFAQModal">FAQ</a></li>
-    @elseif (Auth()->user()->roles == 1)
-      <li class="active"><a href={{ URL::route('Dashboard') }}>Dashboard</a></li>
-      <li class="#"><a href={{URL::route('Reserve')}}>Room Reservation</a></li>
     @endif
   </ul>
 </div>

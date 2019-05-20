@@ -41,14 +41,6 @@
     <script src="js/adminlte_js/fullcalendar-scheduler.min.js"></script>
 
     <script>
-      $(window).on('load',function(){
-        if (!sessionStorage.getItem('shown-modal')){
-          $('#welcomeFAQModal').modal('show');
-          $('#faqBtn').css('z-index', '5000');
-          sessionStorage.setItem('shown-modal', 'true');
-        }
-      });
-
       $(document).ready(function() {
         $('#faqBtn').click(function(e) {
           $('#faqtitle1').text('');
