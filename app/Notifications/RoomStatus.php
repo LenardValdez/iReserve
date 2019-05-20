@@ -57,6 +57,7 @@ class RoomStatus extends Notification
     public function toDatabase($notifiable)
     {
         return [
+            'form_id' => $this->form->form_id,
             'user_id' => $this->form->user_id,
             'status' => $this->form->isApproved,
             'cancel status' => $this->form->isCancelled,
