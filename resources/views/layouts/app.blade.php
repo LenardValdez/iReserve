@@ -10,7 +10,9 @@
     <link rel="stylesheet" href="css/ionicons.min.css">
     <link rel="stylesheet" href="css/select2.min.css">
     <link rel="stylesheet" href="css/daterangepicker.css">
-    <link rel="stylesheet" href="css/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" href="css/dataTables.bootstrap.min.css"/>
+    <link rel="stylesheet" href="css/buttons.dataTables.min.css"/>
+    <link rel="stylesheet" href="css/select.dataTables.min.css"/>
     <link rel="stylesheet" href="css/bootstrap-datepicker.min.css">
     <link rel="stylesheet" href="css/AdminLTE.min.css">
     <link rel="stylesheet" href="css/skin-blue.min.css">
@@ -22,8 +24,14 @@
     <script src="js/adminlte_js/jquery-ui.min.js"></script>
     <script src="js/adminlte_js/moment.min.js"></script> <!--DATE FORMAT BEING USED BY DATERANGEPICKER-->
     <script src="js/adminlte_js/bootstrap.min.js"></script>
-    <script src="js/adminlte_js/jquery.dataTables.min.js"></script> 
-    <script src="js/adminlte_js/dataTables.bootstrap.min.js"></script>
+    <script src="js/adminlte_js/pdfmake.min.js"></script>
+    <script src="js/adminlte_js/vfs_fonts.js"></script>
+    <script src="js/adminlte_js/jquery.dataTables.min.js"></script>
+    <script src="js/adminlte_js/dataTables.bootstrap.min.js"></script>    
+    <script src="js/adminlte_js/dataTables.buttons.min.js"></script>
+    <script src="js/adminlte_js/buttons.flash.min.js"></script>
+    <script src="js/adminlte_js/buttons.html5.min.js"></script>
+    <script src="js/adminlte_js/dataTables.select.min.js"></script>
     <script src="js/adminlte_js/jquery.slimscroll.min.js"></script>
     <script src="js/adminlte_js/adminlte.min.js"></script>
     <script src="js/adminlte_js/daterangepicker.js"></script> <!--JS FOR MULTIPLE SELECT FORM INPUT-->
@@ -31,6 +39,17 @@
     <script src="js/adminlte_js/select2.full.min.js"></script> <!--JS FOR MULTIPLE SELECT FORM INPUT-->
     <script src="js/adminlte_js/fullcalendar.min.js"></script> <!--CHANGE FORM DATE AND TIME FORMAT TO ISO8601 STRING USING moment().toISOString()-->
     <script src="js/adminlte_js/fullcalendar-scheduler.min.js"></script>
+
+    <script>
+      $(document).ready(function() {
+        $('#faqBtn').click(function(e) {
+          $('#faqtitle1').text('');
+          $('#faqtitle2').text('Frequently Asked Questions');
+          $('#faqsubtitle').text('');
+        });
+      });
+    </script>
+
     @yield('script')
     
   </head>

@@ -5,11 +5,13 @@
     <ul class="nav navbar-nav">
         @if (Auth()->user()->roles == 0)
             <li class="#"><a href={{ URL::route('Dashboard') }}>Dashboard</a></li>
-            <li class="active"><a href={{URL::route('Reserve')}}>Room Reservation</a></li>
+            <li class="active"><a href={{URL::route('Reserve')}}>Room Management</a></li>
             <li class="#"><a href={{URL::route('History')}}>Reservation History</a></li>
+            <li class="#"><a id="faqBtn" data-toggle="modal" data-target="#welcomeFAQModal">FAQ</a></li>
         @elseif (Auth()->user()->roles == 1)
             <li class="#"><a href={{ URL::route('Dashboard') }}>Dashboard</a></li>
             <li class="active"><a href={{URL::route('Reserve')}}>Room Reservation</a></li>
+            <li class="#"><a id="faqBtn" data-toggle="modal" data-target="#welcomeFAQModal">FAQ</a></li>
         @else 
             <li class="active"><a href={{ URL::route('Dashboard') }}>Room Overview</a></li>
             <li class="#"><a href={{URL::route('History')}}>Reservation History</a></li>
@@ -134,6 +136,9 @@ $(function () {
 @section('content')
     <!--CONTENT WRAPPER-->
     <div class="content-wrapper">
+
+        @include('layouts.inc.faq')
+
         <!--PAGE TITLE AND BREADCRUMB-->
         <section class="content-header">
             @if(Auth()->user()->roles == 2)
@@ -213,7 +218,7 @@ $(function () {
 
                         <div class="form-group">
                             <label>People Involved: </label>
-                            <select class="form-control select2" id="peopleInvolved" name="users_involved[]" multiple="multiple" data-placeholder="Enter name" required>
+                            <select class="form-control select2" style="width:100%!important;" id="peopleInvolved" name="users_involved[]" multiple="multiple" data-placeholder="Enter name" required>
                                 @foreach ($users as $user)
                                     @if ($user->user_id != Auth()->user()->user_id and $user->roles == 1)
                                         <option value="{{$user->name}}">{{$user->name}}</option>
