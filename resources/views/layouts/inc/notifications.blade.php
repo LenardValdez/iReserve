@@ -11,15 +11,26 @@
         <li>
         <a href="{{ URL::route('Dashboard') }}">
             <i class="fa fa-clock-o text-orange"></i>
-            @foreach (Auth::user()->notifications as $notification)
+            @if (Auth::user()->roles == 1)
+              @foreach (Auth::user()->unreadNotifications as $notification)
               <p>Your reservation has been
-              @if ($notification->data['status'] == 1)
-                  approved</p>
-              @else
-                  denied</p>
-              @endif
+                @if ($notification->data['status'] == 1)
+                    approved</p>
+                @else
+                    denied</p>
+                @endif
               {{-- at {{$notification->updated_at->diffForHumans()}}  (para sa timestamp)--}}
-            @endforeach
+              @endforeach
+            @else
+                @if (Auth::user()->unreadNotifications == null)
+                  <p>There are no pending reservations</p>
+                @else
+                  {{-- <p>There are pending reservations</p> --}}
+                  @foreach (Auth::user()->unreadNotifications as $notification)
+                      {{$notification->data['user_id']}}
+                  @endforeach
+                @endif
+            @endif
           </a>
         </li>
       </ul>

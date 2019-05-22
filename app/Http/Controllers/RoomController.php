@@ -109,6 +109,9 @@ class RoomController extends Controller
             }
             $form->save();
 
+            $user = User::where('user_id', 'admin')->get()->first();
+            $user->notify(new RoomStatus($form));
+
             return redirect()->back();
         }
     }
