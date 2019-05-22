@@ -9,8 +9,17 @@
     <li>
       <ul class="menu">
         <li>
-          <a href="#">
-            <i class="fa fa-clock-o text-orange"></i> You have 4 new pending requests.
+        <a href="{{ URL::route('Dashboard') }}">
+            <i class="fa fa-clock-o text-orange"></i>
+            @foreach (Auth::user()->notifications as $notification)
+              <p>Your reservation has been
+              @if ($notification->data['status'] == 1)
+                  approved</p>
+              @else
+                  denied</p>
+              @endif
+              {{-- at {{$notification->updated_at->diffForHumans()}}  (para sa timestamp)--}}
+            @endforeach
           </a>
         </li>
       </ul>

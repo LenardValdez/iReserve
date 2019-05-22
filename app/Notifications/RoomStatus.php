@@ -59,8 +59,9 @@ class RoomStatus extends Notification
         return [
             'form_id' => $this->form->form_id,
             'user_id' => $this->form->user_id,
+            'read_at' => $this->form->read_at,
             'status' => $this->form->isApproved,
-            'cancel status' => $this->form->isCancelled,
+            'cancel_status' => $this->form->isCancelled,
         ];
     }
 }
