@@ -2,7 +2,11 @@
 <li class="dropdown notifications-menu">
     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
       <i class="fa fa-bell-o"></i>
-    <span class="label label-warning">{{Auth::user()->unreadNotifications->count()}}</span>
+    @if (Auth::user()->unreadNotifications->count()==0)
+    <span></span>
+    @else
+      <span class="label label-warning">{{Auth::user()->unreadNotifications->count()}}</span>
+    @endif
     </a>
     <ul class="dropdown-menu">
       <li class="header">Notifications</li>

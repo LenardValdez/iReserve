@@ -9,11 +9,11 @@
         <div class="box-body">
           <form role="form" id="roomDataForm" method="POST" action="{{ route('processaddroom') }}">
             @csrf
-              <div class="form-group">
+              <div class="form-group{{ $errors->has('room_id') ? ' has-error' : '' }}">
                 <label for="room_id">Room Number: </label>
-                <input type="text" class="form-control{{ $errors->has('room_id') ? ' is-invalid' : '' }}" placeholder="Enter room number" id="newroom_id" name="room_id" value="{{ old('room_id') }}" required>
+                <input type="text" class="form-control{{ $errors->has('room_id') ? ' has-error' : '' }}" placeholder="Enter room number" id="newroom_id" name="room_id" value="{{ old('room_id') }}" required>
                 @if ($errors->has('room_id'))
-                  <span class="invalid-feedback" role="alert">
+                  <span class="help-block" role="alert">
                       <strong>{{ $errors->first('room_id') }}</strong>
                   </span>
                 @endif

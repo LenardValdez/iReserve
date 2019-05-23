@@ -195,7 +195,7 @@ $(function () {
 
                         <div class="form-group {{ $errors->has('room_id') ? ' has-error' : '' }}">
                             <label>Room Number: <span class="text-danger">*</span></label>
-                            <select class="form-control{{ $errors->has('room_id') ? ' has-error' : '' }}" id="room_id" name="room_id" required>
+                            <select class="form-control{{ $errors->has('room_id') ? ' has-error' : '' }}" id="res_id" name="room_id" required>
                                 <option value="" selected disabled>Select an available room</option>
                                 @foreach ($descriptions as $description)
                                 <optgroup label="{{$description}}">
@@ -216,7 +216,7 @@ $(function () {
                                 @endforeach
                             </select>
                             @if ($errors->has('room_id'))
-                            <span class="invalid-feedback" role="alert">
+                            <span class="help-block" role="alert">
                                 <strong>{{ $errors->first('room_id') }}</strong>
                             </span>
                             @endif
@@ -248,18 +248,18 @@ $(function () {
                             </div>
                         </div>
 
-                        <div class="form-group {{ $errors->has('purpose') ? ' has-error' : '' }}">
+                        <div class="form-group{{ $errors->has('puspose') ? ' has-error' : '' }}">
                             <label for="reason">Purpose: <span class="text-danger">*</span></label>
-                            <textarea class="form-control {{ $errors->has('purpose') ? ' has-error' : '' }}" id="purpose" name="purpose" rows="3" placeholder="Enter purpose here" required></textarea>
+                            <textarea class="form-control{{ $errors->has('purpose') ? ' has-error' : '' }}" id="purpose" name="purpose" rows="3" placeholder="Enter purpose here" required></textarea>
                             @if ($errors->has('purpose'))
-                            <span class="invalid-feedback" role="alert">
+                            <span class="help-block" role="alert">
                                 <strong>{{ $errors->first('purpose') }}</strong>
                             </span>
                             @endif
                         </div>
                         <input type="hidden" name="specialReservation" value="0">
                         <p class="text-red pull-left"><span class="text-danger">*</span> items are required</p>
-                        <button type="button" data-target="#formReview" value="Submit" id="addReservationBtn" class="btn btn-primary pull-right">{{ __('Submit') }}</button>
+                        <button type="button" data-target="#formReview" value="Submit" id="addReservationBtn" class="btn btn-primary pull-right">Submit</button>
 
                         <!--FORM REVIEW MODAL+SUBMIT-->
                         <div class="modal fade" id="formReview">
