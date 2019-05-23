@@ -2,7 +2,7 @@
 <li class="dropdown notifications-menu">
     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
       <i class="fa fa-bell-o"></i>
-      <span class="label label-warning">1</span>
+    <span class="label label-warning">{{Auth::user()->unreadNotifications->count()}}</span>
     </a>
     <ul class="dropdown-menu">
       <li class="header">Notifications</li>
@@ -17,9 +17,9 @@
               <a href="{{ URL::route('Dashboard') }}">
                   <i class="fa fa-clock-o text-orange"></i> Your reservation {{sprintf("%07d", $notification->data['form_id'])}} has been
                       @if ($notification->data['status'] == 1)
-                          approved
+                          approved.
                       @else
-                          denied
+                          denied.
                       @endif
                   {{-- at {{$notification->updated_at->diffForHumans()}}  (para sa timestamp)--}}
               </a>

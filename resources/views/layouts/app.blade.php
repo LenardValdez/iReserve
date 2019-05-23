@@ -40,6 +40,11 @@
     <script src="js/adminlte_js/fullcalendar.min.js"></script> <!--CHANGE FORM DATE AND TIME FORMAT TO ISO8601 STRING USING moment().toISOString()-->
     <script src="js/adminlte_js/fullcalendar-scheduler.min.js"></script>
 
+    <style>
+    .notifications-menu > .dropdown-menu > li .menu > li > a {
+      white-space: normal !important;
+    }
+    </style>
     <script>
       $(document).ready(function() {
         $('#faqBtn').click(function(e) {
