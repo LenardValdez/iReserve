@@ -117,7 +117,9 @@ class RoomController extends Controller
 
             $user = User::where('user_id', 'admin')->get()->first();
             if(Auth::user()->roles == 1){
-                $user->notify(new RoomStatus($form));
+                if($request->get('specialReservation')=='1'){
+                    $user->notify(new RoomStatus($form));
+                }
             }
 
             return redirect()->back();

@@ -30,8 +30,6 @@ $(function () {
 
     $('input.reservationPeriod').daterangepicker({
     timePicker: true,
-    startDate: moment().startOf('hour'),
-    endDate: moment().startOf('hour').add(32, 'hour'),
     minDate: moment(),
     maxDate: moment().startOf('hour').add(3, 'months'),
     locale: {
@@ -85,7 +83,7 @@ $(function () {
             end: '21:00',
         },
         eventClick: function(event){
-            alert(event.title + '\nStart: ' + event.start.format('hh:mm A') + '\nEnd: ' + event.end.format('hh:mm A'));
+            alert(event.title + '\nPeople Involved: ' + event.people + '\nStart: ' + event.start.format('hh:mm A') + '\nEnd: ' + event.end.format('hh:mm A'));
         },
         height: '800',
         defaultView: 'timelineDay',
@@ -99,7 +97,7 @@ $(function () {
         events: [
             @foreach($users as $user)
                 @foreach($forms as $form)
-                    { 
+                    {
                     @if($user->user_id == $form->user_id)
                     title: '{{ sprintf("%07d", $form->form_id) }} | {{ $user->name }}', 
                     resourceId: '{{ $form->room_id }}', 
@@ -121,10 +119,12 @@ $(function () {
             var checkPurpose = $.trim($('#purpose').val());
 
             if(checkRoom === '' || checkPurpose === ''){
+                //$('#reservationForm').submit();
                 e.stopPropagation();
             }
             else {
             /* when the button in the form, display the entered values in the modal */
+            $('#addReservationBtn').attr('data-toggle','modal');
             $('#date').text('{{ \Carbon\Carbon::now()->toDayDateTimeString() }}');
             $('#room').text($('#room_id').val());
             $('#people').text($('#peopleInvolved').val());
@@ -190,12 +190,12 @@ $(function () {
                         @csrf
                         <div class="form-group">
                             <label for="formName">Name: </label>
-                            <input type="text" class="form-control"  placeholder="{{Auth::user()->name}}" disabled>
+                            <input type="text" class="form-control" placeholder="{{Auth::user()->name}}" disabled>
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group {{ $errors->has('room_id') ? ' has-error' : '' }}">
                             <label>Room Number: <span class="text-danger">*</span></label>
-                            <select class="form-control{{ $errors->has('room_id') ? ' is-invalid' : '' }}" id="room_id" name="room_id" required>
+                            <select class="form-control{{ $errors->has('room_id') ? ' has-error' : '' }}" id="room_id" name="room_id" required>
                                 <option value="" selected disabled>Select an available room</option>
                                 @foreach ($descriptions as $description)
                                 <optgroup label="{{$description}}">
@@ -248,9 +248,9 @@ $(function () {
                             </div>
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group {{ $errors->has('purpose') ? ' has-error' : '' }}">
                             <label for="reason">Purpose: <span class="text-danger">*</span></label>
-                            <textarea class="form-control{{ $errors->has('room_id') ? ' is-invalid' : '' }}" id="purpose" name="purpose" rows="3" placeholder="Enter purpose here" required></textarea>
+                            <textarea class="form-control {{ $errors->has('purpose') ? ' has-error' : '' }}" id="purpose" name="purpose" rows="3" placeholder="Enter purpose here" required></textarea>
                             @if ($errors->has('purpose'))
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $errors->first('purpose') }}</strong>
@@ -259,7 +259,7 @@ $(function () {
                         </div>
                         <input type="hidden" name="specialReservation" value="0">
                         <p class="text-red pull-left"><span class="text-danger">*</span> items are required</p>
-                        <button type="button" data-target="#formReview" value="Submit" id="addReservationBtn" data-toggle="modal" class="btn btn-primary pull-right">Submit</button>
+                        <button type="button" data-target="#formReview" value="Submit" id="addReservationBtn" class="btn btn-primary pull-right">{{ __('Submit') }}</button>
 
                         <!--FORM REVIEW MODAL+SUBMIT-->
                         <div class="modal fade" id="formReview">

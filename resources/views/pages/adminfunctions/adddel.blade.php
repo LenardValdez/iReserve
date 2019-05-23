@@ -20,7 +20,7 @@
               </div>
               <div class="form-group">
                 <label for="room_desc">Room Description: </label>
-                <select id="room_desc" class="form-control{{ $errors->has('room_desc') ? ' is-invalid' : '' }}" name="room_desc" value="{{ old('room_desc') }}" required>
+                <select id="room_desc" class="form-control{{ $errors->has('room_desc') ? ' has-error' : '' }}" name="room_desc" value="{{ old('room_desc') }}" required>
                   <option selected disabled>Select room description</option>
                   <option value="6th Floor">6th Floor</option>
                   <option value="7th Floor">7th Floor</option>
@@ -41,7 +41,7 @@
               </div>
               <div class="form-group">
                 <label for="isSpecial">Category: </label>
-                  <select class="form-control{{ $errors->has('isSpecial') ? ' is-invalid' : '' }}" id="isSpecial" name="isSpecial" required>
+                  <select class="form-control{{ $errors->has('isSpecial') ? ' has-error' : '' }}" id="isSpecial" name="isSpecial" required>
                     <option value="" selected disabled>Select room category</option>
                     <option value="0">Ordinary Room</option>
                     <option value="1">Special Room</option>
@@ -68,7 +68,7 @@
         <div class="box-body">
           <form role="form" id="roomIdDelForm" method="POST" action="{{ route('processdelroom') }}">
             @csrf
-            <div class="form-group">
+            <div class="form-group{{ $errors->has('delroom_id') ? ' has-error' : '' }}">
               <label>Room Number: </label>
               <select class="form-control" id="delroom_id" name="room_id" required>
                 <option value="" selected disabled>Select a room to be deleted</option>
