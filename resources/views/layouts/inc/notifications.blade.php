@@ -1,40 +1,46 @@
 <!--NOTIFICATIONS-->
 <li class="dropdown notifications-menu">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-    <i class="fa fa-bell-o"></i>
-    <span class="label label-warning">1</span>
-  </a>
-  <ul class="dropdown-menu">
-    <li class="header">Notifications</li>
-    <li>
-      <ul class="menu">
-        <li>
-        <a href="{{ URL::route('Dashboard') }}">
-            <i class="fa fa-clock-o text-orange"></i>
-            @if (Auth::user()->roles == 1)
-              @foreach (Auth::user()->unreadNotifications as $notification)
-              <p>Your reservation has been
-                @if ($notification->data['status'] == 1)
-                    approved</p>
-                @else
-                    denied</p>
-                @endif
-              {{-- at {{$notification->updated_at->diffForHumans()}}  (para sa timestamp)--}}
-              @endforeach
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+      <i class="fa fa-bell-o"></i>
+      <span class="label label-warning">1</span>
+    </a>
+    <ul class="dropdown-menu">
+      <li class="header">Notifications</li>
+      <li>
+        <ul class="menu">
+          @if (Auth::user()->roles == 1)
+            @if (Auth::user()->unreadNotifications->count()==0)
+              <li><a href="#">No new notifications.</a></li>
             @else
-                @if (Auth::user()->unreadNotifications == null)
-                  <p>There are no pending reservations</p>
-                @else
-                  {{-- <p>There are pending reservations</p> --}}
-                  @foreach (Auth::user()->unreadNotifications as $notification)
-                      {{$notification->data['user_id']}}
-                  @endforeach
-                @endif
+              @foreach (Auth::user()->unreadNotifications as $notification)
+              <li>
+              <a href="{{ URL::route('Dashboard') }}">
+                  <i class="fa fa-clock-o text-orange"></i> Your reservation {{sprintf("%07d", $notification->data['form_id'])}} has been
+                      @if ($notification->data['status'] == 1)
+                          approved
+                      @else
+                          denied
+                      @endif
+                  {{-- at {{$notification->updated_at->diffForHumans()}}  (para sa timestamp)--}}
+              </a>
+              </li>
+              @endforeach
             @endif
-          </a>
-        </li>
-      </ul>
-    </li>
-  </ul>
-</li>
-<!--END OF NOTIFICATIONS-->
+          @else
+              @if (Auth::user()->unreadNotifications->count()==0)
+                <li><a href="#">No new notifications.</a></li>
+              @else
+                  @foreach (Auth::user()->unreadNotifications as $notification)
+                  <li>
+                  <a href="{{ URL::route('Dashboard') }}">
+                      <i class="fa fa-clock-o text-orange"></i> Student {{$notification->data['user_id']}} have a new reservation
+                  </a>
+                  </li>
+                  @endforeach
+              @endif
+          @endif
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <!--END OF NOTIFICATIONS-->
