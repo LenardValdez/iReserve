@@ -25,3 +25,4 @@ Route::post('/reserve/add', 'RoomController@store')->name('processaddroom'); //P
 Route::post('/reserve/del','RoomController@destroy')->name('processdelroom'); //Process ng form to del room
 Route::get('/dashboard/approve/{id}', 'RoomController@approve')->name('approverequest');
 Route::get('/dashboard/reject/{id}', 'RoomController@reject')->name('rejectrequest');
+Route::get('/read/{id}', 'RoomController@readNotif')->name('readnotification');

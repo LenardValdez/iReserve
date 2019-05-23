@@ -35,8 +35,9 @@ $(function () {
     minDate: moment(),
     maxDate: moment().startOf('hour').add(3, 'months'),
     locale: {
-        format: 'YYYY-MM-DD HH:mm:ss'
-    }
+        format: 'MMMM DD, YYYY hh:mm A'
+    },
+    timePickerIncrement: 30
     });
 
     $('#reservationForm').submit(function (ev, picker) {
@@ -45,6 +46,8 @@ $(function () {
         if(checkSpecial==='1' || checkSpecial==='8'){
             $(this).find('input[name="specialReservation"]').val('1');
         }
+        startDate = moment(startDate).format("YYYY-MM-DD HH:mm:ss");
+        endDate = moment(endDate).format("YYYY-MM-DD HH:mm:ss");
         $(this).find('input[name="stime_res"]').val(startDate);
         $(this).find('input[name="etime_res"]').val(endDate);
     });
@@ -80,6 +83,9 @@ $(function () {
 
             start: '07:30',
             end: '21:00',
+        },
+        eventClick: function(event){
+            alert(event.title + '\nStart: ' + event.start.format('hh:mm A') + '\nEnd: ' + event.end.format('hh:mm A'));
         },
         height: '800',
         defaultView: 'timelineDay',

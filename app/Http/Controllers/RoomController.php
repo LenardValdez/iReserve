@@ -9,6 +9,8 @@ use App\RegForm;
 use Illuminate\Http\Request;
 use App\Http\Requests\RoomRequest;
 use App\Notifications\RoomStatus;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Notifications\DatabaseNotification;
 
 
 class RoomController extends Controller
@@ -78,6 +80,10 @@ class RoomController extends Controller
                     'etime_res' => $request->get('etime_res'),
                     'purpose' => $request->get('purpose')
                 ]);
+
+                if(Auth()->user()->roles == 0){
+                    $form->isApproved = '1';
+                }
             }
             else {
                 $form = new RegForm([
@@ -110,7 +116,9 @@ class RoomController extends Controller
             $form->save();
 
             $user = User::where('user_id', 'admin')->get()->first();
-            $user->notify(new RoomStatus($form));
+            if(Auth::user()->roles == 1){
+                $user->notify(new RoomStatus($form));
+            }
 
             return redirect()->back();
         }
@@ -207,5 +215,13 @@ class RoomController extends Controller
                                         ->with("rooms", $rooms)
                                         ->with("descriptions", $descriptions)
                                         ->with("users", $users);
+    }
+
+    public function readNotif($id)
+    {
+        $notification = DatabaseNotification::where('id',$id)->first();
+        $notification->markAsRead();
+
+        return redirect()->route('Dashboard');
     }
 }

@@ -14,7 +14,7 @@
             @else
               @foreach (Auth::user()->unreadNotifications as $notification)
               <li>
-              <a href="{{ URL::route('Dashboard') }}">
+              <a href="{{ route('readnotification', $notification->id) }}">
                   <i class="fa fa-clock-o text-orange"></i> Your reservation {{sprintf("%07d", $notification->data['form_id'])}} has been
                       @if ($notification->data['status'] == 1)
                           approved.
@@ -32,8 +32,8 @@
               @else
                   @foreach (Auth::user()->unreadNotifications as $notification)
                   <li>
-                  <a href="{{ URL::route('Dashboard') }}">
-                      <i class="fa fa-clock-o text-orange"></i> Student {{$notification->data['user_id']}} have a new reservation
+                  <a href="{{ route('readnotification', $notification->id) }}">
+                      <i class="fa fa-clock-o text-orange"></i> Student {{$notification->data['user_id']}} has a new reservation
                   </a>
                   </li>
                   @endforeach

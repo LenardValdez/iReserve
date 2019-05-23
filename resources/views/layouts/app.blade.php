@@ -74,7 +74,7 @@
 
       <footer class="main-footer">
         <div class="pull-right hidden-xs">
-          academics@iacademy.edu.ph | (02) 889-5555 ext. 2000
+          <a href="mailto:academics@iacademy.edu.ph">academics@iacademy.edu.ph</a> | <a href="tel:028895555">(02) 889-5555</a> ext. 2000
         </div>
         <strong>Copyright &copy; 2019 <a href="http://www.iacademy.edu.ph">iACADEMY</a>.</strong> All rights reserved.
       </footer>
