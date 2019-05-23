@@ -9,12 +9,12 @@
     @endif
     </a>
     <ul class="dropdown-menu">
-      <li class="header">Notifications</li>
+      <li class="header">You have {{Auth::user()->unreadNotifications->count()}} notifications</li>
       <li>
         <ul class="menu">
           @if (Auth::user()->roles == 1)
             @if (Auth::user()->unreadNotifications->count()==0)
-              <li><a href="#">No new notifications.</a></li>
+              <li><a href="#"><i class="fa fa-check-circle-o text-green"></i> No new notifications.</a></li>
             @else
               @foreach (Auth::user()->unreadNotifications as $notification)
               <li>
@@ -32,7 +32,7 @@
             @endif
           @else
               @if (Auth::user()->unreadNotifications->count()==0)
-                <li><a href="#">No new notifications.</a></li>
+                <li><a href="#"><i class="fa fa-check-circle-o text-green"></i> No new notifications.</a></li>
               @else
                   @foreach (Auth::user()->unreadNotifications as $notification)
                   <li>
