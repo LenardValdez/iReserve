@@ -30,7 +30,7 @@ class PagesController extends Controller
         $role = auth()->user()->roles;
     
         if ($role == 0){
-            $pendingforms = RegForm::where('isApproved', 0)->get();
+            $pendingforms = RegForm::where('isApproved', 0)->orderBy('created_at', 'asc')->get();
             $users = User::get();
             return view('pages.requests')->with("pendingforms", $pendingforms)
                                          ->with("users", $users);

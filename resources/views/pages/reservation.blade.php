@@ -83,7 +83,7 @@ $(function () {
             end: '21:00',
         },
         eventClick: function(event){
-            alert(event.title + '\nPeople Involved: ' + event.people + '\nStart: ' + event.start.format('hh:mm A') + '\nEnd: ' + event.end.format('hh:mm A'));
+            alert(event.title + '\nPeople Involved: ' + event.people + '\nStart: ' + event.start.format('MMMM DD, YYYY hh:mm A') + '\nEnd: ' + event.end.format('MMMM DD, YYYY hh:mm A'));
         },
         height: '800',
         defaultView: 'timelineDay',
@@ -103,7 +103,8 @@ $(function () {
                     resourceId: '{{ $form->room_id }}', 
                     @endif
                     start: moment('{{ $form->stime_res }}').format(), 
-                    end: moment('{{ $form->etime_res }}').format()
+                    end: moment('{{ $form->etime_res }}').format(),
+                    people: @if($form->users_involved!=NULL) '{{ $form->users_involved }}' @else 'N/A' @endif
                     },
                 @endforeach
             @endforeach
@@ -151,12 +152,17 @@ $(function () {
         <section class="content-header">
             @if(Auth()->user()->roles == 2)
                 <h1>Room Overview</h1>
-            @else
+            @elseif(Auth()->user()->roles == 0)
+                <h1>Room Management</h1>
+            @else 
                 <h1>Room Reservation</h1>
             @endif
             <ol class="breadcrumb">
             @if(Auth()->user()->roles == 2)
                 <li class="active"><i class="fa fa-building"></i>Room Overview</a></li>
+            @elseif(Auth()->user()->roles == 0)
+                <li><a href={{URL::route('Dashboard')}}><i class="fa fa-dashboard"></i> Dashboard</a></li>
+                <li class="active">Room Management</li>
             @else
                 <li><a href={{URL::route('Dashboard')}}><i class="fa fa-dashboard"></i> Dashboard</a></li>
                 <li class="active">Room Reservation</li>
@@ -180,6 +186,30 @@ $(function () {
                 </div>
             </div>
             @else
+            @if(session('roomAlert'))
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="alert alert-success alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                        {{ session('roomAlert') }}
+                    </div>
+                </div>
+            </div>
+            @endif
+            @if(session('roomDelAlert'))
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="alert alert-danger alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                        {{ session('roomDelAlert') }}
+                    </div>
+                </div>
+            </div>
+            @endif
             <div class="row">
                 <div class="col-md-4">
                     <div class="box box-primary">
@@ -292,46 +322,12 @@ $(function () {
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Revise</button>
-                                        <button type="submit" class="btn btn-success" id="formConfirmed" data-target="#successModal" data-dismiss="modal" data-toggle="modal">Confirm</button>
+                                        <button type="submit" class="btn btn-success" id="formConfirmed">Confirm</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         </form>
-
-                        <!--ADD-RESERVATION CONFIRMATION MODAL-->
-                        <div class="modal fade" id="successModal">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                    </button>
-                                    <h4 class="modal-title" id="myModalLabel">Reservation Confirmed</h4>
-                                </div>
-                                <div class="modal-body">
-                                    <h4>The scheduler has been updated.</h4>
-                                </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!--ADD-ROOM CONFIRMATION MODAL-->
-                        <div class="modal fade" id="successRoomModal">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                                </button>
-                                <h4 class="modal-title" id="myModalLabel">Room Database Updated</h4>
-                            </div>
-                            <div class="modal-body">
-                                <h4>The database and scheduler have been successfully updated.</h4>
-                            </div>
-                            </div>
-                        </div>
-                        </div>
                     </div> <!--END OF BOX-BODY-->
                     </div> <!--END OF CONTENT BOX-->
 

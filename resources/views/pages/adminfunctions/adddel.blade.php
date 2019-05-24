@@ -52,7 +52,7 @@
                       </span>
                     @endif
               </div>
-              <button type="submit" id="addRoomBtn" data-toggle="modal" data-target="#successRoomModal" class="btn btn-primary pull-right">{{ __('Add') }}</button>
+              <button type="submit" id="addRoomBtn" class="btn btn-primary pull-right">{{ __('Add') }}</button>
           </form>
         </div>
       </div>
@@ -99,7 +99,7 @@
                   </div>
                   <div class="modal-footer">
                       <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Revise</button>
-                      <button type="submit" class="btn btn-danger" data-target="#successRoomModal" data-dismiss="modal" data-toggle="modal" onclick="$('#roomIdDelForm').submit()">Delete</button>
+                      <button type="submit" class="btn btn-danger" onclick="$('#roomIdDelForm').submit()">Delete</button>
                   </div>
                 </div>
               </div>

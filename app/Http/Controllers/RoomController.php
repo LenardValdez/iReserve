@@ -40,7 +40,7 @@ class RoomController extends Controller
     public function store(RoomRequest $request)
     {
         Room::create($request->validated());
-	    return redirect()->back()->with('status',"The room is now saved.");
+	    return redirect()->back()->with('roomAlert',"Room ".$request->room_id." has been successfully added to the database and scheduler!");
     }
 
     public function reserve(Request $request)
@@ -96,6 +96,12 @@ class RoomController extends Controller
                                             ->where('isApproved', '1')
                                             ->update(['isCancelled' => true]);
                     $form->isApproved = '1';
+                    $form->save();
+                    return redirect()->back()->with('roomAlert',"Your reservation has been approved and added to the calendar and database! Requests for the same room with similar reservation period have been overriden.");
+                }
+                else{
+                    $form->save();
+                    return redirect()->back()->with('roomAlert',"Sit back and relax! Your reservation has been received and is subject for approval.");
                 }
             }
             else {
@@ -116,10 +122,16 @@ class RoomController extends Controller
                                             ->where('isApproved', '1')
                                             ->update(['isCancelled' => true]);
                 }
-
                 $form->isApproved = '1';
+                $form->save();
+
+                if(Auth()->user()->roles == 0){
+                    return redirect()->back()->with('roomAlert',"Your reservation has been approved and added to the calendar and database! Requests for the same room with similar reservation period have been overriden.");
+                }
+                else{
+                    return redirect()->back()->with('roomAlert',"Your reservation has been approved and added to the calendar and database!");
+                }
             }
-            $form->save();
 
             $user = User::where('user_id', 'admin')->get()->first();
             if(Auth::user()->roles == 1){
@@ -127,8 +139,6 @@ class RoomController extends Controller
                     $user->notify(new RoomStatus($form));
                 }
             }
-
-            return redirect()->back();
         }
     }
 
@@ -208,7 +218,7 @@ class RoomController extends Controller
     {
         $delete = Room::where('room_id',$request->room_id)->first();
         $delete->delete();
-        return redirect()->back();
+        return redirect()->back()->with('roomDelAlert','Room '.$request->room_id.' has been successfully deleted from the database and scheduler.');
     }
 
     public function list()

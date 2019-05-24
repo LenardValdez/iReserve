@@ -93,7 +93,7 @@
                             </tr>
                             <tr>
                                 <th>People Involved</th>
-                                <td>{{$form->users_involved}}</td>
+                                <td>@if($form->users_involved!=NULL){{$form->users_involved}} @else N/A @endif</td>
                             </tr>
                             <tr>
                                 <th>Reservation Period</th>

@@ -17,32 +17,40 @@
     $(document).ready(function () {
       $('#overallHistory').DataTable({
         dom: 'Bfrtip',
-          lengthMenu: [
-              [ 10, 25, 50, -1 ],
-              [ '10 rows', '25 rows', '50 rows', 'Show all' ]
-          ],
-          buttons: [
-              'pageLength',
-              {
-              extend: 'pdfHtml5',
-              text: 'Export as PDF',
-              exportOptions: {
-                  modifier: {
-                      selected: null
-                  }
-              },
-              download: 'open'
-              },
-              {
-              extend: 'csvHtml5',
-              text: 'Export as CSV',
-              exportOptions: {
-                  modifier: {
-                      search: 'none'
-                  }
+        columnDefs: [
+          {
+            "targets": [ 3,4 ],
+            "visible": false,
+            "searchable": false
+          }
+        ],
+        lengthMenu: [
+          [ 10, 25, 50, -1 ],
+          [ '10 rows', '25 rows', '50 rows', 'Show all' ]
+        ],
+        buttons: [
+          'pageLength',
+          {
+          extend: 'pdfHtml5',
+          text: 'Export as PDF',
+          orientation: 'landscape',
+          exportOptions: {
+              modifier: {
+                  selected: null
               }
+          },
+          download: 'open'
+          },
+          {
+          extend: 'csvHtml5',
+          text: 'Export as CSV',
+          exportOptions: {
+              modifier: {
+                  search: 'none'
               }
-          ],
+            }
+          }
+        ],
         select: true
       });
     });
@@ -167,6 +175,8 @@
                           <th>Request ID</th>
                           <th>Student ID</th>
                           <th>Student Name</th>
+                          <th>People Involved</th>
+                          <th>Purpose</th>
                           <th>Room</th>
                           <th>Type</th>
                           <th>Submission Date</th>
@@ -179,7 +189,7 @@
                         @if(Auth()->User()->roles == 1)
                           @if($studentReservations->isEmpty())
                             <tr>
-                              <td colspan="8" class="text-center">Oops! Looks like you haven't submitted any requests yet.</td>
+                              <td colspan="10" class="text-center">Oops! Looks like you haven't submitted any requests yet.</td>
                             </tr>
                           @else
                             @foreach($studentReservations as $reservation)
@@ -191,6 +201,8 @@
                                     <td>{{$user->name}}</td>
                                   @endif
                                 @endforeach
+                                <td>@if($reservation->users_involved!=NULL){{$reservation->users_involved}} @else N/A @endif</td>
+                                <td>{{$reservation->purpose}}</td>
                                 <td>{{$reservation->room_id}}</td>
                                 @foreach ($rooms as $room)
                                   @if ($room->room_id == $reservation->room_id) 
@@ -222,7 +234,7 @@
                         @else
                         @if($reservations->isEmpty())
                           <tr>
-                            <td colspan="8" class="text-center">Everything is good, no pending requests</td>
+                            <td colspan="10" class="text-center">Everything is good, no pending requests</td>
                           </tr>
                         @else
                           @foreach($reservations as $reservation)
@@ -234,6 +246,8 @@
                                   <td>{{$user->name}}</td>
                                 @endif
                               @endforeach
+                              <td>@if($reservation->users_involved!=NULL){{$reservation->users_involved}} @else N/A @endif</td>
+                              <td>{{$reservation->purpose}}</td>
                               <td>{{$reservation->room_id}}</td>
                               @foreach ($rooms as $room)
                                 @if ($room->room_id == $reservation->room_id) 
