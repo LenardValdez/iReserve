@@ -98,7 +98,7 @@ $(function () {
             @foreach($users as $user)
                 @foreach($forms as $form)
                     {
-                    @if($user->user_id == $form->user_id)
+                    @if($user->user_id == $form->user_id && $form->isCancelled!=1)
                     title: '{{ sprintf("%07d", $form->form_id) }} | {{ $user->name }}', 
                     resourceId: '{{ $form->room_id }}', 
                     @endif
@@ -120,10 +120,12 @@ $(function () {
 
             if(checkRoom === '' || checkPurpose === ''){
                 //$('#reservationForm').submit();
-                e.stopPropagation();
+                //e.stopPropagation();
+                $('#addReservationBtn').attr('type','submit');
             }
             else {
             /* when the button in the form, display the entered values in the modal */
+            $('#addReservationBtn').attr('type','button');
             $('#addReservationBtn').attr('data-toggle','modal');
             $('#date').text('{{ \Carbon\Carbon::now()->toDayDateTimeString() }}');
             $('#room').text($('#room_id').val());
@@ -193,9 +195,9 @@ $(function () {
                             <input type="text" class="form-control" placeholder="{{Auth::user()->name}}" disabled>
                         </div>
 
-                        <div class="form-group {{ $errors->has('room_id') ? ' has-error' : '' }}">
+                        <div class="form-group">
                             <label>Room Number: <span class="text-danger">*</span></label>
-                            <select class="form-control{{ $errors->has('room_id') ? ' has-error' : '' }}" id="res_id" name="room_id" required>
+                            <select class="form-control" id="room_id" name="room_id" required>
                                 <option value="" selected disabled>Select an available room</option>
                                 @foreach ($descriptions as $description)
                                 <optgroup label="{{$description}}">
@@ -215,16 +217,11 @@ $(function () {
                                 </optgroup>
                                 @endforeach
                             </select>
-                            @if ($errors->has('room_id'))
-                            <span class="help-block" role="alert">
-                                <strong>{{ $errors->first('room_id') }}</strong>
-                            </span>
-                            @endif
                         </div>
 
                         <div class="form-group">
                             <label>People Involved: </label>
-                            <select class="form-control select2" style="width:100%!important;" id="peopleInvolved" name="users_involved[]" multiple="multiple" data-placeholder="Enter name" required>
+                            <select class="form-control select2" style="width:100%!important;" id="peopleInvolved" name="users_involved[]" multiple="multiple" data-placeholder="Enter name">
                                 @foreach ($users as $user)
                                     @if ($user->user_id != Auth()->user()->user_id and $user->roles == 1)
                                         <option value="{{$user->name}}">{{$user->name}}</option>
@@ -248,14 +245,9 @@ $(function () {
                             </div>
                         </div>
 
-                        <div class="form-group{{ $errors->has('puspose') ? ' has-error' : '' }}">
+                        <div class="form-group">
                             <label for="reason">Purpose: <span class="text-danger">*</span></label>
-                            <textarea class="form-control{{ $errors->has('purpose') ? ' has-error' : '' }}" id="purpose" name="purpose" rows="3" placeholder="Enter purpose here" required></textarea>
-                            @if ($errors->has('purpose'))
-                            <span class="help-block" role="alert">
-                                <strong>{{ $errors->first('purpose') }}</strong>
-                            </span>
-                            @endif
+                            <textarea class="form-control" id="purpose" name="purpose" rows="3" placeholder="Enter purpose here" required></textarea>
                         </div>
                         <input type="hidden" name="specialReservation" value="0">
                         <p class="text-red pull-left"><span class="text-danger">*</span> items are required</p>
