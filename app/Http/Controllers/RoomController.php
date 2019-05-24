@@ -101,6 +101,10 @@ class RoomController extends Controller
                 }
                 else{
                     $form->save();
+                    $user = User::where('user_id', 'admin')->get()->first();
+                    if($request->get('specialReservation')=='1'){
+                        $user->notify(new RoomStatus($form));
+                    }
                     return redirect()->back()->with('roomAlert',"Sit back and relax! Your reservation has been received and is subject for approval.");
                 }
             }
@@ -130,13 +134,6 @@ class RoomController extends Controller
                 }
                 else{
                     return redirect()->back()->with('roomAlert',"Your reservation has been approved and added to the calendar and database!");
-                }
-            }
-
-            $user = User::where('user_id', 'admin')->get()->first();
-            if(Auth::user()->roles == 1){
-                if($request->get('specialReservation')=='1'){
-                    $user->notify(new RoomStatus($form));
                 }
             }
         }
