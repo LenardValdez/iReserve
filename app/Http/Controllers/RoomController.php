@@ -66,8 +66,8 @@ class RoomController extends Controller
                                 ->where('etime_res', '>', $request->get('stime_res'))
                                 ->where('isApproved', '1')
                                 ->count();
-
-        if(($checkExisting>='1' && Auth()->user()->roles != 0) || $request->get('stime_res')==$request->get('etime_res')){
+        //admin override
+        if(($checkExisting>='1' && Auth()->user()->roles != 0) || $request->get('stime_res')==$request->get('etime_res')){ 
             return redirect()->back()->with('existingErr', "The room you've chosen is not available on the selected period.");
         }
         else {
