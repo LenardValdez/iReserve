@@ -66,9 +66,22 @@ class RoomController extends Controller
                                 ->where('etime_res', '>', $request->get('stime_res'))
                                 ->where('isApproved', '1')
                                 ->count();
+
+        $checkAdminExisting = RegForm::where('user_id','admin')
+                                     ->where('room_id', $request->get('room_id'))
+                                     ->where('stime_res', '<',  $request->get('etime_res'))
+                                     ->where('etime_res', '>', $request->get('stime_res'))
+                                     ->where('isApproved', '1')
+                                     ->count();
         //admin override
-        if(($checkExisting>='1' && Auth()->user()->roles != 0) || $request->get('stime_res')==$request->get('etime_res')){ 
+        if($checkExisting>='1' && Auth()->user()->roles != 0){ 
             return redirect()->back()->with('existingErr', "The room you've chosen is not available on the selected period.");
+        }
+        else if($request->get('stime_res')==$request->get('etime_res')){
+            return redirect()->back()->with('existingErr', "The start and end of the reservation cannot be the same.");
+        }
+        else if($checkAdminExisting>='1' && Auth()->user()->roles == 0){
+            return redirect()->back()->with('existingErr', "You have an existing reservation for the same room on the selected period.");
         }
         else {
             if($request->get('specialReservation')=='1'){
