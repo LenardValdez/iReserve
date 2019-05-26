@@ -233,6 +233,11 @@ class RoomController extends Controller
         $cancelRequest->isCancelled = '1';
         $cancelRequest->save();
 
+        if (Auth()->user()->roles == 0){
+            $user = User::where('user_id', $id)->get()->first();
+            $user->notify(new RoomStatus($id));
+        }
+
         return redirect()->back()->with('cancelledAlert', "The request/reservation has been cancelled.");
 
     }

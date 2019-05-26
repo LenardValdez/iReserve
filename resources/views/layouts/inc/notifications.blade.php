@@ -20,10 +20,14 @@
               <li>
               <a href="{{ route('readnotification', $notification->id) }}">
                   <i class="fa fa-clock-o text-orange"></i> Your reservation {{sprintf("%07d", $notification->data['form_id'])}} has been
-                      @if ($notification->data['status'] == 1)
-                          approved.
+                      @if ($notification->data['cancel_status'] == 1)
+                          cancelled.
                       @else
-                          denied.
+                        @if ($notification->data['status'] == 1)
+                            approved.
+                        @else
+                            denied.
+                        @endif
                       @endif
                   {{-- at {{$notification->updated_at->diffForHumans()}}  (para sa timestamp)--}}
               </a>
