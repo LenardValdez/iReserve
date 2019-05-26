@@ -135,7 +135,7 @@ class RoomController extends Controller
 
                     if(!empty($cancelSameRange)){
                         $user = User::where('user_id',$cancelSameRange->user_id)->first();
-                        $cancelSameRange->isCancelled = true;
+                        $cancelSameRange->isCancelled = '1';
                         $cancelSameRange->save();
                         $user->notify(new RoomStatus($cancelSameRange));
                     }
@@ -165,7 +165,7 @@ class RoomController extends Controller
                 }
                 else{
                     $form->save();
-                    $user = User::where('user_id', 'admin')->get()->first();
+                    $user = User::where('user_id', 'admin')->first();
                     if($request->get('specialReservation')=='1'){
                         $user->notify(new RoomStatus($form));
                     }
@@ -198,7 +198,7 @@ class RoomController extends Controller
                                                 ->first();
                     if(!empty($cancelSameRange)){
                         $user = User::where('user_id',$cancelSameRange->user_id)->first();
-                        $cancelSameRange->isCancelled = true;
+                        $cancelSameRange->isCancelled = '1';
                         $cancelSameRange->save();
                         $user->notify(new RoomStatus($cancelSameRange));
                     }
@@ -231,15 +231,24 @@ class RoomController extends Controller
         $specialRequest = RegForm::find($id);
         
         $specialRequest->isApproved = '1';
-        $rejectSameRange = RegForm::where('form_id', '!=', $id)
-                                  ->where('room_id', $specialRequest->room_id)
-                                  ->where('stime_res', '<', $specialRequest->etime_res)
-                                  ->where('etime_res', '>', $specialRequest->stime_res)
-                                  ->where('isApproved', '0')
-                                  ->update(['isApproved' => '2']);
+        $sameRange = RegForm::where('user_id', '!=', 'admin')
+                            ->where('room_id', $request->get('room_id'))
+                            ->where('stime_res', '<', $request->get('etime_res'))
+                            ->where('etime_res', '>', $request->get('stime_res'))
+                            ->where('isApproved', '0')
+                            ->get();
+
+        if(!empty($sameRange)){
+            foreach($sameRange as $same){
+                $user = User::where('user_id',$same->user_id)->first();
+                $same->isApproved = '2';
+                $same->save();
+                $user->notify(new RoomStatus($same));
+            }
+        }
         $specialRequest->save();
 
-        $user = User::where('user_id', $specialRequest->user_id)->get()->first();
+        $user = User::where('user_id', $specialRequest->user_id)->first();
         $user->notify(new RoomStatus($specialRequest));
 
         return redirect()->back()->with('approvedAlert', "The request has been approved and added to the scheduler! 
@@ -253,7 +262,7 @@ class RoomController extends Controller
         $specialRequest->isApproved = '2';
         $specialRequest->save();
 
-        $user = User::where('user_id', $specialRequest->user_id)->get()->first();
+        $user = User::where('user_id', $specialRequest->user_id)->first();
         $user->notify(new RoomStatus($specialRequest));
 
         return redirect()->back()->with('rejectedAlert', "The request has been rejected.");
@@ -290,7 +299,7 @@ class RoomController extends Controller
         $cancelRequest->save();
 
         if (Auth()->user()->roles == 0 and Auth()->user()->user_id != $cancelRequest->user_id){
-            $user = User::where('user_id', $cancelRequest->user_id)->get()->first();
+            $user = User::where('user_id', $cancelRequest->user_id)->first();
             $user->notify(new RoomStatus($cancelRequest));
         }
 
