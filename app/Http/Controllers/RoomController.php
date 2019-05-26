@@ -65,6 +65,7 @@ class RoomController extends Controller
                                 ->where('stime_res', '<',  $request->get('etime_res'))
                                 ->where('etime_res', '>', $request->get('stime_res'))
                                 ->where('isApproved', '1')
+                                ->where('isCancelled', '0')
                                 ->count();
 
         $checkSameUserPending = RegForm::where('user_id', Auth()->user()->user_id)
@@ -232,9 +233,9 @@ class RoomController extends Controller
         
         $specialRequest->isApproved = '1';
         $sameRange = RegForm::where('user_id', '!=', 'admin')
-                            ->where('room_id', $request->get('room_id'))
-                            ->where('stime_res', '<', $request->get('etime_res'))
-                            ->where('etime_res', '>', $request->get('stime_res'))
+                            ->where('room_id', $specialRequest->room_id)
+                            ->where('stime_res', '<', $specialRequest->etime_res)
+                            ->where('etime_res', '>', $specialRequest->stime_res)
                             ->where('isApproved', '0')
                             ->get();
 
