@@ -9,7 +9,13 @@
     @endif
     </a>
     <ul class="dropdown-menu">
-      <li class="header">You have {{Auth::user()->unreadNotifications->count()}} notifications</li>
+      <li class="header">
+        @if(Auth::user()->unreadNotifications->count()==1)
+        You have 1 notification
+        @else
+        You have {{Auth::user()->unreadNotifications->count()}} notifications
+        @endif
+      </li>
       <li>
         <ul class="menu">
           @if (Auth::user()->roles == 1)
@@ -19,19 +25,16 @@
               @foreach (Auth::user()->unreadNotifications as $notification)
               <li>
               <a href="{{ route('readnotification', $notification->id) }}">
-                  Your reservation {{sprintf("%07d", $notification->data['form_id'])}} has been
-                      @if ($notification->data['cancel_status'] == 1)
-                          cancelled.
-                          <p><i class="fa fa-clock-o text-orange"></i><small> {{$notification->updated_at->diffForHumans()}}</small></p>
-                      @else
-                        @if ($notification->data['status'] == 1)
-                            approved.
-                            <p><i class="fa fa-clock-o text-orange"></i><small> {{$notification->updated_at->diffForHumans()}}</small></p>
-                        @else
-                            denied.
-                            <p><i class="fa fa-clock-o text-orange"></i><small> {{$notification->updated_at->diffForHumans()}}</small></p>
-                        @endif
-                      @endif
+                @if ($notification->data['cancel_status'] == 1)
+                <i class="fa fa-calendar-minus-o text-orange"></i> Your reservation {{sprintf("%07d", $notification->data['form_id'])}} has been cancelled.
+                @else
+                  @if ($notification->data['status'] == 1)
+                  <i class="fa fa-calendar-check-o text-success"></i> Your reservation {{sprintf("%07d", $notification->data['form_id'])}} has been approved.
+                  @else
+                  <i class="fa fa-calendar-times-o text-danger"></i> Your reservation {{sprintf("%07d", $notification->data['form_id'])}} has been denied.
+                  @endif
+                @endif
+                  {{-- at {{$notification->updated_at->diffForHumans()}}  (para sa timestamp)--}}
               </a>
               </li>
               @endforeach
@@ -43,7 +46,7 @@
                   @foreach (Auth::user()->unreadNotifications as $notification)
                   <li>
                   <a href="{{ route('readnotification', $notification->id) }}">
-                      <i class="fa fa-clock-o text-orange"></i> Student {{$notification->data['user_id']}} has a new reservation
+                      <i class="fa fa-clock-o text-orange"></i> Student {{$notification->data['user_id']}} has a new reservation.
                   </a>
                   </li>
                   @endforeach
