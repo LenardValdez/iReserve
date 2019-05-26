@@ -26,3 +26,4 @@ Route::post('/reserve/del','RoomController@destroy')->name('processdelroom'); //
 Route::get('/dashboard/approve/{id}', 'RoomController@approve')->name('approverequest');
 Route::get('/dashboard/reject/{id}', 'RoomController@reject')->name('rejectrequest');
 Route::get('/read/{id}', 'RoomController@readNotif')->name('readnotification');
+Route::get('/readAll', 'RoomController@readAllNotif')->name('readallnotifs');

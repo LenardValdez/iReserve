@@ -1,9 +1,9 @@
 <!--NOTIFICATIONS-->
 <li class="dropdown notifications-menu">
-    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+    <a href="#" onclick="removeNotifCount()" class="dropdown-toggle" data-toggle="dropdown">
       <i class="fa fa-bell-o"></i>
       @if (Auth::user()->unreadNotifications->count()!=0)
-        <span class="label label-warning">{{Auth::user()->unreadNotifications->count()}}</span>
+        <span class="notifCount label label-warning">{{Auth::user()->unreadNotifications->count()}}</span>
       @endif
     </a>
     <ul class="dropdown-menu">
@@ -54,6 +54,9 @@
               @endif
           @endif
         </ul>
+      </li>
+      <li class="footer">
+        <a href="{{URL::route('readallnotifs')}}">Clear all</a>
       </li>
     </ul>
   </li>

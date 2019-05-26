@@ -53,6 +53,10 @@
           $('#faqsubtitle').text('');
         });
       });
+
+      function removeNotifCount() {
+        $('.notifCount').text('');
+      }
     </script>
 
     @yield('script')

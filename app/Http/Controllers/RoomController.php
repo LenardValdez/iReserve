@@ -342,4 +342,12 @@ class RoomController extends Controller
 
         return redirect()->route('Dashboard');
     }
+
+    public function readAllNotif()
+    {
+        $user = User::where('user_id', Auth()->user()->user_id)->first();
+        $user->unreadNotifications->markAsRead();
+
+        return redirect()->back();
+    }
 }
