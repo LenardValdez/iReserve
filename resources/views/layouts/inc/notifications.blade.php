@@ -19,17 +19,19 @@
               @foreach (Auth::user()->unreadNotifications as $notification)
               <li>
               <a href="{{ route('readnotification', $notification->id) }}">
-                  <i class="fa fa-clock-o text-orange"></i> Your reservation {{sprintf("%07d", $notification->data['form_id'])}} has been
+                  Your reservation {{sprintf("%07d", $notification->data['form_id'])}} has been
                       @if ($notification->data['cancel_status'] == 1)
                           cancelled.
+                          <p><i class="fa fa-clock-o text-orange"></i><small> {{$notification->updated_at->diffForHumans()}}</small></p>
                       @else
                         @if ($notification->data['status'] == 1)
                             approved.
+                            <p><i class="fa fa-clock-o text-orange"></i><small> {{$notification->updated_at->diffForHumans()}}</small></p>
                         @else
                             denied.
+                            <p><i class="fa fa-clock-o text-orange"></i><small> {{$notification->updated_at->diffForHumans()}}</small></p>
                         @endif
                       @endif
-                  {{-- at {{$notification->updated_at->diffForHumans()}}  (para sa timestamp)--}}
               </a>
               </li>
               @endforeach
