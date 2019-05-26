@@ -67,6 +67,13 @@ class RoomController extends Controller
                                 ->where('isApproved', '1')
                                 ->count();
 
+        $checkSameUserPending = RegForm::where('user_id', Auth()->user()->user_id)
+                                        ->where('room_id', $request->get('room_id'))
+                                        ->where('stime_res', '<',  $request->get('etime_res'))
+                                        ->where('etime_res', '>', $request->get('stime_res'))
+                                        ->where('isApproved', '0')
+                                        ->count();
+
         $checkAdminExisting = RegForm::where('user_id','admin')
                                      ->where('room_id', $request->get('room_id'))
                                      ->where('stime_res', '<',  $request->get('etime_res'))
@@ -76,6 +83,9 @@ class RoomController extends Controller
         //admin override
         if($checkExisting>='1' && Auth()->user()->roles != 0){ 
             return redirect()->back()->with('existingErr', "The room you've chosen is not available on the selected period.");
+        }
+        elseif($checkSameUserPending>='1' && Auth()->user()->roles == 1){
+            return redirect()->back()->with('roomErr', "You've already submitted a request for the same room on the selected period! Please wait for the admin to confirm your request.");
         }
         else if($request->get('stime_res')==$request->get('etime_res')){
             return redirect()->back()->with('existingErr', "The start and end of the reservation cannot be the same.");
@@ -96,23 +106,51 @@ class RoomController extends Controller
 
                 if(Auth()->user()->roles == 0){
 
-                    $rejectSameRange = RegForm::where('user_id', '!=', 'admin')
+                    /* $rejectSameRange = RegForm::where('user_id', '!=', 'admin')
                                               ->where('room_id', $request->get('room_id'))
                                               ->where('stime_res', '<', $request->get('etime_res'))
                                               ->where('etime_res', '>', $request->get('stime_res'))
                                               ->where('isApproved', '0')
-                                              ->update(['isApproved' => '2']);
+                                              ->update(['isApproved' => '2']); */
 
+                    /* $cancelSameRange = RegForm::where('user_id', '!=', 'admin')
+                                              ->where('room_id', $request->get('room_id'))
+                                              ->where('stime_res', '<', $request->get('etime_res'))
+                                              ->where('etime_res', '>', $request->get('stime_res'))
+                                              ->where('isApproved', '1')
+                                              ->update(['isCancelled' => true]); */
+
+                    $sameRange = RegForm::where('user_id', '!=', 'admin')
+                                        ->where('room_id', $request->get('room_id'))
+                                        ->where('stime_res', '<', $request->get('etime_res'))
+                                        ->where('etime_res', '>', $request->get('stime_res'))
+                                        ->where('isApproved', '0')
+                                        ->get();
                     $cancelSameRange = RegForm::where('user_id', '!=', 'admin')
                                               ->where('room_id', $request->get('room_id'))
                                               ->where('stime_res', '<', $request->get('etime_res'))
                                               ->where('etime_res', '>', $request->get('stime_res'))
                                               ->where('isApproved', '1')
-                                              ->update(['isCancelled' => true]);
+                                              ->first();
 
+                    if(!empty($cancelSameRange)){
+                        $user = User::where('user_id',$cancelSameRange->user_id)->first();
+                        $cancelSameRange->isCancelled = true;
+                        $cancelSameRange->save();
+                        $user->notify(new RoomStatus($cancelSameRange));
+                    }
+
+                    if(!empty($sameRange)){
+                        foreach($sameRange as $same){
+                            $user = User::where('user_id',$same->user_id)->first();
+                            $same->isApproved = '2';
+                            $same->save();
+                            $user->notify(new RoomStatus($same));
+                        }
+                    }
                     $form->isApproved = '1';
                     $form->save();
-                    $container = $form;
+                    /* $container = $form;
                     $container->isCancelled = '1';
                     $reservedForm = RegForm::where('user_id', '!=', 'admin')
                                         ->where('room_id', $request->get('room_id'))
@@ -120,7 +158,7 @@ class RoomController extends Controller
                                         ->where('etime_res', '>', $request->get('stime_res'))
                                         ->get()->first();
                     $user = User::where('user_id', $reservedForm->user_id)->get()->first();
-                    $user->notify(new RoomStatus($container));
+                    $user->notify(new RoomStatus($container)); */
 
                     return redirect()->back()->with('roomAlert',"Your reservation has been approved and added to the calendar and database! Requests for the same room with similar reservation period have been overriden.");
                 }
@@ -144,29 +182,43 @@ class RoomController extends Controller
                 ]);
                 
                 if(Auth()->user()->roles == 0){
-                    $cancelSameRange = RegForm::where('user_id', '!=', 'admin')
+                    /* $cancelSameRange = RegForm::where('user_id', '!=', 'admin')
                                             ->where('room_id', $request->get('room_id'))
                                             ->where('stime_res', '<', $request->get('etime_res'))
                                             ->where('etime_res', '>', $request->get('stime_res'))
                                             ->where('isApproved', '1')
-                                            ->update(['isCancelled' => true]);
+                                            ->update(['isCancelled' => true]); */
+
+                    $cancelSameRange = RegForm::where('user_id', '!=', 'admin')
+                                                ->where('room_id', $request->get('room_id'))
+                                                ->where('stime_res', '<', $request->get('etime_res'))
+                                                ->where('etime_res', '>', $request->get('stime_res'))
+                                                ->where('isApproved', '1')
+                                                ->first();
+                    if(!empty($cancelSameRange)){
+                        $user = User::where('user_id',$cancelSameRange->user_id)->first();
+                        $cancelSameRange->isCancelled = true;
+                        $cancelSameRange->save();
+                        $user->notify(new RoomStatus($cancelSameRange));
+                    }
                 }
+
                 $form->isApproved = '1';
                 $form->save();
-                $container = $form;
-                $container->isCancelled = '1';
+                /* $container = $form;
+                $container->isCancelled = '1'; */
                 if(Auth()->user()->roles == 0){
-                    $reservedForm = RegForm::where('user_id', '!=', 'admin')
+                    /* $reservedForm = RegForm::where('user_id', '!=', 'admin')
                                         ->where('room_id', $request->get('room_id'))
                                         ->where('stime_res', '<', $request->get('etime_res'))
                                         ->where('etime_res', '>', $request->get('stime_res'))
                                         ->get()->first();
                     $user = User::where('user_id', $reservedForm->user_id)->get()->first();
-                    $user->notify(new RoomStatus($container));
+                    $user->notify(new RoomStatus($container)); */
                     return redirect()->back()->with('roomAlert',"Your reservation has been approved and added to the calendar and database!
                                                     Requests for the same room with similar reservation period have been overriden.");
                 }
-                else{
+                else {
                     return redirect()->back()->with('roomAlert',"Your reservation has been approved and added to the calendar and database!");
                 }
             }
@@ -254,7 +306,7 @@ class RoomController extends Controller
     {
         $delete = Room::where('room_id',$request->room_id)->first();
         $delete->delete();
-        return redirect()->back()->with('roomDelAlert','Room '.$request->room_id.' has been successfully deleted from the database and scheduler.');
+        return redirect()->back()->with('roomErr','Room '.$request->room_id.' has been successfully deleted from the database and scheduler.');
     }
 
     public function list()
