@@ -112,6 +112,7 @@ class RoomController extends Controller
 
                     $form->isApproved = '1';
                     $form->save();
+
                     $container = $form;
                     $container->isCancelled = '1';
                     $reservedForm = RegForm::where('user_id', '!=', 'admin')
@@ -122,7 +123,8 @@ class RoomController extends Controller
                     $user = User::where('user_id', $reservedForm->user_id)->get()->first();
                     $user->notify(new RoomStatus($container));
 
-                    return redirect()->back()->with('roomAlert',"Your reservation has been approved and added to the calendar and database! Requests for the same room with similar reservation period have been overriden.");
+                    return redirect()->back()->with('roomAlert',"Your reservation has been approved and added to the calendar and database! 
+                                                    Requests for the same room with similar reservation period have been overriden.");
                 }
                 else{
                     $form->save();
@@ -153,6 +155,7 @@ class RoomController extends Controller
                 }
                 $form->isApproved = '1';
                 $form->save();
+
                 $container = $form;
                 $container->isCancelled = '1';
                 if(Auth()->user()->roles == 0){
@@ -163,6 +166,7 @@ class RoomController extends Controller
                                         ->get()->first();
                     $user = User::where('user_id', $reservedForm->user_id)->get()->first();
                     $user->notify(new RoomStatus($container));
+
                     return redirect()->back()->with('roomAlert',"Your reservation has been approved and added to the calendar and database!
                                                     Requests for the same room with similar reservation period have been overriden.");
                 }
