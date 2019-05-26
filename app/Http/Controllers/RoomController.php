@@ -160,7 +160,8 @@ class RoomController extends Controller
                     $user = User::where('user_id', $reservedForm->user_id)->get()->first();
                     $user->notify(new RoomStatus($container)); */
 
-                    return redirect()->back()->with('roomAlert',"Your reservation has been approved and added to the calendar and database! Requests for the same room with similar reservation period have been overriden.");
+                    return redirect()->back()->with('roomAlert',"Your reservation has been approved and added to the calendar and database! 
+                                                    Requests for the same room with similar reservation period have been overriden.");
                 }
                 else{
                     $form->save();
