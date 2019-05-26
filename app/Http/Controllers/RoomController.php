@@ -80,6 +80,7 @@ class RoomController extends Controller
                                      ->where('stime_res', '<',  $request->get('etime_res'))
                                      ->where('etime_res', '>', $request->get('stime_res'))
                                      ->where('isApproved', '1')
+                                     ->where('isCancelled', '0')
                                      ->count();
         //admin override
         if($checkExisting>='1' && Auth()->user()->roles != 0){ 
