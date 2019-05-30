@@ -61,6 +61,8 @@ class RoomController extends Controller
             $usersInvolved = NULL;
         }
 
+        $roomType = Room::where('room_id', $request->get('room_id'))->first();
+
         $checkExisting = RegForm::where('room_id', $request->get('room_id'))
                                 ->where('stime_res', '<',  $request->get('etime_res'))
                                 ->where('etime_res', '>', $request->get('stime_res'))
@@ -96,7 +98,7 @@ class RoomController extends Controller
             return redirect()->back()->with('existingErr', "You have an existing reservation for the same room on the selected period.");
         }
         else {
-            if($request->get('specialReservation')=='1'){
+            if($roomType->isSpecial=='1'){
                 $form = new RegForm([
                     'user_id' =>  Auth()->user()->user_id,
                     'room_id' => $request->get('room_id'),
@@ -168,7 +170,7 @@ class RoomController extends Controller
                 else{
                     $form->save();
                     $user = User::where('user_id', 'admin')->first();
-                    if($request->get('specialReservation')=='1'){
+                    if($roomType->isSpecial=='1'){
                         $user->notify(new RoomStatus($form));
                     }
                     return redirect()->back()->with('roomAlert',"Sit back and relax! Your reservation has been received and is subject for approval.");
