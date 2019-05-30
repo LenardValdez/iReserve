@@ -55,9 +55,11 @@
           @endif
         </ul>
       </li>
+      @if (Auth::user()->unreadNotifications->count()>1)
       <li class="footer">
-        <a href="{{URL::route('readallnotifs')}}">Clear all</a>
+          <a href="{{URL::route('readallnotifs')}}">Clear all</a>
       </li>
+      @endif
     </ul>
   </li>
   <!--END OF NOTIFICATIONS-->
