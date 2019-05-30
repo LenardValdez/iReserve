@@ -341,8 +341,13 @@ class RoomController extends Controller
     public function list()
     {
         $forms = RegForm::where('isApproved', '1')->get();
-        $rooms = Room::get();
-        $descriptions = Room::groupBy('room_desc')->pluck('room_desc');
+        $rooms = Room::orderByRaw('LENGTH(room_desc)', 'asc')
+                    ->orderBy('room_desc', 'asc')
+                    ->get();
+        $descriptions = Room::groupBy('room_desc')
+                            ->orderByRaw('LENGTH(room_desc)', 'asc')
+                            ->orderBy('room_desc', 'asc')
+                            ->pluck('room_desc');
         $users = User::orderBy('name','asc')
                      ->where('isActive', true)
                      ->get();

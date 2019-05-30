@@ -25,12 +25,13 @@
                   <option value="6th Floor">6th Floor</option>
                   <option value="7th Floor">7th Floor</option>
                   <option value="8th Floor">8th Floor</option>
-                  <option value="CL 8th Floor">CL 8th Floor</option>
                   <option value="9th Floor">9th Floor</option>
-                  <option value="CL 10th Floor">CL 10th Floor</option>
+                  <option value="10th Floor">10th Floor</option>
+                  <option value="10th Floor">12th Floor</option>
                   <option value="Lower Penthouse">Lower Penthouse</option>
                   <option value="Upper Penthouse">Upper Penthouse</option>
                   <option value="Drawing Room 10th Floor">Drawing Room 10th Floor</option>
+                  <option value="Ground Floor">Ground Floor</option>
                   <option value="Others">Others</option>
                 </select>
                   @if ($errors->has('room_desc'))
