@@ -239,18 +239,18 @@ class RoomController extends Controller
                             ->where('etime_res', '>', $specialRequest->stime_res)
                             ->where('isApproved', '0')
                             ->get();
+        $specialRequest->save();
 
         if(!empty($sameRange)){
             foreach($sameRange as $same){
-                $user = User::where('user_id', $same->user_id)
-                            ->where('user_id', '!=', $specialRequest->user_id)
-                            ->first();
-                $same->isApproved = '2';
-                $same->save();
-                $user->notify(new RoomStatus($same));
+                if($same->user_id != $specialRequest->user_id){
+                    $user = User::where('user_id',$same->user_id)->first();
+                    $same->isApproved = '2';
+                    $same->save();
+                    $user->notify(new RoomStatus($same));
+                }
             }
         }
-        $specialRequest->save();
 
         $user = User::where('user_id', $specialRequest->user_id)->first();
         $user->notify(new RoomStatus($specialRequest));
