@@ -41,9 +41,9 @@ $(function () {
     $('#reservationForm').submit(function (ev, picker) {
         var checkSpecial = $('#room_id').val().substr(0, 1);
         [startDate, endDate] = $('.reservationPeriod').val().split(' - ');
-        if(checkSpecial==='1' || checkSpecial==='8'){
+        /* if(checkSpecial==='1' || checkSpecial==='8'){
             $(this).find('input[name="specialReservation"]').val('1');
-        }
+        } */
         startDate = moment(startDate).format("YYYY-MM-DD HH:mm:ss");
         endDate = moment(endDate).format("YYYY-MM-DD HH:mm:ss");
         $(this).find('input[name="stime_res"]').val(startDate);
@@ -279,7 +279,7 @@ $(function () {
                             <label for="reason">Purpose: <span class="text-danger">*</span></label>
                             <textarea class="form-control" id="purpose" name="purpose" rows="3" placeholder="Enter purpose here" required></textarea>
                         </div>
-                        <input type="hidden" name="specialReservation" value="0">
+                        {{-- <input type="hidden" name="specialReservation" value="0"> --}}
                         <p class="text-red pull-left"><span class="text-danger">*</span> items are required</p>
                         <button type="button" data-target="#formReview" value="Submit" id="addReservationBtn" class="btn btn-primary pull-right">Submit</button>
 
