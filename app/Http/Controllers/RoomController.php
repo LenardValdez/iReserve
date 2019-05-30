@@ -242,7 +242,9 @@ class RoomController extends Controller
 
         if(!empty($sameRange)){
             foreach($sameRange as $same){
-                $user = User::where('user_id',$same->user_id)->first();
+                $user = User::where('user_id', $same->user_id)
+                            ->where('user_id', '!=', $specialRequest->user_id)
+                            ->first();
                 $same->isApproved = '2';
                 $same->save();
                 $user->notify(new RoomStatus($same));
