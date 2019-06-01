@@ -39,7 +39,7 @@
                   selected: null
               }
           },
-          download: 'open'
+          /* download: 'open' */
           },
           {
           extend: 'csvHtml5',
