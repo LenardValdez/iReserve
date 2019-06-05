@@ -1,15 +1,14 @@
 @extends('layouts.app')
 
 @section('script')
-
-<script>
-  $(window).on('load',function(){
-  if (!sessionStorage.getItem('shown-modal')){
-    $('#welcomeFAQModal').modal('show');
-    sessionStorage.setItem('shown-modal', 'true');
-    }
-  });
-</script>    
+  <script>
+    $(window).on('load',function(){
+    if (!sessionStorage.getItem('shown-modal')){
+      $('#welcomeFAQModal').modal('show');
+      sessionStorage.setItem('shown-modal', 'true');
+      }
+    });
+  </script>    
 @endsection
 
 @section('menu')

@@ -15,6 +15,7 @@
         @else 
             <li class="active"><a href={{ URL::route('Dashboard') }}>Room Overview</a></li>
             <li class="#"><a href={{URL::route('History')}}>Reservation History</a></li>
+            <li class="#"><a id="faqBtn" data-toggle="modal" data-target="#welcomeFAQModal">FAQ</a></li>
         @endif
     </ul>
 </div>

@@ -95,6 +95,7 @@
             <li class="active">Reservation History</li>
             @else 
             <li class="active"><i class="fa fa-building"></i> Room Overview</a></li>
+            <li class="#"><a id="faqBtn" data-toggle="modal" data-target="#welcomeFAQModal">FAQ</a></li>
             @endif
           </ol>
         </section>
