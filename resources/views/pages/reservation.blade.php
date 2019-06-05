@@ -120,7 +120,8 @@ $(function () {
             end: '21:00',
         },
         eventClick: function(event){
-            alert(event.title + '\nPeople Involved: ' + event.people + '\nStart: ' + event.start.format('MMMM DD, YYYY hh:mm A') + '\nEnd: ' + event.end.format('MMMM DD, YYYY hh:mm A'));
+            //alert(event.title + '\nPeople Involved: ' + event.people + '\nStart: ' + event.start.format('MMMM DD, YYYY hh:mm A') + '\nEnd: ' + event.end.format('MMMM DD, YYYY hh:mm A'));
+            $('#reqInfo'+event.formid).modal('show');
         },
         height: '800',
         defaultView: 'timelineDay',
@@ -141,6 +142,7 @@ $(function () {
                     @endif
                     start: moment('{{ $form->stime_res }}').format(), 
                     end: moment('{{ $form->etime_res }}').format(),
+                    formid: '{{ $form->form_id }}',
                     people: @if($form->users_involved!=NULL) '{{ $form->users_involved }}' @else 'N/A' @endif
                     },
                 @endforeach
@@ -215,6 +217,54 @@ $(function () {
     
         <!--ACTUAL CONTENT-->
         <section class="content">
+            <!--NORMAL ROOM REQUEST INFORMATION MODAL-->
+            @foreach($forms as $form)
+            <div class="modal fade" id="reqInfo{{$form->form_id}}">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title" id="myModalLabel">Reservation Details</h4>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table">
+                            <tr>
+                                <th>Date</th>
+                                <td>{{ \Carbon\Carbon::parse($form->created_at)->toDayDateTimeString() }}</td>
+                            </tr>
+                            <tr>
+                                <th>Room Number</th>
+                                <td>{{$form->room_id}}</td>
+                            </tr>
+                            <tr>
+                                <th>People Involved</th>
+                                <td>{{$form->users_involved}}</td>
+                            </tr>
+                            <tr>
+                                <th>Reservation Period</th>
+                                <td>{{$form->stime_res}} - {{$form->etime_res}}</td>
+                            </tr>
+                            <tr>
+                                <th>Purpose</th>
+                                <td>{{$form->purpose}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    @if (Auth()->user()->roles == 0 or Auth()->user()->roles == 1)
+                    <div class="modal-footer">
+                        @if(\Carbon\Carbon::parse($form->etime_res)->isPast() or $form->isCancelled==1 or $form->isApproved==2)
+                            <button type="button" class="btn btn-danger" disabled>Cancel Reservation</button>
+                        @else
+                            <a type="button" class="btn btn-danger" href="{{ route('cancelrequest', $form->form_id) }}">Cancel Reservation</a>
+                        @endif
+                    </div>
+                    @endif
+                    </div>
+                </div>
+            </div>
+            @endforeach
             @if(Auth()->user()->roles == 2)
             <div class="row">
                 <div class="col-md-12">
