@@ -84,8 +84,17 @@ class RoomController extends Controller
                                      ->where('isApproved', '1')
                                      ->where('isCancelled', '0')
                                      ->count();
-        //admin override
-        if($checkExisting>='1' && Auth()->user()->roles != 0){ 
+
+        //max. requests a day = 5
+        $checkMaxReserve = RegForm::where('user_id', auth()->user()->user_id)
+                                  ->whereDate('created_at', Carbon::today())
+                                  ->where('approval', '!=', '-1')
+                                  ->count();
+
+        if($checkMaxReserve>=5 && auth()->user()->roles == 1){
+            return redirect()->back()->with('roomErr', "You have already reached the maximum number of requests allowed per day. Please try again tomorrow or book under another user.");
+        }
+        elseif($checkExisting>='1' && Auth()->user()->roles == 1){ 
             return redirect()->back()->with('existingErr', "The room you've chosen is not available on the selected period.");
         }
         elseif($checkSameUserPending>='1' && Auth()->user()->roles == 1){
@@ -353,6 +362,28 @@ class RoomController extends Controller
         $users = User::orderBy('name','asc')
                      ->where('isActive', true)
                      ->get();
+
+        $roomList = [];
+        foreach($descriptions as $description){
+            $roomList[] = [
+                $description => []
+            ];
+        }
+
+        foreach($rooms as $room){
+            $roomList[$room->room_desc][$room->room_id] = $room->room_id;
+        }
+
+        foreach($descriptions as $description){
+            $spaces = '/\s+/';
+            $replace = '-';
+            $string= $description;
+            $trimmedDesc = preg_replace($spaces, $replace, strtolower($string));
+
+            $roomListJson = json_encode($roomList[$description], JSON_PRETTY_PRINT);
+            file_put_contents(public_path($trimmedDesc.'.json'), stripslashes($roomListJson));
+        }
+
         return view('pages.reservation')->with("forms", $forms)
                                         ->with("rooms", $rooms)
                                         ->with("descriptions", $descriptions)

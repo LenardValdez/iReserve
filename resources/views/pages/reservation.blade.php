@@ -22,6 +22,43 @@
 
 @section('script')
 <script>
+var Select2Cascade = ( function(window, $) {
+
+    function Select2Cascade(parent, child, url, select2Options) {
+        var afterActions = [];
+        var options = select2Options || {};
+
+        // Register functions to be called after cascading data loading done
+        this.then = function(callback) {
+            afterActions.push(callback);
+            return this;
+        };
+
+        parent.select2(select2Options).on("change", function (e) {
+
+            child.prop("disabled", true);
+            var _this = this;
+            
+            $.getJSON(url.replace(':parentId:', $(this).val()), function(items) {
+                var newOptions = '<option value="" disabled>Select room</option>';
+                for(var id in items) {
+                    newOptions += '<option value="'+ id +'">'+ items[id] +'</option>';
+                }
+
+                child.select2('destroy').html(newOptions).prop("disabled", false)
+                    .select2(options);
+                
+                afterActions.forEach(function (callback) {
+                    callback(parent, child, items);
+                });
+            });
+        });
+    }
+
+    return Select2Cascade;
+
+})( window, $);
+
 $(function () {
     $('.select2').select2({
         tags: true,
@@ -115,6 +152,12 @@ $(function () {
     });
 
     $(document).ready(function() {
+        var select2Options = { width: 'resolve' };
+        var apiUrl = '/rooms/:parentId:';
+        
+        $('select').select2(select2Options);                 
+        var cascadLoading = new Select2Cascade($('#room_floor'), $('#room_id'), apiUrl, select2Options);
+
         $('#addReservationBtn').click(function(e) {
             var checkRoom = $.trim($('#room_id').val());
             var checkPurpose = $.trim($('#purpose').val());
@@ -225,7 +268,7 @@ $(function () {
                             <input type="text" class="form-control" placeholder="{{Auth::user()->name}}" disabled>
                         </div>
 
-                        <div class="form-group">
+                        {{-- <div class="form-group">
                             <label>Room Number: <span class="text-danger">*</span></label>
                             <select class="form-control" id="room_id" name="room_id" required>
                                 <option value="" selected disabled>Select an available room</option>
@@ -246,6 +289,29 @@ $(function () {
                                     @endforeach
                                 </optgroup>
                                 @endforeach
+                            </select>
+                        </div> --}}
+
+                        <div class="form-group">
+                            <label>Floor: <span class="text-danger">*</span></label>
+                            <select class="form-control" id="room_floor" name="room_floor" required>
+                                <option value="" selected disabled>Select floor</option>
+                                @foreach ($descriptions as $description)
+                                @php
+                                $spaces = '/\s+/';
+                                $replace = '-';
+                                $string= $description;
+                                $trimmedDesc = preg_replace($spaces, $replace, strtolower($string));
+                                @endphp
+                                <option value="{{$trimmedDesc}}">{{$description}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Room Number: <span class="text-danger">*</span></label>
+                            <select class="form-control" id="room_id" name="room_id" required>
+                                <option>Select room</option>
                             </select>
                         </div>
 

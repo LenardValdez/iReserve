@@ -27,3 +27,7 @@ Route::get('/dashboard/approve/{id}', 'RoomController@approve')->name('approvere
 Route::get('/dashboard/reject/{id}', 'RoomController@reject')->name('rejectrequest');
 Route::get('/read/{id}', 'RoomController@readNotif')->name('readnotification');
 Route::get('/readAll', 'RoomController@readAllNotif')->name('readallnotifs');
+
+Route::get('/rooms/8th-floor', 'JsonController@flr8');
+Route::get('/rooms/9th-floor', 'JsonController@flr9');
+Route::get('/rooms/cl-10th-floor', 'JsonController@cl10');
