@@ -88,7 +88,7 @@ class RoomController extends Controller
         //max. requests a day = 5
         $checkMaxReserve = RegForm::where('user_id', auth()->user()->user_id)
                                   ->whereDate('created_at', Carbon::today())
-                                  ->where('approval', '!=', '-1')
+                                  ->where('isApproved', '!=', '-1')
                                   ->count();
 
         if($checkMaxReserve>=5 && auth()->user()->roles == 1){
