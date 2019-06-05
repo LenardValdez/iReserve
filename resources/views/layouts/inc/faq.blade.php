@@ -14,7 +14,11 @@
                     <!-- .panel class is declared so that bootstrap.js collapse plugin detects it -->
                     <div class="panel box box-primary">
                     <div class="box-header with-border" data-toggle="collapse" data-parent="#faq" href="#collapseOne">
-                        <h4 class="box-title text-info">How to Reserve A Room</h4>
+                        @if (Auth()->user()->roles == 2)
+                        <h4 class="box-title text-info">How to view reserved room info</h4>
+                        @else
+                            <h4 class="box-title text-info">How to Reserve A Room</h4>
+                        @endif
                     </div>
 
                     <div id="collapseOne" class="panel-collapse collapse in">
@@ -34,7 +38,7 @@
                                 You can use the calendar to see what time slot is available on the prefered room of booking.
                                 </strong></p>
                             </div>
-                        @else <!--User FAQ-->
+                        @elseif (Auth()->user()->roles == 1) <!--User FAQ-->
                             <div class="box-body" style="margin:0 20px;">
                                 <p><ul><li><strong>Step 1:</strong></li>
                                 <ul><li>Go to Room reservation tab.</li></ul><br>
@@ -53,6 +57,21 @@
                                  You can use the calendar to see what time slot is available on the prefered room of booking.
                                 </strong></li></ul></p>
                             </div>
+                        @else <!--User FAQ-->
+                            <div class="box-body" style="margin:0 20px;">
+                                <p><ul><li><strong>Step 1:</strong></li>
+                                <ul><li>Go to Room overview tab.</li></ul><br>
+                            
+                                <li><strong>Step 2:</strong></li>
+                                <ul><li>Look for the room being inspected in the calendar</li></ul><br>
+                            
+                                <li><strong>Step 3:</strong></li>
+                                <ul><li>Tap the room reservation schedule to reveal the complete information</li></ul><br>
+                            
+                                <li><strong>Note:
+                                For security reasons please only allow students that are in the list of "people involved" to stay in the rserved room
+                                </strong></li></ul></p>
+                            </div>
                         @endif
                     </div>
                     </div>
@@ -63,7 +82,7 @@
                     </div>
 
                     <div id="collapseTwo" class="panel-collapse collapse">
-                            @if (Auth()->user()->roles == 0) <!--Admin FAQ-->
+                        @if (Auth()->user()->roles == 0) <!--Admin FAQ-->
                             <div class="box-body" style="margin:0 10px;">
                                 <p><strong>As room Manager, please be aware of these policies: </strong><br>
                                     <ul><li>Students/Faculty that violates any rule in the school
@@ -85,7 +104,7 @@
                                 <ul><li> Users can only reserve a room on a date that
                                     is within three months.</li></ul></p>
                             </div>
-                            @else <!--User FAQ-->
+                        @elseif(Auth()->user()->roles == 1) <!--User FAQ-->
                             <div class="box-body" style="margin:0 10px;">
                                 <p><ul><li>Students/Faculty that violates any rule in the school
                                 handbook will be disciplined accordingly.</li></ul>
@@ -95,6 +114,28 @@
                                     the reservation.</li></ul>
                             
                                 <ul><li> a room is labeled as a "Special Room", you
+                                    must wait for the approval of the Room Manager
+                                    in order to use the room.</li></ul>
+                                
+                                <ul><li> Students that are not listed on "Students involved"
+                                    section are not allowed on the reserved room.</li></ul>
+                                
+                                <ul><li> Regular rooms are automatically approved.</li></ul>
+                                
+                                <ul><li> Users can only reserve a room on a date that
+                                    is within three months.</li></ul></p>
+                            </div>
+                        @else
+                            <div class="box-body" style="margin:0 10px;">
+                                <p><strong>As a Security personnel, please be aware of these policies: </strong><br>
+                                    <ul><li>Students/Faculty that violates any rule in the school
+                                handbook will be disciplined accordingly.</li></ul>
+                            
+                                <ul><li> Damage occurring during the use of the room 
+                                    will be the responsibility of the person who made
+                                    the reservation.</li></ul>
+                            
+                                <ul><li> A room is labeled as a "Special Room", you
                                     must wait for the approval of the Room Manager
                                     in order to use the room.</li></ul>
                                 

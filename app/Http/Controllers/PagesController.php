@@ -46,7 +46,9 @@ class PagesController extends Controller
                                         ->with("studentReservations", $studentReservations);
         } else {
             $forms = RegForm::where('isApproved', '1')->get();
-            $rooms = Room::get();
+            $rooms = Room::orderByRaw('LENGTH(room_desc)', 'asc')
+                    ->orderBy('room_desc', 'asc')
+                    ->get();
             $users = User::where('isActive', true)->get();
             return view('pages.reservation')->with("forms", $forms)
                                             ->with("rooms", $rooms)

@@ -22,6 +22,18 @@
 @endsection
 
 @section('script')
+
+@if (Auth()->User()->roles == 2)
+  <script>
+    $(window).on('load',function(){
+    if (!sessionStorage.getItem('shown-modal')){
+      $('#welcomeFAQModal').modal('show');
+      sessionStorage.setItem('shown-modal', 'true');
+      }
+    });
+  </script>
+@endif
+
 <script>
 var Select2Cascade = ( function(window, $) {
 
