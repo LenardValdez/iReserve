@@ -21,6 +21,8 @@
 @endsection
 
 @section('script')
+<script src="js/select2-cascade.js"></script>
+
 <script>
 $(function () {
     $('.select2').select2({
@@ -115,6 +117,12 @@ $(function () {
     });
 
     $(document).ready(function() {
+        var select2Options = { width: 'resolve' };
+        var apiUrl = '/rooms/:parentId:';
+        
+        $('select').select2(select2Options);                 
+        var cascadLoading = new Select2Cascade($('#room_floor'), $('#room_id'), apiUrl, select2Options);
+
         $('#addReservationBtn').click(function(e) {
             var checkRoom = $.trim($('#room_id').val());
             var checkPurpose = $.trim($('#purpose').val());
@@ -225,7 +233,7 @@ $(function () {
                             <input type="text" class="form-control" placeholder="{{Auth::user()->name}}" disabled>
                         </div>
 
-                        <div class="form-group">
+                        {{-- <div class="form-group">
                             <label>Room Number: <span class="text-danger">*</span></label>
                             <select class="form-control" id="room_id" name="room_id" required>
                                 <option value="" selected disabled>Select an available room</option>
@@ -246,6 +254,29 @@ $(function () {
                                     @endforeach
                                 </optgroup>
                                 @endforeach
+                            </select>
+                        </div> --}}
+
+                        <div class="form-group">
+                            <label>Floor: <span class="text-danger">*</span></label>
+                            <select class="form-control" id="room_floor" name="room_floor" required>
+                                <option value="" selected disabled>Select floor</option>
+                                @foreach ($descriptions as $description)
+                                @php
+                                $spaces = '/\s+/';
+                                $replace = '-';
+                                $string= $description;
+                                $trimmedDesc = preg_replace($spaces, $replace, strtolower($string));
+                                @endphp
+                                <option value="{{$trimmedDesc}}">{{$description}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Room Number: <span class="text-danger">*</span></label>
+                            <select class="form-control" id="room_id" name="room_id" required>
+                                <option>Select room</option>
                             </select>
                         </div>
 
