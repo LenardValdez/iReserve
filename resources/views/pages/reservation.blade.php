@@ -243,6 +243,14 @@ $(function () {
                     </div>
                     <div class="modal-body">
                         <table class="table">
+                            @foreach ($users as $user)
+                                @if ($form->user_id == $user->user_id)
+                                    <tr>
+                                        <th>Reserved User</th>
+                                        <td>{{$user->name}}</td>
+                                    </tr>
+                                @endif
+                            @endforeach
                             <tr>
                                 <th>Date</th>
                                 <td>{{ \Carbon\Carbon::parse($form->created_at)->toDayDateTimeString() }}</td>

@@ -49,7 +49,7 @@ class PagesController extends Controller
             $rooms = Room::orderByRaw('LENGTH(room_desc)', 'asc')
                     ->orderBy('room_desc', 'asc')
                     ->get();
-            $users = User::where('isActive', true)->get();
+            $users = User::get(); //User::where('isActive', true)->get();
             return view('pages.reservation')->with("forms", $forms)
                                             ->with("rooms", $rooms)
                                             ->with("users", $users);
