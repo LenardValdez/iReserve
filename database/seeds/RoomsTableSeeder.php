@@ -188,7 +188,7 @@ class RoomsTableSeeder extends Seeder
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
             ],
             [
-                'room_id' => 'Multimedia Lab 3	',
+                'room_id' => 'Multimedia Lab 3',
                 'room_desc' => '8th Floor',
                 'isSpecial' => true,
                 'created_at' => '2019/05/03 11:04:23',
