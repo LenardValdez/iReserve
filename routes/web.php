@@ -33,3 +33,4 @@ Route::get('/rooms/7th-floor', 'JsonController@flr7');
 Route::get('/rooms/8th-floor', 'JsonController@flr8');
 Route::get('/rooms/9th-floor', 'JsonController@flr9');
 Route::get('/rooms/10th-floor', 'JsonController@flr10');
+Route::get('/rooms/ground-floor', 'JsonController@grdflr');
