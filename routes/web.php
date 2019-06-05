@@ -28,6 +28,8 @@ Route::get('/dashboard/reject/{id}', 'RoomController@reject')->name('rejectreque
 Route::get('/read/{id}', 'RoomController@readNotif')->name('readnotification');
 Route::get('/readAll', 'RoomController@readAllNotif')->name('readallnotifs');
 
+Route::get('/rooms/6th-floor', 'JsonController@flr6');
+Route::get('/rooms/7th-floor', 'JsonController@flr7');
 Route::get('/rooms/8th-floor', 'JsonController@flr8');
 Route::get('/rooms/9th-floor', 'JsonController@flr9');
-Route::get('/rooms/cl-10th-floor', 'JsonController@cl10');
+Route::get('/rooms/10th-floor', 'JsonController@flr10');
