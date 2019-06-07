@@ -100,7 +100,7 @@
                                     section are not allowed on the reserved room.</li></ul>
                                 
                                 <ul><li> Regular rooms are automatically approved.</li></ul>
-                                
+
                                 <ul><li> Users can only reserve a room on a date that
                                     is within three months.</li></ul></p>
                             </div>
@@ -121,6 +121,8 @@
                                     section are not allowed on the reserved room.</li></ul>
                                 
                                 <ul><li> Regular rooms are automatically approved.</li></ul>
+
+                                <ul><li> Users can only reserve 5 rooms per day</li></ul>
                                 
                                 <ul><li> Users can only reserve a room on a date that
                                     is within three months.</li></ul></p>
