@@ -36,7 +36,6 @@
                             
                                 <strong>Note:
                                 You can use the calendar to see what time slot is available on the prefered room of booking.
-                                test
                                 </strong></p>
                             </div>
                         @elseif (Auth()->user()->roles == 1) <!--User FAQ-->
