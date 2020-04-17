@@ -26,3 +26,5 @@ public/8th-floor.json
 public/6th-floor.json
 public/7th-floor.json
 public/7th-floor.json
+.vscode/settings.json
+composer.lock
