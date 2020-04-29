@@ -44,6 +44,15 @@
     .notifications-menu > .dropdown-menu > li .menu > li > a {
       white-space: normal !important;
     }
+
+    .gutter-10.row {
+      margin-right: -5px;
+      margin-left: -5px;
+    }
+    .gutter-10 > [class^="col-"], .gutter-10 > [class^=" col-"] {
+      padding-right: 5px;
+      padding-left: 5px;
+    }
     </style>
     <script>
       $(document).ready(function() {
