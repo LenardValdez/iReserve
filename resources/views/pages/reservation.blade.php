@@ -78,6 +78,12 @@ $(function () {
         tokenSeparators: [',']
     });
 
+    $('input.termPeriod').daterangepicker({
+        locale: {
+            format: 'MMMM DD, YYYY'
+        }
+    });
+
     $('input.reservationPeriod').daterangepicker({
     timePicker: true,
     minDate: moment(),
@@ -85,7 +91,7 @@ $(function () {
     locale: {
         format: 'MMMM DD, YYYY hh:mm A'
     },
-    timePickerIncrement: 30
+    timePickerIncrement: 10
     });
 
     $('#reservationForm').submit(function (ev, picker) {
@@ -136,7 +142,7 @@ $(function () {
             //alert(event.title + '\nPeople Involved: ' + event.people + '\nStart: ' + event.start.format('MMMM DD, YYYY hh:mm A') + '\nEnd: ' + event.end.format('MMMM DD, YYYY hh:mm A'));
             $('#reqInfo'+event.formid).modal('show');
         },
-        height: '800',
+        height: "auto",
         defaultView: 'timelineDay',
         resourceLabelText: 'Rooms',
         resourceGroupField: 'floorNum',
@@ -186,7 +192,7 @@ $(function () {
             /* when the button in the form, display the entered values in the modal */
             $('#addReservationBtn').attr('type','button');
             $('#addReservationBtn').attr('data-toggle','modal');
-            $('#date').text('{{ \Carbon\Carbon::now()->toDayDateTimeString() }}');
+            $('#date').text('{{ Carbon::now()->toDayDateTimeString() }}');
             $('#room').text($('#room_id').val());
             $('#people').text($('#peopleInvolved').val());
             $('#range').text($('#resPeriod').val());
@@ -253,7 +259,7 @@ $(function () {
                             @endforeach
                             <tr>
                                 <th>Date</th>
-                                <td>{{ \Carbon\Carbon::parse($form->created_at)->toDayDateTimeString() }}</td>
+                                <td>{{ Carbon::parse($form->created_at)->toDayDateTimeString() }}</td>
                             </tr>
                             <tr>
                                 <th>Room Number</th>
@@ -265,7 +271,7 @@ $(function () {
                             </tr>
                             <tr>
                                 <th>Reservation Period</th>
-                                <td>{{$form->stime_res}} - {{$form->etime_res}}</td>
+                                <td>{{ Carbon::parse($form->stime_res)->format('M d, Y h:m A') }} - {{ Carbon::parse($form->etime_res)->format('M d, Y h:m A') }}</td>
                             </tr>
                             <tr>
                                 <th>Purpose</th>
@@ -275,7 +281,7 @@ $(function () {
                     </div>
                     @if (Auth()->user()->roles == 0 or Auth()->user()->roles == 1)
                     <div class="modal-footer">
-                        @if(\Carbon\Carbon::parse($form->etime_res)->isPast() or $form->isCancelled==1 or $form->isApproved==2)
+                        @if(Carbon::parse($form->etime_res)->isPast() or $form->isCancelled==1 or $form->isApproved==2)
                             <button type="button" class="btn btn-danger" disabled>Cancel Reservation</button>
                         @else
                             <a type="button" class="btn btn-danger" href="{{ route('cancelrequest', $form->form_id) }}">Cancel Reservation</a>
@@ -325,7 +331,7 @@ $(function () {
             </div>
             @endif
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="box box-primary">
                     <div class="box-header with-border">
                         <h3 class="box-title">Reservation Form</h3>
@@ -471,12 +477,13 @@ $(function () {
                     <!--add-delete room-->
                     @if (Auth()->user()->roles == 0)
                         @include('pages.adminfunctions.adddel')
+                        @include('pages.adminfunctions.schedule')
                     @endif
                     <!--end of add-delete room button-->
 
                 </div> <!--END OF COLUMN-->
 
-                <div class="col-md-8">
+                <div class="col-md-9">
                     <div class="box box-primary">
                         <div class="box-header with-border">
                             <h3 class="box-title">Room Availability</h3>
