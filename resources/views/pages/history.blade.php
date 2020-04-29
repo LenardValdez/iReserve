@@ -136,7 +136,7 @@
                             <table class="table">
                                 <tr>
                                     <th>Date</th>
-                                    <td>{{ \Carbon\Carbon::parse($reservation->created_at)->toDayDateTimeString() }}</td>
+                                    <td>{{ Carbon::parse($reservation->created_at)->toDayDateTimeString() }}</td>
                                 </tr>
                                 <tr>
                                     <th>Room Number</th>
@@ -148,7 +148,7 @@
                                 </tr>
                                 <tr>
                                     <th>Reservation Period</th>
-                                    <td>{{$reservation->stime_res}} - {{$reservation->etime_res}}</td>
+                                    <td>{{ Carbon::parse($reservation->stime_res)->format('M d, Y h:m A') }} - {{ Carbon::parse($reservation->etime_res)->format('M d, Y h:m A') }}</td>
                                 </tr>
                                 <tr>
                                     <th>Purpose</th>
@@ -158,7 +158,7 @@
                         </div>
                         @if (Auth()->user()->roles == 0 or Auth()->user()->roles == 1)
                         <div class="modal-footer">
-                            @if(\Carbon\Carbon::parse($reservation->etime_res)->isPast() or $reservation->isCancelled==1 or $reservation->isApproved==2)
+                            @if(Carbon::parse($reservation->etime_res)->isPast() or $reservation->isCancelled==1 or $reservation->isApproved==2)
                               <button type="button" class="btn btn-danger" disabled>Cancel Reservation</button>
                             @else
                               <a type="button" class="btn btn-danger" href="{{ route('cancelrequest', $reservation->form_id) }}">Cancel Reservation</a>
@@ -215,11 +215,11 @@
                                     @endif
                                   @endif
                                 @endforeach
-                                <td>{{ \Carbon\Carbon::parse($reservation->created_at)->toFormattedDateString() }}</td>
+                                <td>{{ Carbon::parse($reservation->created_at)->toFormattedDateString() }}</td>
                                 @if ($reservation->isApproved==0)
                                   <td>N/A</td> 
                                 @else
-                                  <td>{{ \Carbon\Carbon::parse($reservation->updated_at)->toFormattedDateString() }}</td>
+                                  <td>{{ Carbon::parse($reservation->updated_at)->toFormattedDateString() }}</td>
                                 @endif
                                 @if($reservation->isCancelled == 1)
                                   <td><span class="label label-warning">Cancelled</span></td>
@@ -260,11 +260,11 @@
                                   @endif
                                 @endif
                               @endforeach
-                              <td>{{ \Carbon\Carbon::parse($reservation->created_at)->toFormattedDateString() }}</td>
+                              <td>{{ Carbon::parse($reservation->created_at)->toFormattedDateString() }}</td>
                               @if ($reservation->isApproved==0)
                                 <td>N/A</td> 
                               @else
-                                <td>{{ \Carbon\Carbon::parse($reservation->updated_at)->toFormattedDateString() }}</td>
+                                <td>{{ Carbon::parse($reservation->updated_at)->toFormattedDateString() }}</td>
                               @endif
                               @if($reservation->isCancelled == 1)
                               <td><span class="label label-warning">Cancelled</span></td>

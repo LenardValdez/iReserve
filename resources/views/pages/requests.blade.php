@@ -84,7 +84,7 @@
                         <table class="table">
                             <tr>
                                 <th>Date</th>
-                                <td>{{ \Carbon\Carbon::parse($form->created_at)->toDayDateTimeString() }}</td>
+                                <td>{{ Carbon::parse($form->created_at)->toDayDateTimeString() }}</td>
                             </tr>
                             <tr>
                                 <th>Room Number</th>
@@ -96,7 +96,7 @@
                             </tr>
                             <tr>
                                 <th>Reservation Period</th>
-                                <td>{{ \Carbon\Carbon::parse($form->stime_res)->format('M d, Y h:m A')}} - {{ \Carbon\Carbon::parse($form->etime_res)->format('M d, Y h:m A')}}</td>
+                                <td>{{ Carbon::parse($form->stime_res)->format('M d, Y h:m A')}} - {{ Carbon::parse($form->etime_res)->format('M d, Y h:m A')}}</td>
                             </tr>
                             <tr>
                                 <th>Purpose</th>
@@ -141,7 +141,7 @@
                             @endif
                           @endforeach
                           <td>{{$form->room_id}}</td>
-                          <td>{{ \Carbon\Carbon::parse($form->created_at)->toFormattedDateString() }}</td>
+                          <td>{{ Carbon::parse($form->created_at)->toFormattedDateString() }}</td>
                           <td><span class="label label-info">Special Room</span></td>
                         </tr>
                         @endforeach
