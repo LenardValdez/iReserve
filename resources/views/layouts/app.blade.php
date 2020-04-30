@@ -19,7 +19,21 @@
     <link rel="stylesheet" href="css/fullcalendar.min.css">
     <link rel="stylesheet" href="css/fullcalendar-scheduler.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
-    
+    <style>
+      .notifications-menu > .dropdown-menu > li .menu > li > a {
+        white-space: normal !important;
+      }
+  
+      .gutter-10.row {
+        margin-right: -5px;
+        margin-left: -5px;
+      }
+      .gutter-10 > [class^="col-"], .gutter-10 > [class^=" col-"] {
+        padding-right: 5px;
+        padding-left: 5px;
+      }
+    </style>
+
     <script src="js/adminlte_js/jquery.min.js"></script>
     <script src="js/adminlte_js/jquery-ui.min.js"></script>
     <script src="js/adminlte_js/moment.min.js"></script> <!--DATE FORMAT BEING USED BY DATERANGEPICKER-->
@@ -39,21 +53,6 @@
     <script src="js/adminlte_js/select2.full.min.js"></script> <!--JS FOR MULTIPLE SELECT FORM INPUT-->
     <script src="js/adminlte_js/fullcalendar.min.js"></script> <!--CHANGE FORM DATE AND TIME FORMAT TO ISO8601 STRING USING moment().toISOString()-->
     <script src="js/adminlte_js/fullcalendar-scheduler.min.js"></script>
-
-    <style>
-    .notifications-menu > .dropdown-menu > li .menu > li > a {
-      white-space: normal !important;
-    }
-
-    .gutter-10.row {
-      margin-right: -5px;
-      margin-left: -5px;
-    }
-    .gutter-10 > [class^="col-"], .gutter-10 > [class^=" col-"] {
-      padding-right: 5px;
-      padding-left: 5px;
-    }
-    </style>
     <script>
       $(document).ready(function() {
         $('#faqBtn').click(function(e) {
@@ -67,9 +66,7 @@
         $('.notifCount').text('');
       }
     </script>
-
     @yield('script')
-    
   </head>
   <body class="hold-transition skin-blue layout-top-nav fixed" style="height: auto; min-height: 100%;">
     <div class="wrapper" style="height: auto; min-height: 100%;">
