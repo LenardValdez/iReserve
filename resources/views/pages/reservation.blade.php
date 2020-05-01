@@ -95,7 +95,6 @@
         });
 
         $('#reservationForm').submit(function (ev, picker) {
-            var checkSpecial = $('#room_id').val().substr(0, 1);
             [startDate, endDate] = $('.reservationPeriod').val().split(' - ');
             startDate = moment(startDate).format("YYYY-MM-DD HH:mm:ss");
             endDate = moment(endDate).format("YYYY-MM-DD HH:mm:ss");
@@ -103,6 +102,13 @@
             $(this).find('input[name="etime_res"]').val(endDate);
         });
 
+        $('#scheduleDataForm').submit(function (ev, picker) {
+            [termStart, termEnd] = $('.termPeriod').val().split(' - ');
+            termStart = moment(termStart).format("YYYY-MM-DD");
+            termEnd = moment(termStart).format("YYYY-MM-DD");
+            $(this).find('input[name="sdate_term"]').val(termStart);
+            $(this).find('input[name="edate_term"]').val(termEnd);
+        });
 
         var select2Options = { width: 'resolve' };
         var apiUrl = '/rooms/:parentId:';
@@ -174,7 +180,11 @@
             resourceGroupField: 'floorNum',
             resources: [
                 @foreach($rooms as $room)
-                { id: '{{ $room->room_id }}', floorNum: '{{ $room->room_desc }}', title: '{{ $room->room_id }}' },
+                    @if(isset($room->room_name))
+                        { id: '{{ $room->room_id }}', floorNum: '{{ $room->room_desc }}', title: '{{ $room->room_id }} ({{ $room->room_name}})' },
+                    @else
+                        { id: '{{ $room->room_id }}', floorNum: '{{ $room->room_desc }}', title: '{{ $room->room_id }}' },
+                    @endif
                 @endforeach
             ],
             events: [
@@ -303,7 +313,8 @@
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
-                        {{ session('roomAlert') }}
+                        <h4><i class="icon fa fa-check"></i>{{ session()->get('roomAlert')[0] }}</h4>
+                        {{ session()->get('roomAlert')[1] }}
                     </div>
                 </div>
             </div>
@@ -315,10 +326,33 @@
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
-                        {{ session('roomErr') }}
+                        <h4><i class="icon fa fa-ban"></i>{{ session('roomErr')[0] }}</h4>
+                        {{ session()->get('roomErr')[1] }}
                     </div>
                 </div>
             </div>
+            @endif
+            @if(session('classErr'))
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="alert alert-danger alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4><i class="icon fa fa-ban"></i>Error importing CSV!</h4>
+                        <span style="white-space: pre-wrap">{{ session('classErr') }}</span>
+                    </div>
+                </div>
+            </div>
+            @endif
+            @if(session('cancelledAlert'))
+                <div class="alert alert-danger alert-dismissible">
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                  <h4><i class="icon fa fa-ban"></i>{{ session('cancelledAlert')[0] }}</h4>
+                  {{ session('cancelledAlert')[1] }}
+                </div>
             @endif
             <div class="row">
                 <div class="col-md-3">

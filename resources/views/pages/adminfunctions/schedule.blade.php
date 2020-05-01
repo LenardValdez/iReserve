@@ -7,13 +7,13 @@
       </div>
     </div>
     <div class="box-body">
-        <form role="form" id="scheduleDataForm" method="POST" action="">
+        <form role="form" id="scheduleDataForm" method="POST" action="{{ route('insertschedule') }}" enctype="multipart/form-data">
             @csrf
             <div class="row gutter-10">
                 <div class="col-lg-3">
                     <div class="form-group">
-                        <label for="termNumber">Term: </label>
-                        <select class="form-control" name="termNumber">
+                        <label for="term_number">Term: </label>
+                        <select class="form-control" name="term_number">
                             <option value=1>1</option>
                             <option value=2>2</option>
                             <option value=3>3</option>
@@ -35,8 +35,8 @@
                 </div>
             </div>
             <div class="form-group">
-                <label for="csvFile">CSV File: </label>
-                <input type="file" id="csvFile" name="csvFile">
+                <label for="csv_file">CSV File: </label>
+                <input type="file" id="csvFile" name="csv_file">
                 <p class="text-primary">What should be the format?</p>
             </div>
             <button type="submit" id="insertScheduleBtn" class="btn btn-primary pull-right">{{ __('Insert') }}</button>
