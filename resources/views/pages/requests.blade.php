@@ -50,7 +50,8 @@
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
-                {{ session('approvedAlert') }}
+                <h4><i class="icon fa fa-check"></i>{{ session()->get('approvedAlert')[0] }}</h4>
+                {{ session()->get('approvedAlert')[1] }}
               </div>
               @endif
 
@@ -59,9 +60,20 @@
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
-                {{ session('rejectedAlert') }}
+                <h4><i class="icon fa fa-ban"></i>{{ session()->get('rejectedAlert')[0] }}</h4>
+                {{ session('rejectedAlert')[1] }}
               </div>
               @endif
+
+              @if(session('cancelledAlert'))
+                <div class="alert alert-danger alert-dismissible">
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                  <h4><i class="icon fa fa-ban"></i>{{ session('cancelledAlert')[0] }}</h4>
+                  {{ session('cancelledAlert')[1] }}
+                </div>
+            @endif
 
               <div class="box box-primary">
                 <div class="box-header with-border">
@@ -128,7 +140,7 @@
                     <tbody>
                       @if($pendingforms->isEmpty())
                         <tr>
-                          <td colspan="6" class="text-center">Everything is good, no pending requests</td>
+                          <td colspan="6" class="text-center">Everything is good, no pending requests!</td>
                         </tr>
                       @else
                         @foreach($pendingforms as $form)

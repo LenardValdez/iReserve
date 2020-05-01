@@ -14,10 +14,14 @@ class Room extends Model
   public $timestamps = true;
 
   protected $fillable = [
-    'room_id', 'room_desc', 'isSpecial'
+    'room_id', 'room_name', 'room_desc', 'isSpecial'
   ];
 
-    public function regform(){
-      return $this->hasOne('App\RegForm', 'room_id');
+  public function regform(){
+    return $this->hasOne('App\RegForm', 'room_id');
+  }
+
+  public function class(){
+    return $this->hasMany('App\ClassSchedule', 'class_id');
   }
 }

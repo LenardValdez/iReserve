@@ -39,8 +39,10 @@ class RoomController extends Controller
 
     public function store(RoomRequest $request)
     {
-        Room::create($request->validated());
-	    return redirect()->back()->with('roomAlert',"Room ".$request->room_id." has been successfully added to the database and scheduler!");
+        Room::create($request->validated()); 
+        
+        return redirect()->back()->with('roomAlert',["Room ".$request->room_id." has been successfully added!", 
+        "This room will be now available for reservation."]);
     }
 
     public function reserve(Request $request)
@@ -50,7 +52,7 @@ class RoomController extends Controller
             'users_involved' => 'nullable',
             'stime_res' => 'required',
             'etime_res' => 'required',
-            'purpose' => 'required'
+            'purpose' => 'required|max:255'
         ]);
 
         if($request->has('users_involved')){
@@ -92,19 +94,23 @@ class RoomController extends Controller
                                   ->count();
 
         if($checkMaxReserve>=5 && auth()->user()->roles == 1){
-            return redirect()->back()->with('roomErr', "You have already reached the maximum number of requests allowed per day. Please try again tomorrow or book under another user.");
+            return redirect()->back()->with('roomErr', ["Oops! You have reached your maximum daily requests.",
+            "As a precautionary measure against spam, please try again tomorrow or book under another user."]);
         }
         elseif($checkExisting>='1' && Auth()->user()->roles == 1){ 
-            return redirect()->back()->with('existingErr', "The room you've chosen is not available on the selected period.");
+            return redirect()->back()->with('existingErr', ["The room you've selected is taken!", 
+            "The room you've chosen is not available on the selected period."]);
         }
         elseif($checkSameUserPending>='1' && Auth()->user()->roles == 1){
-            return redirect()->back()->with('roomErr', "You've already submitted a request for the same room on the selected period! Please wait for the admin to confirm your request.");
+            return redirect()->back()->with('roomErr', ["Duplicate submission detected!",
+                "You've already submitted a request for the same room on the selected period! Please wait for the admin to confirm your request."]);
         }
         else if($request->get('stime_res')==$request->get('etime_res')){
-            return redirect()->back()->with('existingErr', "The start and end of the reservation cannot be the same.");
+            return redirect()->back()->with('existingErr', ["Invalid reservation period!", "The start and end of the reservation cannot be the same."]);
         }
         else if($checkAdminExisting>='1' && Auth()->user()->roles == 0){
-            return redirect()->back()->with('existingErr', "You have an existing reservation for the same room on the selected period.");
+            return redirect()->back()->with('existingErr', ["Same confirmed reservation already exists!", 
+            "You have an existing reservation for the same room on the selected period."]);
         }
         else {
             if($roomType->isSpecial=='1'){
@@ -163,18 +169,10 @@ class RoomController extends Controller
                     }
                     $form->isApproved = '1';
                     $form->save();
-                    /* $container = $form;
-                    $container->isCancelled = '1';
-                    $reservedForm = RegForm::where('user_id', '!=', 'admin')
-                                        ->where('room_id', $request->get('room_id'))
-                                        ->where('stime_res', '<', $request->get('etime_res'))
-                                        ->where('etime_res', '>', $request->get('stime_res'))
-                                        ->get()->first();
-                    $user = User::where('user_id', $reservedForm->user_id)->get()->first();
-                    $user->notify(new RoomStatus($container)); */
 
-                    return redirect()->back()->with('roomAlert',"Your reservation has been approved and added to the calendar and database! 
-                                                    Requests for the same room with similar reservation period have been overriden.");
+                    return redirect()->back()->with('adminRoomAlert', ["Your reservation is now confirmed!",
+                    "Requests for the same room with similar reservation period have been overriden. User/s affected will be notified. 
+                    To cancel this reservation, just click on your reservation in the dashboard or scheduler."]);
                 }
                 else{
                     $form->save();
@@ -182,7 +180,8 @@ class RoomController extends Controller
                     if($roomType->isSpecial=='1'){
                         $user->notify(new RoomStatus($form));
                     }
-                    return redirect()->back()->with('roomAlert',"Sit back and relax! Your reservation has been received and is subject for approval.");
+                    return redirect()->back()->with('roomAlert',["Your special room request has been received.",
+                    "Sit back and relax! Your request is now subject for approval. You will receive a notification once its status has been updated."]);
                 }
             }
             else {
@@ -196,13 +195,6 @@ class RoomController extends Controller
                 ]);
                 
                 if(Auth()->user()->roles == 0){
-                    /* $cancelSameRange = RegForm::where('user_id', '!=', 'admin')
-                                            ->where('room_id', $request->get('room_id'))
-                                            ->where('stime_res', '<', $request->get('etime_res'))
-                                            ->where('etime_res', '>', $request->get('stime_res'))
-                                            ->where('isApproved', '1')
-                                            ->update(['isCancelled' => true]); */
-
                     $cancelSameRange = RegForm::where('user_id', '!=', 'admin')
                                                 ->where('room_id', $request->get('room_id'))
                                                 ->where('stime_res', '<', $request->get('etime_res'))
@@ -219,21 +211,16 @@ class RoomController extends Controller
 
                 $form->isApproved = '1';
                 $form->save();
-                /* $container = $form;
-                $container->isCancelled = '1'; */
+
                 if(Auth()->user()->roles == 0){
-                    /* $reservedForm = RegForm::where('user_id', '!=', 'admin')
-                                        ->where('room_id', $request->get('room_id'))
-                                        ->where('stime_res', '<', $request->get('etime_res'))
-                                        ->where('etime_res', '>', $request->get('stime_res'))
-                                        ->get()->first();
-                    $user = User::where('user_id', $reservedForm->user_id)->get()->first();
-                    $user->notify(new RoomStatus($container)); */
-                    return redirect()->back()->with('roomAlert',"Your reservation has been approved and added to the calendar and database!
-                                                    Requests for the same room with similar reservation period have been overriden.");
+                    return redirect()->back()->with('adminRoomAlert', ["Your reservation is now confirmed!",
+                    "Requests for the same room with similar reservation period have been overriden. User/s affected will be notified. 
+                    To cancel this reservation, just click on your reservation in the dashboard or scheduler."]);
                 }
                 else {
-                    return redirect()->back()->with('roomAlert',"Your reservation has been approved and added to the calendar and database!");
+                    return redirect()->back()->with('roomAlert',["Your reservation is now confirmed!",
+                    "Your reservation has been approved and added to the calendar! To cancel this reservation, 
+                    just click on your reservation in the dashboard or scheduler."]);
                 }
             }
         }
@@ -242,34 +229,34 @@ class RoomController extends Controller
     public function approve($id)
     {
         if(Auth()->user()->roles == 0){
-        $specialRequest = RegForm::find($id);
-        
-        $specialRequest->isApproved = '1';
-        $sameRange = RegForm::where('user_id', '!=', 'admin')
-                            ->where('room_id', $specialRequest->room_id)
-                            ->where('stime_res', '<', $specialRequest->etime_res)
-                            ->where('etime_res', '>', $specialRequest->stime_res)
-                            ->where('isApproved', '0')
-                            ->get();
-        $specialRequest->save();
+            $specialRequest = RegForm::find($id);
+            
+            $specialRequest->isApproved = '1';
+            $sameRange = RegForm::where('user_id', '!=', 'admin')
+                                ->where('room_id', $specialRequest->room_id)
+                                ->where('stime_res', '<', $specialRequest->etime_res)
+                                ->where('etime_res', '>', $specialRequest->stime_res)
+                                ->where('isApproved', '0')
+                                ->get();
+            $specialRequest->save();
 
-        if(!empty($sameRange)){
-            foreach($sameRange as $same){
-                if($same->user_id != $specialRequest->user_id){
-                    $user = User::where('user_id',$same->user_id)->first();
-                    $same->isApproved = '2';
-                    $same->save();
-                    $user->notify(new RoomStatus($same));
+            if(!empty($sameRange)){
+                foreach($sameRange as $same){
+                    if($same->user_id != $specialRequest->user_id){
+                        $user = User::where('user_id',$same->user_id)->first();
+                        $same->isApproved = '2';
+                        $same->save();
+                        $user->notify(new RoomStatus($same));
+                    }
                 }
             }
-        }
 
-        $user = User::where('user_id', $specialRequest->user_id)->first();
-        $user->notify(new RoomStatus($specialRequest));
+            $user = User::where('user_id', $specialRequest->user_id)->first();
+            $user->notify(new RoomStatus($specialRequest));
 
-        return redirect()->back()->with('approvedAlert', "The request has been approved and added to the scheduler! 
-                                        Any pending requests for this room number with similar reservation period will 
-                                        automatically be rejected.");
+            return redirect()->back()->with('approvedAlert', ["The request has been approved and added to the scheduler!", 
+            "Any pending requests for this room number with similar reservation period will 
+            automatically be rejected and notified."]);
         }
         else {
             abort(403, 'Unauthorized action.');
@@ -330,7 +317,14 @@ class RoomController extends Controller
                 $user->notify(new RoomStatus($cancelRequest));
             }
 
-            return redirect()->back()->with('cancelledAlert', "The request/reservation has been cancelled.");
+            if(Auth()->user()->roles == 0) {
+                return redirect()->back()->with('cancelledAlert', ["The request/reservation is now cancelled.", 
+                "User/s affected will be notified. Reservation details may still be accessed through the over-all reservation history."]);
+            }
+            else {
+                return redirect()->back()->with('cancelledAlert', ["Your request/reservation is now cancelled.", 
+                "Reservation details may still be accessed through your reservation history."]);
+            }
         }
         else {
             abort(403, 'Unauthorized action.');
@@ -346,7 +340,8 @@ class RoomController extends Controller
     {
         $delete = Room::where('room_id',$request->room_id)->first();
         $delete->delete();
-        return redirect()->back()->with('roomErr','Room '.$request->room_id.' has been successfully deleted from the database and scheduler.');
+        return redirect()->back()->with('roomErr',["Room ".$request->room_id." has been successfully deleted.",
+        "Any confirmed and pending reservations are now automatically cancelled."]);
     }
 
     public function list()
@@ -371,13 +366,18 @@ class RoomController extends Controller
         }
 
         foreach($rooms as $room){
-            $roomList[$room->room_desc][$room->room_id] = $room->room_id;
+            if(isset($room->room_name)) {
+                $roomList[$room->room_desc][$room->room_id] = $room->room_id." (".$room->room_name.")";
+            }
+            else {
+                $roomList[$room->room_desc][$room->room_id] = $room->room_id;
+            }
         }
 
         foreach($descriptions as $description){
             $spaces = '/\s+/';
             $replace = '-';
-            $string= $description;
+            $string = $description;
             $trimmedDesc = preg_replace($spaces, $replace, strtolower($string));
 
             $roomListJson = json_encode($roomList[$description], JSON_PRETTY_PRINT);

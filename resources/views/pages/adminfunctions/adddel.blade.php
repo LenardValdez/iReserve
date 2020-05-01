@@ -19,6 +19,10 @@
                 @endif
               </div>
               <div class="form-group">
+                <label for="room_name">Room Name: </label>
+                <input type="text" class="form-control" placeholder="Enter room name (ex.: Chemistry Lab)" id="newroom_name" name="room_name" value="{{ old('room_name') }}">
+              </div>
+              <div class="form-group">
                 <label for="room_desc">Room Description: </label>
                 <select id="room_desc" class="form-control{{ $errors->has('room_desc') ? ' has-error' : '' }}" name="room_desc" value="{{ old('room_desc') }}" required>
                   <option selected disabled>Select room description</option>
@@ -77,7 +81,13 @@
                   <optgroup label="{{$description}}">
                     @foreach ($rooms as $room)
                       @if ($description == $room->room_desc)
-                        <option value="{{$room->room_id}}">{{$room->room_id}}</option>
+                      <option value="{{$room->room_id}}">
+                        @if (isset($room->room_name))
+                          {{$room->room_id}} ({{$room->room_name}})
+                        @else
+                          {{$room->room_id}}
+                        @endif
+                      </option>
                       @endif
                     @endforeach
                   </optgroup>

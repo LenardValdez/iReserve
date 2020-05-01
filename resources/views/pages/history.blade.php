@@ -236,7 +236,7 @@
                         @else
                         @if($reservations->isEmpty())
                           <tr>
-                            <td colspan="10" class="text-center">Everything is good, no pending requests</td>
+                            <td colspan="10" class="text-center">Everything is good, no pending requests!</td>
                           </tr>
                         @else
                           @foreach($reservations as $reservation)
