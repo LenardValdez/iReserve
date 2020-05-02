@@ -10,8 +10,9 @@ use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\WithValidation;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
 
-class ClassSchedulesImport implements ToModel, WithHeadingRow, WithValidation
+class ClassSchedulesImport implements ToModel, WithHeadingRow, WithValidation, WithChunkReading
 {
     use Importable;
 
@@ -26,9 +27,14 @@ class ClassSchedulesImport implements ToModel, WithHeadingRow, WithValidation
         $this->termEndDate = $termEndDate;
     }
 
+    public function chunkSize(): int
+    {
+        return 1000;
+    }
+
     public function model(array $row)
     {
-        return new ClassSchedule([
+        return ClassSchedule::updateOrCreate([
             'subject_code' => $row['subject_code'],
             'user_id' => $row['user_id'],
             'room_id' => $row['room_number'],
