@@ -29,7 +29,8 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('/read/{id}', 'RoomController@readNotif')->name('readnotification');
     Route::get('/readAll', 'RoomController@readAllNotif')->name('readallnotifs');
 
-    Route::post('/reserve/new-schedule', 'ClassScheduleController@store')->name('insertschedule');
+    Route::post('/schedule/new', 'ClassScheduleController@store')->name('insertschedule');
+    Route::post('/schedule/del','ClassScheduleController@destroy')->name('deleteschedule');
 
     Route::get('/rooms/6th-floor', 'JsonController@flr6');
     Route::get('/rooms/7th-floor', 'JsonController@flr7');

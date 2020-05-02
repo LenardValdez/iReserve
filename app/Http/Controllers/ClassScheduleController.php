@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\ClassSchedule;
 use Maatwebsite\Excel\Validators\ValidationException;
 use App\Imports\ClassSchedulesImport;
 use Maatwebsite\Excel\Facades\Excel;
@@ -32,6 +33,12 @@ class ClassScheduleController extends Controller
             }
             return redirect()->back()->with('classErr', $errorMessage);
         }
-        return redirect()->back()->with('roomAlert',"Classes have been successfully added to the database!");
+        return redirect()->back()->with('roomAlert',["CSV import successful!", "Corresponding day and time periods will be blocked for reservations."]);
+    }
+
+    public function destroy(Request $request) {
+        ClassSchedule::where('class_id',$request->class_id)->first()->delete();
+        return redirect()->back()->with('roomAlert',["Class schedule selected has been successfully deleted.", 
+        "Corresponding room and time period are now unblocked."]);
     }
 }

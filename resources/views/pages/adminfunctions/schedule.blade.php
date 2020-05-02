@@ -53,41 +53,47 @@
       </div>
     </div>
     <div class="box-body">
-      <form role="form" id="roomIdDelForm" method="POST" action="{{ route('processdelroom') }}">
+    <form role="form" id="deleteScheduleForm" method="POST" action="{{ route('deleteschedule') }}">
         @csrf
-        <div class="form-group{{ $errors->has('delroom_id') ? ' has-error' : '' }}">
+        <div class="form-group{{ $errors->has('class_id') ? ' has-error' : '' }}">
           <label>Select Entry: </label>
-          <select class="form-control" id="delroom_id" name="room_id" required>
-            <option value="" selected disabled>Select a schedule to be deleted</option>
-            @foreach ($descriptions as $description)
-              <optgroup label="{{$description}}">
-                @foreach ($rooms as $room)
-                  @if ($description == $room->room_desc)
-                    <option value="{{$room->room_id}}">{{$room->room_id}}</option>
-                  @endif
-                @endforeach
-              </optgroup>
-            @endforeach
+          <select class="form-control" id="class_id" name="class_id" required>
+            @if($classSchedules->isEmpty())
+              <option value="" selected disabled>No entries available</option>
+            @else
+              <option value="" selected disabled>Select a schedule to be deleted</option>
+              @foreach ($classrooms as $classroom)
+                <optgroup label="{{$classroom}}">
+                  @foreach ($classSchedules as $schedule)
+                    @if ($classroom == $schedule->room_id)
+                      <option value="{{$schedule->class_id}}">
+                        {{$schedule->subject_code}} {{$schedule->section}} | {{$schedule->day}} {{Carbon::parse($schedule->stime_class)->format('h:i A') }}-{{Carbon::parse($schedule->etime_class)->format('h:i A') }}
+                      </option>
+                    @endif
+                  @endforeach
+                </optgroup>
+              @endforeach
+            @endif
           </select>
         </div>
         <button type="button" id="delAllScheduleBtn" data-target="#confirmRoomDeletion" data-toggle="modal" class="btn btn-default">Delete All</button>
-        <button type="button" id="delScheduleBtn" data-target="#confirmRoomDeletion" data-toggle="modal" class="btn btn-danger pull-right">Delete</button>
+        <button type="button" id="delScheduleBtn" data-target="#confirmScheduleDeletion" data-toggle="modal" class="btn btn-danger pull-right">Delete</button>
 
-        <div class="modal fade" id="confirmRoomDeletion">
+        <div class="modal fade" id="confirmScheduleDeletion">
           <div class="modal-dialog" role="document">
             <div class="modal-content">
               <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
-                <h4 class="modal-title" id="myModalLabel">Room Deletion</h4>
+                <h4 class="modal-title" id="myModalLabel">Class Schedule Deletion</h4>
               </div>
               <div class="modal-body">
-                <h4>Are you sure you want to delete this room? You cannot undo this action.</h4>
+                <h4>Are you sure you want to delete this schedule? You cannot undo this action.</h4>
               </div>
               <div class="modal-footer">
                   <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Revise</button>
-                  <button type="submit" class="btn btn-danger" onclick="$('#roomIdDelForm').submit()">Delete</button>
+                  <button type="submit" class="btn btn-danger" onclick="$('#deleteScheduleForm').submit()">Delete</button>
               </div>
             </div>
           </div>
