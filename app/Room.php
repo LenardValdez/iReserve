@@ -18,10 +18,10 @@ class Room extends Model
   ];
 
   public function regform(){
-    return $this->hasOne('App\RegForm', 'room_id');
+    return $this->hasMany('App\RegForm', 'room_id');
   }
 
   public function class(){
-    return $this->hasMany('App\ClassSchedule', 'class_id');
+    return $this->hasMany('App\ClassSchedule', 'room_id');
   }
 }

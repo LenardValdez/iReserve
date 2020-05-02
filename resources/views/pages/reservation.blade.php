@@ -156,26 +156,36 @@
                 e.stopPropagation();
             }
         });
+    });
 
-        $('#calendar').fullCalendar({
+    document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            plugins: [ 'resourceTimeline' ],
             schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
-            themeSystem: 'bootstrap3',
+            themeSystem: 'standard',
+            timezone: 'Asia/Manila',
             header: {
-                left: 'today prev,next',
+                left: 'today,prev,next',
                 center: 'title',
-                right: 'timelineDay,timelineWeek,timelineMonth'
+                right: 'resourceTimelineDay,resourceTimelineWeek,resourceTimelineMonth'
             },
             businessHours: {
-                dow: [ 1, 2, 3, 4 ,5, 6],
-
-                start: '07:30',
-                end: '21:00',
+                daysOfWeek: [ 1, 2, 3, 4 ,5, 6],
+                startTime: '07:30',
+                endTime: '21:00',
             },
-            eventClick: function(event){
-                $('#reqInfo'+event.formid).modal('show');
+            eventClick: function(info){
+                if (info.event.extendedProps.kind == 'reservation') {
+                    $('#reqInfo'+info.event.id).modal('show');
+                }
+                else {
+                    $('#classInfo'+info.event.id).modal('show');
+                }
             },
-            height: "auto",
-            defaultView: 'timelineDay',
+            height: 'auto',
+            defaultView: 'resourceTimelineDay',
             resourceLabelText: 'Rooms',
             resourceGroupField: 'floorNum',
             resources: [
@@ -188,22 +198,49 @@
                 @endforeach
             ],
             events: [
-                @foreach($users as $user)
+                @if(isset($forms))
                     @foreach($forms as $form)
+                        @if($form->isCancelled != 1)
                         {
-                        @if($user->user_id == $form->user_id && $form->isCancelled!=1)
-                        title: '{{ sprintf("%07d", $form->form_id) }} | {{ $user->name }}', 
+                        id: '{{ $form->form_id }}',
+                        title: '{{ sprintf("%07d", $form->form_id) }} | {{ $form->user->name }}', 
                         resourceId: '{{ $form->room_id }}', 
-                        @endif
                         start: moment('{{ $form->stime_res }}').format(), 
                         end: moment('{{ $form->etime_res }}').format(),
-                        formid: '{{ $form->form_id }}',
+                        extendedProps: {
+                            kind: 'reservation'
+                        },
                         people: @if($form->users_involved!=NULL) '{{ $form->users_involved }}' @else 'N/A' @endif
                         },
+                        @endif
                     @endforeach
-                @endforeach
+                @endif
+                @if(isset($classSchedules))
+                    @foreach($classSchedules as $schedule)
+                        @php
+                            $days = ["M", "T", "W", "TH", "F", "S"];
+                            $dayInDigit = array_search($schedule->day, $days)+1;
+                        @endphp
+                        {
+                        id: '{{ $schedule->class_id }}',
+                        title: '{{ $schedule->subject_code }} | {{ $schedule->section }}', 
+                        resourceId: '{{ $schedule->room_id }}',
+                        daysOfWeek: [ '{{ $dayInDigit }}' ],
+                        startTime: '{{ $schedule->stime_class }}',
+                        endTime: '{{ $schedule->etime_class }}',
+                        startRecur: '{{ $schedule->sdate_term }}',
+                        endRecur: '{{ $schedule->edate_term }}',
+                        extendedProps: {
+                            kind: 'class'
+                        },
+                        people: '{{ $schedule->user_id }}'
+                        },
+                    @endforeach
+                @endif
             ]
         });
+
+        calendar.render();
     });
 </script>
 @endsection
@@ -249,14 +286,10 @@
                         </div>
                         <div class="modal-body">
                             <table class="table">
-                                @foreach ($users as $user)
-                                    @if ($form->user_id == $user->user_id)
-                                        <tr>
-                                            <th>Reserved User</th>
-                                            <td>{{$user->name}}</td>
-                                        </tr>
-                                    @endif
-                                @endforeach
+                                    <tr>
+                                        <th>Reserved User</th>
+                                        <td>{{$form->user->name}}</td>
+                                    </tr>
                                 <tr>
                                     <th>Date</th>
                                     <td>{{ Carbon::parse($form->created_at)->toDayDateTimeString() }}</td>
@@ -271,7 +304,7 @@
                                 </tr>
                                 <tr>
                                     <th>Reservation Period</th>
-                                    <td>{{ Carbon::parse($form->stime_res)->format('M d, Y h:m A') }} - {{ Carbon::parse($form->etime_res)->format('M d, Y h:m A') }}</td>
+                                    <td>{{ Carbon::parse($form->stime_res)->format('M d, Y h:i A') }} - {{ Carbon::parse($form->etime_res)->format('M d, Y h:i A') }}</td>
                                 </tr>
                                 <tr>
                                     <th>Purpose</th>
@@ -288,6 +321,46 @@
                                 @endif
                             </div>
                         @endif
+                    </div>
+                </div>
+            </div>
+            @endforeach
+
+            <!--CLASS SCHEDULE INFORMATION MODAL-->
+            @foreach($classSchedules as $schedule)
+            <div class="modal fade" id="classInfo{{$schedule->class_id}}">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h4 class="modal-title" id="myModalLabel">Class Schedule Details</h4>
+                        </div>
+                        <div class="modal-body">
+                            <table class="table">
+                                <tr>
+                                    <th>Subject</th>
+                                    <td>{{ $schedule->subject_code }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Section</th>
+                                    <td>{{ $schedule->section }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Professor</th>
+                                    <td>{{$schedule->user->name}}</td>
+                                </tr>
+                                <tr>
+                                    <th>Room Number</th>
+                                    <td>{{$schedule->room_id}}</td>
+                                </tr>
+                                <tr>
+                                    <th>Day and Time</th>
+                                    <td>{{ $schedule->day }} {{ Carbon::parse($schedule->stime_class)->format('h:i A') }} - {{ Carbon::parse($schedule->etime_class)->format('h:i A') }}</td>
+                                </tr>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -375,10 +448,7 @@
                                         <option value="" selected disabled>Select floor</option>
                                         @foreach ($descriptions as $description)
                                         @php
-                                        $spaces = '/\s+/';
-                                        $replace = '-';
-                                        $string= $description;
-                                        $trimmedDesc = preg_replace($spaces, $replace, strtolower($string));
+                                        $trimmedDesc = preg_replace('/\s+/', '-', strtolower($description));
                                         @endphp
                                         <option value="{{$trimmedDesc}}">{{$description}}</option>
                                         @endforeach

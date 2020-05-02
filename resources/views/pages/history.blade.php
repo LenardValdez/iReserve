@@ -148,7 +148,7 @@
                                 </tr>
                                 <tr>
                                     <th>Reservation Period</th>
-                                    <td>{{ Carbon::parse($reservation->stime_res)->format('M d, Y h:m A') }} - {{ Carbon::parse($reservation->etime_res)->format('M d, Y h:m A') }}</td>
+                                    <td>{{ Carbon::parse($reservation->stime_res)->format('M d, Y h:i A') }} - {{ Carbon::parse($reservation->etime_res)->format('M d, Y h:i A') }}</td>
                                 </tr>
                                 <tr>
                                     <th>Purpose</th>
@@ -198,23 +198,15 @@
                               <tr data-toggle="modal" data-target="#reqInfo{{$reservation->form_id}}">
                                 <td>{{ sprintf("%07d", $reservation->form_id) }}</td>
                                 <td>{{$reservation->user_id}}</td>
-                                @foreach($users as $user)
-                                  @if($user->user_id == $reservation->user_id)
-                                    <td>{{$user->name}}</td>
-                                  @endif
-                                @endforeach
+                                <td>{{$reservation->user->name}}</td>
                                 <td>@if($reservation->users_involved!=NULL){{$reservation->users_involved}} @else N/A @endif</td>
                                 <td>{{$reservation->purpose}}</td>
                                 <td>{{$reservation->room_id}}</td>
-                                @foreach ($rooms as $room)
-                                  @if ($room->room_id == $reservation->room_id) 
-                                    @if ($room->isSpecial)
-                                      <td><span class="label label-info">Special Room</span></td>
-                                    @else
-                                      <td><span class="label label-primary">Normal Room</span></td>
-                                    @endif
+                                  @if ($reservation->room->isSpecial)
+                                    <td><span class="label label-info">Special Room</span></td>
+                                  @else
+                                    <td><span class="label label-primary">Normal Room</span></td>
                                   @endif
-                                @endforeach
                                 <td>{{ Carbon::parse($reservation->created_at)->toFormattedDateString() }}</td>
                                 @if ($reservation->isApproved==0)
                                   <td>N/A</td> 
@@ -243,23 +235,15 @@
                             <tr data-toggle="modal" data-target="#reqInfo{{$reservation->form_id}}">
                               <td>{{ sprintf("%07d", $reservation->form_id) }}</td>
                               <td>{{$reservation->user_id}}</td>
-                              @foreach($users as $user)
-                                @if($user->user_id == $reservation->user_id)
-                                  <td>{{$user->name}}</td>
-                                @endif
-                              @endforeach
+                              <td>{{$reservation->user->name}}</td>
                               <td>@if($reservation->users_involved!=NULL){{$reservation->users_involved}} @else N/A @endif</td>
                               <td>{{$reservation->purpose}}</td>
                               <td>{{$reservation->room_id}}</td>
-                              @foreach ($rooms as $room)
-                                @if ($room->room_id == $reservation->room_id) 
-                                  @if ($room->isSpecial)
-                                    <td><span class="label label-info">Special Room</span></td>
-                                  @else
-                                    <td><span class="label label-primary">Normal Room</span></td>
-                                  @endif
-                                @endif
-                              @endforeach
+                              @if ($reservation->room->isSpecial)
+                                <td><span class="label label-info">Special Room</span></td>
+                              @else
+                                <td><span class="label label-primary">Normal Room</span></td>
+                              @endif
                               <td>{{ Carbon::parse($reservation->created_at)->toFormattedDateString() }}</td>
                               @if ($reservation->isApproved==0)
                                 <td>N/A</td> 

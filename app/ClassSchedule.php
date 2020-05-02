@@ -24,4 +24,13 @@ class ClassSchedule extends Model
         'sdate_term',
         'edate_term'
     ];
+
+    protected $hidden = [
+        'class_id',
+        'updated_at'
+    ];
+
+    public function user(){
+        return $this->belongsTo('App\User', 'user_id');
+    }
 }

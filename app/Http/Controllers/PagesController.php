@@ -31,18 +31,12 @@ class PagesController extends Controller
     
         if ($role == 0){
             $pendingforms = RegForm::where('isApproved', 0)->orderBy('created_at', 'asc')->get();
-            $users = User::get();
-            return view('pages.requests')->with("pendingforms", $pendingforms)
-                                         ->with("users", $users);
+            return view('pages.requests')->with("pendingforms", $pendingforms);
         } elseif ($role == 1){
             $reservations = RegForm::get();
-            $users = User::get();
-            $rooms = Room::get();
             $studentReservations = RegForm::where('user_id', Auth()->User()->user_id)->get();
 
-            return view('pages.history')->with("users", $users)
-                                        ->with("rooms", $rooms)
-                                        ->with('reservations',$reservations)
+            return view('pages.history')->with('reservations',$reservations)
                                         ->with("studentReservations", $studentReservations);
         } else {
             $forms = RegForm::where('isApproved', '1')->get();

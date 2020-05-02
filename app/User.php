@@ -38,4 +38,12 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function regform(){
+        return $this->hasMany('App\RegForm', 'user_id');
+    }
+
+    public function schedule(){
+        return $this->hasMany('App\ClassSchedule', 'user_id');
+    }
 }

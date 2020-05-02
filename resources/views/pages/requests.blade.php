@@ -108,7 +108,7 @@
                             </tr>
                             <tr>
                                 <th>Reservation Period</th>
-                                <td>{{ Carbon::parse($form->stime_res)->format('M d, Y h:m A')}} - {{ Carbon::parse($form->etime_res)->format('M d, Y h:m A')}}</td>
+                                <td>{{ Carbon::parse($form->stime_res)->format('M d, Y h:i A')}} - {{ Carbon::parse($form->etime_res)->format('M d, Y h:i A')}}</td>
                             </tr>
                             <tr>
                                 <th>Purpose</th>
@@ -147,11 +147,7 @@
                         <tr data-toggle="modal" data-target="#specialInfo{{$form->form_id}}">
                           <td>{{ sprintf("%07d", $form->form_id) }}</td>
                           <td>{{$form->user_id}}</td>
-                          @foreach($users as $user)
-                            @if($user->user_id == $form->user_id)
-                            <td>{{$user->name}}</td>
-                            @endif
-                          @endforeach
+                          <td>{{$form->user->name}}</td>
                           <td>{{$form->room_id}}</td>
                           <td>{{ Carbon::parse($form->created_at)->toFormattedDateString() }}</td>
                           <td><span class="label label-info">Special Room</span></td>
