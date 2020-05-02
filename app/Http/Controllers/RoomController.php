@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Room;
 use App\User;
 use App\RegForm;
+use App\ClassSchedule;
 use Illuminate\Http\Request;
 use App\Http\Requests\RoomRequest;
 use App\Notifications\RoomStatus;
@@ -72,6 +73,19 @@ class RoomController extends Controller
                                 ->where('isCancelled', '0')
                                 ->count();
 
+        $days = ["SUN", "M", "T", "W", "TH", "F", "S"];
+
+        $checkClassExisting = ClassSchedule::where('room_id', $request->get('room_id'))
+                                            ->where(function ($query) use($request, $days) {
+                                                $query->where('day', $days[Carbon::parse($request->get('stime_res'))->dayOfWeek])
+                                                      ->where('stime_class', '<', Carbon::parse($request->get('etime_res'))->format('H:i:s'));
+                                            })
+                                            ->orWhere(function ($query) use($request, $days) {
+                                                $query->where('day', $days[Carbon::parse($request->get('etime_res'))->dayOfWeek])
+                                                      ->where('etime_class', '>', Carbon::parse($request->get('stime_res'))->format('H:i:s'));
+                                            })
+                                            ->count();
+
         $checkSameUserPending = RegForm::where('user_id', Auth()->user()->user_id)
                                         ->where('room_id', $request->get('room_id'))
                                         ->where('stime_res', '<',  $request->get('etime_res'))
@@ -111,6 +125,11 @@ class RoomController extends Controller
         else if($checkAdminExisting>='1' && Auth()->user()->roles == 0){
             return redirect()->back()->with('roomErr', ["Same confirmed reservation already exists!", 
             "You have an existing reservation for the same room on the selected period."]);
+        }
+        else if($checkClassExisting>='1'){
+            return redirect()->back()->with('roomErr', ["Class schedule exists!", 
+            "Sorry, a class schedule already exists within the reservation period you've provided. Please select a different room and/or period 
+            and book again. For room availability, feel free to check the scheduler below."]);
         }
         else {
             if($roomType->isSpecial=='1'){
@@ -346,6 +365,10 @@ class RoomController extends Controller
 
     public function list()
     {
+        $classSchedules = ClassSchedule::get();
+        $classrooms = ClassSchedule::groupBy('room_id')
+                                    ->orderBy('room_id', 'asc')
+                                    ->pluck('room_id');
         $forms = RegForm::where('isApproved', '1')->get();
         $rooms = Room::orderByRaw('LENGTH(room_desc)', 'asc')
                     ->orderBy('room_desc', 'asc')
@@ -375,18 +398,15 @@ class RoomController extends Controller
         }
 
         foreach($descriptions as $description){
-            $spaces = '/\s+/';
-            $replace = '-';
-            $string = $description;
-            $trimmedDesc = preg_replace($spaces, $replace, strtolower($string));
-
             $roomListJson = json_encode($roomList[$description], JSON_PRETTY_PRINT);
-            file_put_contents(public_path($trimmedDesc.'.json'), stripslashes($roomListJson));
+            file_put_contents(public_path(preg_replace('/\s+/', '-', strtolower($description)).'.json'), stripslashes($roomListJson));
         }
 
         return view('pages.reservation')->with("forms", $forms)
                                         ->with("rooms", $rooms)
                                         ->with("descriptions", $descriptions)
+                                        ->with("classSchedules", $classSchedules)
+                                        ->with("classrooms", $classrooms)
                                         ->with("users", $users);
     }
 
