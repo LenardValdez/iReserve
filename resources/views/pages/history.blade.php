@@ -112,7 +112,8 @@
                   <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                   </button>
-                  {{ session('cancelledAlert') }}
+                  <h4><i class="icon fa fa-ban"></i>{{ session('cancelledAlert')[0] }}</h4>
+                  {{ session('cancelledAlert')[1] }}
                 </div>
                 @endif
               <div class="box box-primary">
