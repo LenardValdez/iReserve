@@ -12,6 +12,7 @@ class User extends Authenticatable
 
     protected $primaryKey = 'user_id';
     public $incrementing = false;
+    
     /**
      * The attributes that are mass assignable.
      *
@@ -38,6 +39,17 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * Route notifications for the mail channel.
+     *
+     * @param  \Illuminate\Notifications\Notification  $notification
+     * @return array|string
+     */
+    public function routeNotificationForMail($notification)
+    {
+        return 'admin-ca3ec7@inbox.mailtrap.io';
+    }
 
     public function regform(){
         return $this->hasMany('App\RegForm', 'user_id');
