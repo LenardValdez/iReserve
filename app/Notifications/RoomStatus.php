@@ -35,10 +35,10 @@ class RoomStatus extends Notification
         $channels = ['mail', 'database'];
 
         if($notifiable->user_id == 'admin') {
-            array_splice($channels, 1, 1);
+            array_splice($channels, 0, 1);
         }
         elseif($this->form->isApproved == 0) {
-            array_splice($channels, 0, 1);
+            array_splice($channels, 1, 1);
         }
 
         return $channels;
