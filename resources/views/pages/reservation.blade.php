@@ -86,12 +86,26 @@
 
         $('input.reservationPeriod').daterangepicker({
             timePicker: true,
-            minDate: moment(),
+            autoUpdateInput: false,
+            minDate: function(date) {
+                return ((moment(date).day() === 0) ? moment().add(1, 'days') : moment());
+            },
             maxDate: moment().startOf('hour').add(3, 'months'),
             locale: {
                 format: 'MMMM DD, YYYY hh:mm A'
             },
+            isInvalidDate: function(date) {
+                return ((moment(date).day() === 0 || (moment(date).isBefore())) ? true : false);
+            },
             timePickerIncrement: 10
+        });
+
+        $('input.reservationPeriod').on('apply.daterangepicker', function(ev, picker) {
+            $(this).val(picker.startDate.format('MMMM DD, YYYY hh:mm A') + ' - ' + picker.endDate.format('MMMM DD, YYYY hh:mm A'));
+        });
+
+        $('input.reservationPeriod').on('cancel.daterangepicker', function(ev, picker) {
+            $(this).val('');
         });
 
         $('#reservationForm').submit(function (ev, picker) {
@@ -480,7 +494,7 @@
                                         <span class="input-group-addon">
                                             <i class="fa fa-clock-o"></i>
                                         </span>
-                                        <input type="text" class="form-control reservationPeriod" id="resPeriod" required>
+                                        <input type="text" class="form-control reservationPeriod" id="resPeriod" placeholder="Enter reservation period" required>
                                         <input type="hidden" name="stime_res" id="start">
                                         <input type="hidden" name="etime_res" id="end">
                                     </div>

@@ -907,7 +907,7 @@
                     disabled = true;
                 if (maxDate && time.minute(0).isAfter(maxDate))
                     disabled = true;
-                if ((i < 7 && i_in_24 < 12) || (i > 9 && i_in_24 >= 12))
+                if (((i < 7 || i == 12) && i_in_24 < 12) || ((i > 9 && i_in_24 >= 12) && i != 12))
                     disabled = true;
 
                 if (i_in_24 == selected.hour() && !disabled) {
