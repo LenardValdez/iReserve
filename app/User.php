@@ -48,7 +48,8 @@ class User extends Authenticatable
      */
     public function routeNotificationForMail($notification)
     {
-        return 'admin-ca3ec7@inbox.mailtrap.io';
+        // return $this->email;
+        return 'user@iacademy.edu.ph';
     }
 
     public function regform(){
