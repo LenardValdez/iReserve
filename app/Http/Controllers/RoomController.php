@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Response;
 use Carbon\Carbon;
 use App\Room;
 use App\User;
@@ -11,12 +12,13 @@ use Illuminate\Http\Request;
 use App\Http\Requests\RoomRequest;
 use App\Notifications\RoomStatus;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Notifications\DatabaseNotification;
 
 
 class RoomController extends Controller
 {
-
     /**
      * Display a listing of the resource.
      *
@@ -338,10 +340,27 @@ class RoomController extends Controller
      */
     public function destroy(Request $request)
     {
-        $delete = Room::where('room_id',$request->room_id)->first();
-        $delete->delete();
-        return redirect()->back()->with('roomAlert',["Room ".$request->room_id." has been successfully deleted.",
-        "Any confirmed and pending reservations are now automatically cancelled."]);
+        Validator::extend('passwordMatches', function($attribute, $value, $parameters)
+        {
+            return (Hash::check($value, $parameters[0])) ? true : false;
+        });
+
+        $validator = Validator::make($request->all(), [
+            'room_id' => 'required|exists:rooms,room_id',
+            'password' => 'required|passwordMatches:'.Auth()->user()->password
+        ]);
+
+        if ($validator->errors()->has('password')) {
+            return Response::json(['errors' => $validator->errors()]);
+        } 
+        else {
+            $delete = Room::where('room_id',$request->room_id)->first();
+            $delete->delete();
+
+            // return redirect()->back()->with('roomAlert',["Room ".$request->room_id." has been successfully deleted.",
+            // "Any confirmed and pending reservations are now automatically cancelled."]);
+            return Response::json(['success' => true, 'roomId' => $request->room_id]);
+        }
     }
 
     public function list()

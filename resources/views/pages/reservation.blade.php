@@ -158,15 +158,60 @@
             var checkDesc = $.trim($('#room_desc').val());
             var checkStat = $.trim($('#isSpecial').val());
 
-            if(checkAddRoom === '' || checkDesc === '' || checkStat === ''){
+            if(checkAddRoom === '' || checkDesc === '' || checkStat === '') {
                 e.stopPropagation();
             }
         });
 
         $('#delRoomBtn').click(function(e) {
             var checkDelRoom = $.trim($('#delroom_id').val());
-            
+
             if(checkDelRoom === ''){
+                e.stopPropagation();
+            }
+        });
+
+        $('#roomIdDelForm').submit(function(e) {
+            e.preventDefault();
+            var formData = $(this).serialize();
+            $('#confirmPassword').removeClass('has-error');
+            $('#passwordHelpBlock').text('');
+
+            $.ajax({
+                url:  '{{ route("processdelroom") }}',
+                type: 'POST',
+                headers: {
+                    accept: 'application/json'
+                },
+                data: formData,
+                success: (response) => {
+                    if(response.errors) {
+                        if(response.errors.password) {
+                            $('#confirmPassword').addClass('has-error');
+                            $('#passwordHelpBlock').text('Password entered was incorrect. Please try again.');
+                        }
+                    }
+                    else if (response.success) {
+                        sessionStorage.delSuccessMessage = true;
+                        sessionStorage.roomRemoved = response.roomId;
+                        window.location.replace("{{ route('Reserve') }}");
+                    }
+                }
+            });
+        });
+
+        if (sessionStorage.getItem('delSuccessMessage') != null) {
+            $('#delSuccessTitle').append('<i class="icon fa fa-check"></i>Room '+ sessionStorage.roomRemoved + ' has been successfully deleted.');
+            $('#delSuccessMessage').text('Any confirmed and pending reservations are now automatically cancelled. Users affected will be notified.');
+            $('#delSuccess').show();
+            sessionStorage.removeItem('delSuccessMessage');
+            sessionStorage.removeItem('roomRemoved');
+        }
+
+        $('#delScheduleBtn').click(function(e) {
+            var checkDelSchedule = $.trim($('#class_id').val());
+            
+            if(checkDelSchedule === ''){
                 e.stopPropagation();
             }
         });
@@ -393,54 +438,23 @@
                 </div>
             </div>
             @else
-            @if(session('roomAlert'))
-            <div class="row">
+            @include('layouts.alerts.successAlert', ['redirectMessageName' => 'roomAlert'])
+            @include('layouts.alerts.dangerAlert', ['redirectMessageName' => 'roomErr'])
+            @include('layouts.alerts.dangerAlert', ['redirectMessageName' => 'classErr'])
+            @include('layouts.alerts.dangerAlert', ['redirectMessageName' => 'cancelledAlert'])
+
+            <div class="row" style="display: none" id="delSuccess">
                 <div class="col-md-12">
                     <div class="alert alert-success alert-dismissible">
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
-                        <h4><i class="icon fa fa-check"></i>{{ session()->get('roomAlert')[0] }}</h4>
-                        {{ session()->get('roomAlert')[1] }}
+                        <h4 id="delSuccessTitle"></h4>
+                        <span style="white-space: pre-wrap" id="delSuccessMessage"></span>
                     </div>
                 </div>
             </div>
-            @endif
-            @if(session('roomErr'))
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="alert alert-danger alert-dismissible">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                        <h4><i class="icon fa fa-ban"></i>{{ session('roomErr')[0] }}</h4>
-                        {{ session()->get('roomErr')[1] }}
-                    </div>
-                </div>
-            </div>
-            @endif
-            @if(session('classErr'))
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="alert alert-danger alert-dismissible">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                        <h4><i class="icon fa fa-ban"></i>Error importing CSV!</h4>
-                        <span style="white-space: pre-wrap">{{ session('classErr') }}</span>
-                    </div>
-                </div>
-            </div>
-            @endif
-            @if(session('cancelledAlert'))
-                <div class="alert alert-danger alert-dismissible">
-                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                  <h4><i class="icon fa fa-ban"></i>{{ session('cancelledAlert')[0] }}</h4>
-                  {{ session('cancelledAlert')[1] }}
-                </div>
-            @endif
+
             <div class="row">
                 <div class="col-md-3">
                     <div class="box box-primary">

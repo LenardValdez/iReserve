@@ -95,26 +95,7 @@
               </select>
             </div>
             <button type="button" id="delRoomBtn" data-target="#confirmRoomDeletion" data-toggle="modal" class="btn btn-danger pull-right">Delete</button>
-
-            <div class="modal fade" id="confirmRoomDeletion">
-              <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </button>
-                    <h4 class="modal-title" id="myModalLabel">Room Deletion</h4>
-                  </div>
-                  <div class="modal-body">
-                    <h4>Are you sure you want to delete this room? You cannot undo this action.</h4>
-                  </div>
-                  <div class="modal-footer">
-                      <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Revise</button>
-                      <button type="submit" class="btn btn-danger" onclick="$('#roomIdDelForm').submit()">Delete</button>
-                  </div>
-                </div>
-              </div>
-            </div>
+            @include('layouts.modals.deleteModal', ['deleteModalId' => 'confirmRoomDeletion', 'deleteActionTitle' => 'Room Deletion Confirmation', 'formId' => '#roomIdDelForm'])
           </form>
         </div><!--END OF BOX-BODY-->
       </div><!--END OF CONTENT BOX-->

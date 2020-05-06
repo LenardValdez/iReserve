@@ -45,35 +45,9 @@
           <div class="row">
             <div class="col-md-12">
               
-              @if(session('approvedAlert'))
-              <div class="alert alert-success alert-dismissible">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-                <h4><i class="icon fa fa-check"></i>{{ session()->get('approvedAlert')[0] }}</h4>
-                {{ session()->get('approvedAlert')[1] }}
-              </div>
-              @endif
-
-              @if(session('rejectedAlert'))
-              <div class="alert alert-danger alert-dismissible">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-                <h4><i class="icon fa fa-ban"></i>{{ session()->get('rejectedAlert')[0] }}</h4>
-                {{ session('rejectedAlert')[1] }}
-              </div>
-              @endif
-
-              @if(session('cancelledAlert'))
-                <div class="alert alert-danger alert-dismissible">
-                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                  <h4><i class="icon fa fa-ban"></i>{{ session('cancelledAlert')[0] }}</h4>
-                  {{ session('cancelledAlert')[1] }}
-                </div>
-            @endif
+              @include('layouts.alerts.successAlert', ['redirectMessageName' => 'approvedAlert'])
+              @include('layouts.alerts.dangerAlert', ['redirectMessageName' => 'rejectedAlert'])
+              @include('layouts.alerts.dangerAlert', ['redirectMessageName' => 'cancelledAlert'])
 
               <div class="box box-primary">
                 <div class="box-header with-border">
