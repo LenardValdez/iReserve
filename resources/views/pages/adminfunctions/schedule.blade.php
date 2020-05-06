@@ -79,25 +79,7 @@
         <button type="button" id="delAllScheduleBtn" data-target="#confirmRoomDeletion" data-toggle="modal" class="btn btn-default">Delete All</button>
         <button type="button" id="delScheduleBtn" data-target="#confirmScheduleDeletion" data-toggle="modal" class="btn btn-danger pull-right">Delete</button>
 
-        <div class="modal fade" id="confirmScheduleDeletion">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-                <h4 class="modal-title" id="myModalLabel">Class Schedule Deletion</h4>
-              </div>
-              <div class="modal-body">
-                <h4>Are you sure you want to delete this schedule? You cannot undo this action.</h4>
-              </div>
-              <div class="modal-footer">
-                  <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Revise</button>
-                  <button type="submit" class="btn btn-danger" onclick="$('#deleteScheduleForm').submit()">Delete</button>
-              </div>
-            </div>
-          </div>
-        </div>
+        @include('layouts.modals.deleteModal', ['deleteModalId' => 'confirmScheduleDeletion', 'deleteActionTitle' => 'Schedule Deletion Confirmation', 'formId' => '#deleteScheduleForm'])
       </form>
     </div><!--END OF BOX-BODY-->
   </div><!--END OF CONTENT BOX-->
