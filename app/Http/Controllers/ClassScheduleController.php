@@ -31,7 +31,7 @@ class ClassScheduleController extends Controller
                 $errorMessage .= "- Row " .$failure->row(). ": [" .$failure->attribute(). "] " .implode (' ', $failure->errors()). 
                 " (Given value: " .$failure->values()[$failure->attribute()]. ")\n";
             }
-            return redirect()->back()->with('classErr', $errorMessage);
+            return redirect()->back()->with('classErr', ["Error importing CSV!", $errorMessage]);
         }
         return redirect()->back()->with('roomAlert',["CSV import successful!", "Corresponding day and time periods will be blocked for reservations."]);
     }
