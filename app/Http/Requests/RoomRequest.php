@@ -26,7 +26,7 @@ class RoomRequest extends FormRequest
     {
 	//VALIDATE
     return [
-        'room_id' => 'required|unique:rooms',
+        'room_id' => 'required|unique:rooms,room_id,NULL,id,deleted_at,NULL',
         'room_name' => 'max:50',
         'room_desc' => 'required',
         'isSpecial' => 'required|min:0|max:1'

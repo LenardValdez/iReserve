@@ -9,6 +9,7 @@ use App\User;
 use App\RegForm;
 use App\ClassSchedule;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use App\Http\Requests\RoomRequest;
 use App\Notifications\RoomStatus;
 use Illuminate\Support\Facades\Auth;
@@ -42,8 +43,18 @@ class RoomController extends Controller
 
     public function store(RoomRequest $request)
     {
-        Room::create($request->validated()); 
-        
+        if($request->validated()) {
+            if(Room::withTrashed()->find($request->get('room_id'))->trashed()) {
+                $softDeletedRoom = Room::onlyTrashed()
+                                        ->where('room_id', $request->get('room_id'))
+                                        ->restore();
+            }
+            $room = Room::where('room_id', $request->get('room_id'))->first();
+            $room->room_name = $request->get('room_name');
+            $room->room_desc = $request->get('room_desc');
+            $room->isSpecial = $request->get('isSpecial');
+            $room->save();
+            }
         return redirect()->back()->with('roomAlert',["Room ".$request->room_id." has been successfully added!", 
         "This room will be now available for reservation."]);
     }
@@ -307,15 +318,24 @@ class RoomController extends Controller
         //
     }
 
-    public function cancel($id)
+    public function cancel(Request $request)
     {
-        $cancelRequest = RegForm::find($id);
+        $request->validate([
+            'user_id' => [
+                'required',
+                Rule::in([Auth()->user()->user_id, 'admin'])
+            ],
+            'form_id' => 'required|exists:reg_forms,form_id',
+            'reason' => 'required|max:255',
+        ]);
 
-        if(Auth()->user()->user_id == $cancelRequest->user_id || Auth()->user()->roles == 0){
+        if(Auth()->user()->user_id == $request->get('user_id') || Auth()->user()->roles == 0){
+            $cancelRequest = RegForm::find($request->get('form_id'));
+            $cancelRequest->reasonCancelled = $request->get('reason');
             $cancelRequest->isCancelled = '1';
             $cancelRequest->save();
 
-            if (Auth()->user()->roles == 0 and Auth()->user()->user_id != $cancelRequest->user_id){
+            if (Auth()->user()->user_id != $cancelRequest->user_id){
                 $cancelRequest->user->notify(new RoomStatus($cancelRequest));
             }
 
@@ -354,12 +374,30 @@ class RoomController extends Controller
             return Response::json(['errors' => $validator->errors()]);
         } 
         else {
+            $existingForms = RegForm::where('room_id', $request->room_id)
+                                    ->where('isCancelled', 0)
+                                    ->where('etime_res', '>=', Carbon::today())
+                                    ->where('isApproved', '!=', 2)
+                                    ->get();
+            
+            if(!empty($existingForms)){
+                foreach($existingForms as $form){
+                    $form->isCancelled = 1;
+                    $form->reasonCancelled = "Room has been removed from the system.";
+                    $form->save();
+
+                    if (Auth()->user()->user_id != $cancelRequest->user_id) {
+                        $form->user->notify(new RoomStatus($form));
+                    }
+                }
+            }
+
             $delete = Room::where('room_id',$request->room_id)->first();
             $delete->delete();
 
             // return redirect()->back()->with('roomAlert',["Room ".$request->room_id." has been successfully deleted.",
             // "Any confirmed and pending reservations are now automatically cancelled."]);
-            return Response::json(['success' => true, 'roomId' => $request->room_id]);
+            return Response::json(['success' => true, 'idRemoved' => $request->room_id]);
         }
     }
 

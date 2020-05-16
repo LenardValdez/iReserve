@@ -19,6 +19,7 @@ class CreateRoomsTable extends Migration
             $table->string('room_desc');
             $table->boolean('isSpecial');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

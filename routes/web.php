@@ -20,7 +20,8 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('/history', 'RoomController@historyList')->name('History');
     Route::get('/reserve', 'RoomController@list')->name('Reserve');
 
-    Route::get('/history/cancel/{id}', 'RoomController@cancel')->name('cancelrequest');
+    // Route::get('/history/cancel/{id}', 'RoomController@cancel')->name('cancelrequest');
+    Route::post('/reserve/cancel', 'RoomController@cancel')->name('cancelrequest');
     Route::post('/reserve/new', 'RoomController@reserve')->name('reserveroom');
     Route::post('/reserve/add', 'RoomController@store')->name('processaddroom'); //Process ng form to add room
     Route::post('/reserve/del','RoomController@destroy')->name('processdelroom'); //Process ng form to del room
