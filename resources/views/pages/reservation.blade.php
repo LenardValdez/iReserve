@@ -163,22 +163,21 @@
             }
         });
 
-        $('#delRoomBtn').click(function(e) {
-            var checkDelRoom = $.trim($('#delroom_id').val());
-
-            if(checkDelRoom === ''){
+        $('#editRoomBtn, #delRoomBtn').click(function(e) {
+            var checkModifyRoom = $.trim($('#deleteRoomId').val());
+            if(checkModifyRoom === ''){
                 e.stopPropagation();
             }
         });
 
-        $('#roomIdDelForm').submit(function(e) {
+        $('#roomModifyForm, #deleteScheduleForm').submit(function(e) {
             e.preventDefault();
             var formData = $(this).serialize();
             $('#confirmPassword').removeClass('has-error');
             $('#passwordHelpBlock').text('');
 
             $.ajax({
-                url:  '{{ route("processdelroom") }}',
+                url:  ($(this).attr('id') === '#roomModifyForm') ? '{{ route("processdelroom") }}' : '{{ route("deleteschedule") }}',
                 type: 'POST',
                 headers: {
                     accept: 'application/json'
@@ -193,16 +192,27 @@
                     }
                     else if (response.success) {
                         sessionStorage.delSuccessMessage = true;
-                        sessionStorage.roomRemoved = response.roomId;
+                        sessionStorage.idRemoved = response.idRemoved;
                         window.location.replace("{{ route('Reserve') }}");
+
+                        if($(this).attr('id') === '#roomModifyForm') {
+                            sessionStorage.roomDeletion = true;
+                        }
                     }
                 }
             });
         });
 
         if (sessionStorage.getItem('delSuccessMessage') != null) {
-            $('#delSuccessTitle').append('<i class="icon fa fa-check"></i>Room '+ sessionStorage.roomRemoved + ' has been successfully deleted.');
-            $('#delSuccessMessage').text('Any confirmed and pending reservations are now automatically cancelled. Users affected will be notified.');
+            if (sessionStorage.getItem('roomDeletion') != null) {
+                $('#delSuccessTitle').append('<i class="icon fa fa-check"></i>Room '+ sessionStorage.idRemoved + ' has been successfully deleted.');
+                $('#delSuccessMessage').text('Any confirmed and pending reservations are now automatically cancelled. Users affected will be notified.');
+            }
+            else {
+                $('#delSuccessTitle').append('<i class="icon fa fa-check"></i>Class schedule for '+ sessionStorage.idRemoved + ' has been successfully deleted.');
+                $('#delSuccessMessage').text('Corresponding room and time period are now unblocked.');
+                sessionStorage.removeItem('scheduleDeletionMessage');
+            }
             $('#delSuccess').show();
             sessionStorage.removeItem('delSuccessMessage');
             sessionStorage.removeItem('roomRemoved');
@@ -224,7 +234,7 @@
             plugins: [ 'resourceTimeline' ],
             schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
             themeSystem: 'standard',
-            timezone: 'Asia/Manila',
+            timeZone: 'local',
             header: {
                 left: 'today,prev,next',
                 center: 'title',
@@ -332,59 +342,7 @@
     
         <!--ACTUAL CONTENT-->
         <section class="content">
-            <!--NORMAL ROOM REQUEST INFORMATION MODAL-->
-            @foreach($forms as $form)
-            <div class="modal fade" id="reqInfo{{$form->form_id}}">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                            </button>
-                            <h4 class="modal-title" id="myModalLabel">Reservation Details</h4>
-                        </div>
-                        <div class="modal-body">
-                            <table class="table">
-                                    <tr>
-                                        <th>Reserved User</th>
-                                        <td>{{$form->user->name}}</td>
-                                    </tr>
-                                <tr>
-                                    <th>Date</th>
-                                    <td>{{ Carbon::parse($form->created_at)->toDayDateTimeString() }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Room Number</th>
-                                    <td>{{$form->room_id}}</td>
-                                </tr>
-                                <tr>
-                                    <th>People Involved</th>
-                                    <td>{{$form->users_involved}}</td>
-                                </tr>
-                                <tr>
-                                    <th>Reservation Period</th>
-                                    <td>{{ Carbon::parse($form->stime_res)->format('M d, Y h:i A') }} - {{ Carbon::parse($form->etime_res)->format('M d, Y h:i A') }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Purpose</th>
-                                    <td>{{$form->purpose}}</td>
-                                </tr>
-                            </table>
-                        </div>
-                        @if (Auth()->user()->roles == 0 or Auth()->user()->roles == 1)
-                            <div class="modal-footer">
-                                @if(Carbon::parse($form->etime_res)->isPast() or $form->isCancelled==1 or $form->isApproved==2)
-                                    <button type="button" class="btn btn-danger" disabled>Cancel Reservation</button>
-                                @else
-                                    <a type="button" class="btn btn-danger" href="{{ route('cancelrequest', $form->form_id) }}">Cancel Reservation</a>
-                                @endif
-                            </div>
-                        @endif
-                    </div>
-                </div>
-            </div>
-            @endforeach
-
+            @include('layouts.modals.infoModal', ['forms' => $forms, 'isOverall' => false, 'isSchedule' => false, 'isApproval' => false])
             <!--CLASS SCHEDULE INFORMATION MODAL-->
             @foreach($classSchedules as $schedule)
             <div class="modal fade" id="classInfo{{$schedule->class_id}}">
@@ -572,7 +530,7 @@
                     </div> <!--END OF CONTENT BOX-->
                     <!--ROOM AND SCHEDULE MANAGEMENT-->
                     @if (Auth()->user()->roles == 0)
-                        @include('pages.adminfunctions.adddel')
+                        @include('pages.adminfunctions.room')
                         @include('pages.adminfunctions.schedule')
                     @endif
                     <!--END OF ROOM AND SCHEDULE MANAGEMENT FORMS-->

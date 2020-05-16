@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use Response;
 use App\ClassSchedule;
-use Maatwebsite\Excel\Validators\ValidationException;
-use App\Imports\ClassSchedulesImport;
-use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Hash;
+use App\Imports\ClassSchedulesImport;
+use Illuminate\Support\Facades\Validator;
+use Maatwebsite\Excel\Validators\ValidationException;
 
 class ClassScheduleController extends Controller
 {
@@ -37,8 +40,25 @@ class ClassScheduleController extends Controller
     }
 
     public function destroy(Request $request) {
-        ClassSchedule::where('class_id',$request->class_id)->first()->delete();
-        return redirect()->back()->with('roomAlert',["Class schedule selected has been successfully deleted.", 
-        "Corresponding room and time period are now unblocked."]);
+        Validator::extend('passwordMatches', function($attribute, $value, $parameters)
+        {
+            return (Hash::check($value, $parameters[0])) ? true : false;
+        });
+
+        $validator = Validator::make($request->all(), [
+            'class_id' => 'required|exists:class_schedules,class_id',
+            'password' => 'required|passwordMatches:'.Auth()->user()->password
+        ]);
+
+        if ($validator->errors()->has('password')) {
+            return Response::json(['errors' => $validator->errors()]);
+        } 
+        else {
+            $class = ClassSchedule::where('class_id',$request->class_id)->first();
+            $classCode = $class->subject_code . " " . $class->section;
+            $class->delete();
+
+            return Response::json(['success' => true, 'idRemoved' => $classCode]);
+        }
     }
 }
