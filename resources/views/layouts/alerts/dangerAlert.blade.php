@@ -6,7 +6,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
                 <h4><i class="icon fa fa-ban"></i>{{ session($redirectMessageName)[0] }}</h4>
-                <span style="white-space: pre-wrap">{{ session($redirectMessageName)[1] }}</span>
+                <span style="white-space: normal">{{ session($redirectMessageName)[1] }}</span>
             </div>
         </div>
     </div>

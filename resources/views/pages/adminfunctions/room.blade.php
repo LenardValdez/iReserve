@@ -10,7 +10,7 @@
           <form role="form" id="roomDataForm" method="POST" action="{{ route('processaddroom') }}">
             @csrf
               <div class="form-group{{ $errors->has('room_id') ? ' has-error' : '' }}">
-                <label for="room_id">Room Number: </label>
+                <label for="room_id">Room Number: <span class="text-danger">*</span></label>
                 <input type="text" class="form-control{{ $errors->has('room_id') ? ' has-error' : '' }}" placeholder="Enter room number" id="newroom_id" name="room_id" value="{{ old('room_id') }}" required>
                 @if ($errors->has('room_id'))
                   <span class="help-block" role="alert">
@@ -23,7 +23,7 @@
                 <input type="text" class="form-control" placeholder="Enter room name (ex.: Chemistry Lab)" id="newroom_name" name="room_name" value="{{ old('room_name') }}">
               </div>
               <div class="form-group">
-                <label for="room_desc">Room Description: </label>
+                <label for="room_desc">Room Description: <span class="text-danger">*</span></label>
                 <select id="room_desc" class="form-control{{ $errors->has('room_desc') ? ' has-error' : '' }}" name="room_desc" value="{{ old('room_desc') }}" required>
                   <option selected disabled>Select room description</option>
                   <option value="6th Floor">6th Floor</option>
@@ -45,7 +45,7 @@
                   @endif
               </div>
               <div class="form-group">
-                <label for="isSpecial">Category: </label>
+                <label for="isSpecial">Category: <span class="text-danger">*</span></label>
                   <select class="form-control{{ $errors->has('isSpecial') ? ' has-error' : '' }}" id="isSpecial" name="isSpecial" required>
                     <option value="" selected disabled>Select room category</option>
                     <option value="0">Ordinary Room</option>
@@ -57,6 +57,7 @@
                       </span>
                     @endif
               </div>
+              <p class="text-red pull-left"><span class="text-danger">*</span> items are required</p>
               <button type="submit" id="addRoomBtn" class="btn btn-primary pull-right">{{ __('Add') }}</button>
           </form>
         </div>
@@ -71,11 +72,11 @@
           </div>
         </div>
         <div class="box-body">
-          <form role="form" id="roomIdDelForm" method="POST" action="{{ route('processdelroom') }}">
+          <form role="form" id="roomModifyForm" method="POST" action="{{ route('processdelroom') }}">
             @csrf
-            <div class="form-group{{ $errors->has('delroom_id') ? ' has-error' : '' }}">
+            <div class="form-group{{ $errors->has('deleteRoomId') ? ' has-error' : '' }}">
               <label>Room Number: </label>
-              <select class="form-control" id="delroom_id" name="room_id" required>
+              <select class="form-control" id="deleteRoomId" name="room_id" required>
                 <option value="" selected disabled>Select a room to be deleted</option>
                 @foreach ($descriptions as $description)
                   <optgroup label="{{$description}}">
@@ -95,7 +96,7 @@
               </select>
             </div>
             <button type="button" id="delRoomBtn" data-target="#confirmRoomDeletion" data-toggle="modal" class="btn btn-danger pull-right">Delete</button>
-            @include('layouts.modals.deleteModal', ['deleteModalId' => 'confirmRoomDeletion', 'deleteActionTitle' => 'Room Deletion Confirmation', 'formId' => '#roomIdDelForm'])
+            @include('layouts.modals.deleteModal', ['deleteModalId' => 'confirmRoomDeletion', 'deleteActionTitle' => 'Room Deletion Confirmation', 'formId' => '#roomModifyForm'])
           </form>
         </div><!--END OF BOX-BODY-->
       </div><!--END OF CONTENT BOX-->

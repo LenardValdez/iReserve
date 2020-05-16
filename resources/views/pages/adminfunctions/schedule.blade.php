@@ -12,7 +12,7 @@
             <div class="row gutter-10">
                 <div class="col-lg-3">
                     <div class="form-group">
-                        <label for="term_number">Term: </label>
+                        <label for="term_number">Term: <span class="text-danger">*</span></label>
                         <select class="form-control" name="term_number">
                             <option value=1>1</option>
                             <option value=2>2</option>
@@ -22,7 +22,7 @@
                 </div>
                 <div class="col-lg-9">
                     <div class="form-group">
-                        <label for="termPeriod">Term Period: </label>
+                        <label for="termPeriod">Term Period: <span class="text-danger">*</span></label>
                         <div class="input-group date">
                             <span class="input-group-addon">
                                 <i class="fa fa-calendar-o"></i>
@@ -35,10 +35,11 @@
                 </div>
             </div>
             <div class="form-group">
-                <label for="csv_file">CSV File: </label>
+                <label for="csv_file">CSV File: <span class="text-danger">*</span></label>
                 <input type="file" id="csvFile" name="csv_file">
                 <p class="text-primary">What should be the format?</p>
             </div>
+            <p class="text-red pull-left"><span class="text-danger">*</span> items are required</p>
             <button type="submit" id="insertScheduleBtn" class="btn btn-primary pull-right">{{ __('Insert') }}</button>
         </form>
     </div>
@@ -56,7 +57,7 @@
     <form role="form" id="deleteScheduleForm" method="POST" action="{{ route('deleteschedule') }}">
         @csrf
         <div class="form-group{{ $errors->has('class_id') ? ' has-error' : '' }}">
-          <label>Select Entry: </label>
+          <label>Select Entry: <span class="text-danger">*</span></label>
           <select class="form-control" id="class_id" name="class_id" required>
             @if($classSchedules->isEmpty())
               <option value="" selected disabled>No entries available</option>
@@ -76,9 +77,8 @@
             @endif
           </select>
         </div>
-        <button type="button" id="delAllScheduleBtn" data-target="#confirmRoomDeletion" data-toggle="modal" class="btn btn-default">Delete All</button>
+        <p class="text-red pull-left"><span class="text-danger">*</span> items are required</p>
         <button type="button" id="delScheduleBtn" data-target="#confirmScheduleDeletion" data-toggle="modal" class="btn btn-danger pull-right">Delete</button>
-
         @include('layouts.modals.deleteModal', ['deleteModalId' => 'confirmScheduleDeletion', 'deleteActionTitle' => 'Schedule Deletion Confirmation', 'formId' => '#deleteScheduleForm'])
       </form>
     </div><!--END OF BOX-BODY-->
