@@ -141,7 +141,7 @@
             /* when the button in the form, display the entered values in the modal */
             $('#addReservationBtn').attr('type','button');
             $('#addReservationBtn').attr('data-toggle','modal');
-            $('#date').text('{{ Carbon::now()->toDayDateTimeString() }}');
+            $('#date').text('{{ Carbon::now()->format("M d, Y h:i A") }}');
             $('#room').text($('#room_id').val());
             $('#people').text($('#peopleInvolved').val());
             $('#range').text($('#resPeriod').val());

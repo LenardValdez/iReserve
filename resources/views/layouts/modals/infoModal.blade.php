@@ -17,12 +17,12 @@
                     @if($isOverall)
                     <tr>
                         <th>User</th>
-                        <td>{{$form->user->user_id}} {{$form->user->name}}</td>
+                        <td>{{$form->user->name}}</td>
                     </tr>
                     @endif
                     <tr>
                         <th>Date Submitted</th>
-                        <td>{{ Carbon::parse($form->created_at)->toDayDateTimeString() }}</td>
+                        <td>{{ Carbon::parse($form->created_at)->format('M d, Y h:i A') }}</td>
                     </tr>
                     <tr>
                         <th>Room Number</th>

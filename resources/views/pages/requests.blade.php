@@ -137,8 +137,11 @@
           <div class="row">
             <div class="col-md-5 col-s-12">
               <div class="callout callout-info">
-                <h4>I am an info callout!</h4>
-                <p>Follow the steps to continue to payment.</p>
+                <h4>Hello! How are you doing today?</h4>
+                <p>
+                  You can find pending requests and upcoming reservations for the week here on your dashboard. 
+                  <br>Statistics related to user traffic and request status differences are provided for inferencing.
+                </p>
               </div>
               <div class="box box-primary">
                 <div class="box-header with-border">
