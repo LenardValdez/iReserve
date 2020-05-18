@@ -10,7 +10,7 @@
         <div class="modal-body">
             <p>Are you sure you want to delete? Please enter your password to confirm.</p>
             <div class="form-group" id="confirmPassword">
-            <input type="password" class="form-control" placeholder="Enter password to confirm deletion" name="password">
+            <input type="password" class="form-control" placeholder="Enter password to confirm deletion" name="password" autocomplete="current-password">
             <span id="passwordHelpBlock" class="help-block"></span>
             </div>
         </div>
