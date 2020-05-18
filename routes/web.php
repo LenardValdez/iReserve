@@ -15,8 +15,6 @@ Auth::routes(['register' => false, 'reset' => false, 'verify' => false]);
 
 Route::get('/', 'PagesController@index')->name('landing');
 
-Route::get('/{any}','PagesController@index');
-
 Route::group(['middleware' => ['auth']], function() {
     Route::get('/dashboard', 'PagesController@index')->name('Dashboard');
     Route::get('/history', 'RoomController@historyList')->name('History');
