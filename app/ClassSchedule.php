@@ -34,4 +34,8 @@ class ClassSchedule extends Model
     public function user(){
         return $this->belongsTo('App\User', 'user_id');
     }
+
+    public function division() {
+        return $this->belongsTo('App\Division', 'division_id');
+    }
 }

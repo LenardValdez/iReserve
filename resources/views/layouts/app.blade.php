@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="css/AdminLTE.min.css">
     <link rel="stylesheet" href="css/skin-blue.min.css">
     <link rel="stylesheet" href="css/fullcalendar-core.min.css">
+    <link rel="stylesheet" href="css/fullcalendar-list.min.css">
     <link rel="stylesheet" href="css/fullcalendar-timeline.min.css">
     <link rel="stylesheet" href="css/fullcalendar-resource-timeline.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
@@ -56,6 +57,7 @@
     <script src="js/adminlte_js/bootstrap-datepicker.min.js"></script> <!--JS FOR DATE AND TIME RANGE-->
     <script src="js/adminlte_js/select2.full.min.js"></script> <!--JS FOR MULTIPLE SELECT FORM INPUT-->
     <script src="js/adminlte_js/fullcalendar-core.min.js"></script> <!--CHANGE FORM DATE AND TIME FORMAT TO ISO8601 STRING USING moment().toISOString()-->
+    <script src="js/adminlte_js/fullcalendar-list.min.js"></script>
     <script src="js/adminlte_js/fullcalendar-timeline.min.js"></script>
     <script src="js/adminlte_js/fullcalendar-resource-common.min.js"></script>
     <script src="js/adminlte_js/fullcalendar-resource-timeline.min.js"></script>

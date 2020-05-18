@@ -119,7 +119,7 @@
         $('#scheduleDataForm').submit(function (ev, picker) {
             [termStart, termEnd] = $('.termPeriod').val().split(' - ');
             termStart = moment(termStart).format("YYYY-MM-DD");
-            termEnd = moment(termStart).format("YYYY-MM-DD");
+            termEnd = moment(termEnd).format("YYYY-MM-DD");
             $(this).find('input[name="sdate_term"]').val(termStart);
             $(this).find('input[name="edate_term"]').val(termEnd);
         });
@@ -173,11 +173,12 @@
         $('#roomModifyForm, #deleteScheduleForm').submit(function(e) {
             e.preventDefault();
             var formData = $(this).serialize();
+            var url = (e.target.id == 'roomModifyForm') ? '{{ route("processdelroom") }}' : '{{ route("deleteschedule") }}';
             $('#confirmPassword').removeClass('has-error');
             $('#passwordHelpBlock').text('');
 
             $.ajax({
-                url:  ($(this).attr('id') === '#roomModifyForm') ? '{{ route("processdelroom") }}' : '{{ route("deleteschedule") }}',
+                url:  url,
                 type: 'POST',
                 headers: {
                     accept: 'application/json'
@@ -195,7 +196,7 @@
                         sessionStorage.idRemoved = response.idRemoved;
                         window.location.replace("{{ route('Reserve') }}");
 
-                        if($(this).attr('id') === '#roomModifyForm') {
+                        if(e.target.id == 'roomModifyForm') {
                             sessionStorage.roomDeletion = true;
                         }
                     }
@@ -228,13 +229,62 @@
     });
 
     document.addEventListener('DOMContentLoaded', function() {
-        var calendarEl = document.getElementById('calendar');
+        @if(Auth()->user()->roles == 2)
+        var classCalendarEl = document.getElementById('classCalendar');
 
-        var calendar = new FullCalendar.Calendar(calendarEl, {
+        var classCalendar = new FullCalendar.Calendar(classCalendarEl, {
+            plugins: [ 'list' ],
+            themeSystem: 'standard',
+            timeZone: 'local',
+            defaultView: 'listDay',
+            noEventsMessage: 'No classes scheduled for today!',
+            nowIndicator: 'true',
+            views: {
+                listDay: { buttonText: 'day' },
+                listWeek: { buttonText: 'week' },
+                listMonth: { buttonText: 'month' }
+            },
+            header: {
+                left: 'title',
+                center: '',
+                right: 'listDay,listWeek,listMonth'
+            },
+            height: 'auto',
+            events: [
+                @foreach($classSchedules as $schedule)
+                {
+                    @php
+                        $days = ["M", "T", "W", "TH", "F", "S"];
+                        $dayInDigit = array_search($schedule->day, $days)+1;
+                    @endphp
+                    title: '{{ $schedule->subject_code }} {{ $schedule->section }} | {{ $schedule->user->name }}',
+                    daysOfWeek: [ '{{ $dayInDigit }}' ],
+                    startTime: '{{ $schedule->stime_class }}',
+                    endTime: '{{ $schedule->etime_class }}',
+                    startRecur: '{{ $schedule->sdate_term }}',
+                    endRecur: '{{ $schedule->edate_term }}',
+                    extendedProps: {
+                        division: '{{ $schedule->division->division_name }}'
+                    }
+                },
+                @endforeach
+            ],
+            eventRender: function(info) {
+                var dotEl = info.el.getElementsByClassName('fc-event-dot')[0];
+                dotEl.style.backgroundColor = (info.event.extendedProps.division == 'College') ? 'rgba(167, 0, 1, 1)' : 'rgba(0, 91, 150, 1)';
+            }
+        });
+        classCalendar.render();
+        @endif
+
+        var roomCalendarEl = document.getElementById('calendar');
+
+        var roomCalendar = new FullCalendar.Calendar(roomCalendarEl, {
             plugins: [ 'resourceTimeline' ],
             schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
             themeSystem: 'standard',
             timeZone: 'local',
+            nowIndicator: 'true',
             header: {
                 left: 'today,prev,next',
                 center: 'title',
@@ -276,6 +326,8 @@
                         resourceId: '{{ $form->room_id }}', 
                         start: moment('{{ $form->stime_res }}').format(), 
                         end: moment('{{ $form->etime_res }}').format(),
+                        backgroundColor: 'rgb(0, 91, 150)',
+                        borderColor: 'rgb(0, 91, 150)',
                         extendedProps: {
                             kind: 'reservation'
                         },
@@ -299,6 +351,8 @@
                         endTime: '{{ $schedule->etime_class }}',
                         startRecur: '{{ $schedule->sdate_term }}',
                         endRecur: '{{ $schedule->edate_term }}',
+                        backgroundColor: 'rgb(167, 0, 1)',
+                        borderColor: 'rgb(167, 0, 1)',
                         extendedProps: {
                             kind: 'class'
                         },
@@ -308,8 +362,7 @@
                 @endif
             ]
         });
-
-        calendar.render();
+        roomCalendar.render();
     });
 </script>
 @endsection
@@ -384,13 +437,39 @@
             @endforeach
             @if(Auth()->user()->roles == 2)
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-4">
+                    <div class="box box-primary">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Class Schedules</h3>
+                            <span class="pull-right">
+                                Legend:&nbsp;&nbsp;
+                                <i class="ion ion-record" style="color: rgba(167, 0, 1, 1)"></i>&nbsp;College 
+                                &nbsp;&nbsp;
+                                <i class="ion ion-record" style="color: rgba(0, 91, 150, 1)"></i>&nbsp;Senior High 
+                            </span>
+                        </div>
+                        <div class="box-body">
+                            <div id="classCalendar"></div>
+                        </div>
+                        <div class="box-footer clearfix">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8">
                     <div class="box box-primary">
                         <div class="box-header with-border">
                             <h3 class="box-title">Room Availability</h3>
+                            <span class="pull-right">
+                                Legend:&nbsp;&nbsp;
+                                <i class="ion ion-record" style="color: rgba(167, 0, 1, 1)"></i>&nbsp;Regular Class 
+                                &nbsp;&nbsp;
+                                <i class="ion ion-record" style="color: rgba(0, 91, 150, 1)"></i>&nbsp;Reservation 
+                            </span>
                         </div>
                         <div class="box-body">
                             <div id="calendar"></div>
+                        </div>
+                        <div class="box-footer clearfix">
                         </div>
                     </div>
                 </div>
@@ -540,9 +619,17 @@
                     <div class="box box-primary">
                         <div class="box-header with-border">
                             <h3 class="box-title">Room Availability</h3>
+                            <span class="pull-right">
+                                Legend:&nbsp;&nbsp;
+                                <i class="ion ion-record" style="color: rgba(167, 0, 1, 1)"></i>&nbsp;Regular Class 
+                                &nbsp;&nbsp;
+                                <i class="ion ion-record" style="color: rgba(0, 91, 150, 1)"></i>&nbsp;Reservation 
+                            </span>
                         </div>
                         <div class="box-body">
                             <div id="calendar"></div>
+                        </div>
+                        <div class="box-footer clearfix">
                         </div>
                     </div>
                 </div> <!--END OF COLUMN-->

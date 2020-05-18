@@ -36,7 +36,7 @@
             </div>
             <div class="form-group">
                 <label for="csv_file">CSV File: <span class="text-danger">*</span></label>
-                <input type="file" id="csvFile" name="csv_file">
+                <input type="file" id="csvFile" name="csv_file" required>
                 <p class="text-primary">What should be the format?</p>
             </div>
             <p class="text-red pull-left"><span class="text-danger">*</span> items are required</p>
