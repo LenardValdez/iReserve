@@ -20,10 +20,12 @@ class CreateUsersTable extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->smallInteger('roles')->nullable();
-            $table->smallInteger('user_type');
+            $table->unsignedTinyInteger('user_type');
             $table->boolean('isActive')->nullable();
             $table->rememberToken();
             $table->timestamps();
+
+            $table->foreign('user_type')->references('division_id')->on('divisions');
         });
     }
 

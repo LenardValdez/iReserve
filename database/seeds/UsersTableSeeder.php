@@ -18,7 +18,7 @@ class UsersTableSeeder extends Seeder
                 'email' => 'admin@iacademy.edu.ph',
                 'password' => Hash::make('adminpassword'),
                 'roles' => '0', //0=admin, 1=user, 2=security
-                'user_type' => '0', //0=staff, 1=faculty, 2=college, 3=SHS
+                'user_type' => '1', //1=staff, 2=faculty, 3=college, 4=SHS
                 'isActive' => true,
                 'created_at' => '2019/05/03 11:00:23',
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
@@ -29,7 +29,7 @@ class UsersTableSeeder extends Seeder
                 'email' => 'security@iacademy.edu.ph',
                 'password' => Hash::make('secpassword'),
                 'roles' => '2', //0=admin, 1=user, 2=security
-                'user_type' => '0', //0=staff, 1=faculty, 2=college, 3=SHS
+                'user_type' => '1', //1=staff, 2=faculty, 3=college, 4=SHS
                 'isActive' => true,
                 'created_at' => '2019/05/03 11:00:23',
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
@@ -40,7 +40,7 @@ class UsersTableSeeder extends Seeder
                 'email' => '201701054@iacademy.edu.ph',
                 'password' => Hash::make('userpassword'),
                 'roles' => '1', //0=admin, 1=user, 2=security
-                'user_type' => '2', //0=staff, 1=faculty, 2=college, 3=SHS
+                'user_type' => '3', //1=staff, 2=faculty, 3=college, 4=SHS
                 'isActive' => true,
                 'created_at' => '2019/05/03 11:01:23',
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
@@ -51,7 +51,7 @@ class UsersTableSeeder extends Seeder
                 'email' => '201701026@iacademy.edu.ph',
                 'password' => Hash::make('userpassword'),
                 'roles' => '1', //0=admin, 1=user, 2=security
-                'user_type' => '2', //0=staff, 1=faculty, 2=college, 3=SHS
+                'user_type' => '3', //1=staff, 2=faculty, 3=college, 4=SHS
                 'isActive' => true,
                 'created_at' => '2019/05/03 11:01:00',
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
@@ -62,7 +62,7 @@ class UsersTableSeeder extends Seeder
                 'email' => '201701065@iacademy.edu.ph',
                 'password' => Hash::make('userpassword'),
                 'roles' => '1', //0=admin, 1=user, 2=security
-                'user_type' => '2', //0=staff, 1=faculty, 2=college, 3=SHS
+                'user_type' => '3', //1=staff, 2=faculty, 3=college, 4=SHS
                 'isActive' => true,
                 'created_at' => '2019/05/03 11:02:00',
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
@@ -73,7 +73,7 @@ class UsersTableSeeder extends Seeder
                 'email' => '201701051@iacademy.edu.ph',
                 'password' => Hash::make('userpassword'),
                 'roles' => '1', //0=admin, 1=user, 2=security
-                'user_type' => '2', //0=staff, 1=faculty, 2=college, 3=SHS
+                'user_type' => '3', //1=staff, 2=faculty, 3=college, 4=SHS
                 'isActive' => true,
                 'created_at' => '2019/05/03 11:00:00',
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
@@ -84,7 +84,7 @@ class UsersTableSeeder extends Seeder
                 'email' => '201702012@iacademy.edu.ph',
                 'password' => Hash::make('userpassword'),
                 'roles' => '1', //0=admin, 1=user, 2=security
-                'user_type' => '2', //0=staff, 1=faculty, 2=college, 3=SHS
+                'user_type' => '3', //1=staff, 2=faculty, 3=college, 4=SHS
                 'isActive' => true,
                 'created_at' => '2019/05/03 11:00:00',
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
@@ -95,7 +95,7 @@ class UsersTableSeeder extends Seeder
                 'email' => '201701039@iacademy.edu.ph',
                 'password' => Hash::make('userpassword'),
                 'roles' => '1', //0=admin, 1=user, 2=security
-                'user_type' => '2', //0=staff, 1=faculty, 2=college, 3=SHS
+                'user_type' => '3', //1=staff, 2=faculty, 3=college, 4=SHS
                 'isActive' => true,
                 'created_at' => '2019/05/03 11:00:00',
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
@@ -106,7 +106,7 @@ class UsersTableSeeder extends Seeder
                 'email' => '201701068@iacademy.edu.ph',
                 'password' => Hash::make('userpassword'),
                 'roles' => '1', //0=admin, 1=user, 2=security
-                'user_type' => '2', //0=staff, 1=faculty, 2=college, 3=SHS
+                'user_type' => '3', //1=staff, 2=faculty, 3=college, 4=SHS
                 'isActive' => true,
                 'created_at' => '2019/05/03 11:00:00',
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
@@ -117,7 +117,7 @@ class UsersTableSeeder extends Seeder
                 'email' => '201701027@iacademy.edu.ph',
                 'password' => Hash::make('userpassword'),
                 'roles' => '1', //0=admin, 1=user, 2=security
-                'user_type' => '2', //0=staff, 1=faculty, 2=college, 3=SHS
+                'user_type' => '3', //1=staff, 2=faculty, 3=college, 4=SHS
                 'isActive' => true,
                 'created_at' => '2019/05/03 11:00:00',
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
@@ -128,7 +128,7 @@ class UsersTableSeeder extends Seeder
                 'email' => '201601132@iacademy.edu.ph',
                 'password' => Hash::make('userpassword'),
                 'roles' => '1', //0=admin, 1=user, 2=security
-                'user_type' => '2', //0=staff, 1=faculty, 2=college, 3=SHS
+                'user_type' => '3', //1=staff, 2=faculty, 3=college, 4=SHS
                 'isActive' => true,
                 'created_at' => '2019/05/03 11:00:00',
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
@@ -139,7 +139,7 @@ class UsersTableSeeder extends Seeder
                 'email' => '201701050@iacademy.edu.ph',
                 'password' => Hash::make('userpassword'),
                 'roles' => '1', //0=admin, 1=user, 2=security
-                'user_type' => '2', //0=staff, 1=faculty, 2=college, 3=SHS
+                'user_type' => '3', //1=staff, 2=faculty, 3=college, 4=SHS
                 'isActive' => true,
                 'created_at' => '2019/05/03 11:00:00',
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
@@ -150,7 +150,7 @@ class UsersTableSeeder extends Seeder
                 'email' => 'marikit.valmadrid@iacademy.edu.ph',
                 'password' => Hash::make('userpassword'),
                 'roles' => '1', //0=admin, 1=user, 2=security
-                'user_type' => '1', //0=staff, 1=faculty, 2=college, 3=SHS
+                'user_type' => '2', //1=staff, 2=faculty, 3=college, 4=SHS
                 'isActive' => true,
                 'created_at' => '2019/05/03 11:00:00',
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
@@ -161,7 +161,7 @@ class UsersTableSeeder extends Seeder
                 'email' => 'bennett.tanyag@iacademy.edu.ph',
                 'password' => Hash::make('userpassword'),
                 'roles' => '1', //0=admin, 1=user, 2=security
-                'user_type' => '1', //0=staff, 1=faculty, 2=college, 3=SHS
+                'user_type' => '2', //1=staff, 2=faculty, 3=college, 4=SHS
                 'isActive' => true,
                 'created_at' => '2019/05/03 11:00:00',
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
@@ -172,7 +172,7 @@ class UsersTableSeeder extends Seeder
                 'email' => 'mitch.andaya@iacademy.edu.ph',
                 'password' => Hash::make('userpassword'),
                 'roles' => '1', //0=admin, 1=user, 2=security
-                'user_type' => '1', //0=staff, 1=faculty, 2=college, 3=SHS
+                'user_type' => '2', //1=staff, 2=faculty, 3=college, 4=SHS
                 'isActive' => true,
                 'created_at' => '2019/05/03 11:00:00',
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
@@ -183,7 +183,7 @@ class UsersTableSeeder extends Seeder
                 'email' => '201701061@iacademy.edu.ph',
                 'password' => Hash::make('userpassword'),
                 'roles' => '1', //0=admin, 1=user, 2=security
-                'user_type' => '3', //0=staff, 1=faculty, 2=college, 3=SHS
+                'user_type' => '4', //1=staff, 2=faculty, 3=college, 4=SHS
                 'isActive' => true,
                 'created_at' => '2019/05/03 11:00:00',
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
@@ -194,7 +194,7 @@ class UsersTableSeeder extends Seeder
                 'email' => '201501008@iacademy.edu.ph',
                 'password' => Hash::make('userpassword'),
                 'roles' => '1', //0=admin, 1=user, 2=security
-                'user_type' => '3', //0=staff, 1=faculty, 2=college, 3=SHS
+                'user_type' => '4', //1=staff, 2=faculty, 3=college, 4=SHS
                 'isActive' => true,
                 'created_at' => '2019/05/03 11:00:00',
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
@@ -205,7 +205,7 @@ class UsersTableSeeder extends Seeder
                 'email' => 'ronald.ramos@iacademy.edu.ph',
                 'password' => Hash::make('userpassword'),
                 'roles' => '1', //0=admin, 1=user, 2=security
-                'user_type' => '1', //0=staff, 1=faculty, 2=college, 3=SHS
+                'user_type' => '2', //1=staff, 2=faculty, 3=college, 4=SHS
                 'isActive' => true,
                 'created_at' => '2019/05/03 11:00:00',
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
@@ -216,7 +216,7 @@ class UsersTableSeeder extends Seeder
                 'email' => 'riel.gomez@iacademy.edu.ph',
                 'password' => Hash::make('userpassword'),
                 'roles' => '1', //0=admin, 1=user, 2=security
-                'user_type' => '1', //0=staff, 1=faculty, 2=college, 3=SHS
+                'user_type' => '2', //1=staff, 2=faculty, 3=college, 4=SHS
                 'isActive' => true,
                 'created_at' => '2019/05/03 11:00:00',
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
@@ -227,7 +227,7 @@ class UsersTableSeeder extends Seeder
                 'email' => '201503006@iacademy.edu.ph',
                 'password' => Hash::make('userpassword'),
                 'roles' => '1', //0=admin, 1=user, 2=security
-                'user_type' => '3', //0=staff, 1=faculty, 2=college, 3=SHS
+                'user_type' => '4', //1=staff, 2=faculty, 3=college, 4=SHS
                 'isActive' => true,
                 'created_at' => '2019/05/03 11:00:00',
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
@@ -238,7 +238,7 @@ class UsersTableSeeder extends Seeder
                 'email' => '201501193@iacademy.edu.ph',
                 'password' => Hash::make('userpassword'),
                 'roles' => '1', //0=admin, 1=user, 2=security
-                'user_type' => '3', //0=staff, 1=faculty, 2=college, 3=SHS
+                'user_type' => '4', //1=staff, 2=faculty, 3=college, 4=SHS
                 'isActive' => true,
                 'created_at' => '2019/05/03 11:00:00',
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
@@ -249,7 +249,7 @@ class UsersTableSeeder extends Seeder
                 'email' => '201501029@iacademy.edu.ph',
                 'password' => Hash::make('userpassword'),
                 'roles' => '1', //0=admin, 1=user, 2=security
-                'user_type' => '3', //0=staff, 1=faculty, 2=college, 3=SHS
+                'user_type' => '4', //1=staff, 2=faculty, 3=college, 4=SHS
                 'isActive' => true,
                 'created_at' => '2019/05/03 11:00:00',
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
@@ -260,7 +260,7 @@ class UsersTableSeeder extends Seeder
                 'email' => '201701094@iacademy.edu.ph',
                 'password' => Hash::make('userpassword'),
                 'roles' => '1', //0=admin, 1=user, 2=security
-                'user_type' => '3', //0=staff, 1=faculty, 2=college, 3=SHS
+                'user_type' => '4', //1=staff, 2=faculty, 3=college, 4=SHS
                 'isActive' => true,
                 'created_at' => '2019/05/03 11:00:00',
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
@@ -271,7 +271,7 @@ class UsersTableSeeder extends Seeder
                 'email' => '201601053@iacademy.edu.ph',
                 'password' => Hash::make('userpassword'),
                 'roles' => '1', //0=admin, 1=user, 2=security
-                'user_type' => '3', //0=staff, 1=faculty, 2=college, 3=SHS
+                'user_type' => '4', //1=staff, 2=faculty, 3=college, 4=SHS
                 'isActive' => true,
                 'created_at' => '2019/05/03 11:00:00',
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
@@ -282,7 +282,7 @@ class UsersTableSeeder extends Seeder
                 'email' => '201501098@iacademy.edu.ph',
                 'password' => Hash::make('userpassword'),
                 'roles' => '1', //0=admin, 1=user, 2=security
-                'user_type' => '3', //0=staff, 1=faculty, 2=college, 3=SHS
+                'user_type' => '4', //1=staff, 2=faculty, 3=college, 4=SHS
                 'isActive' => true,
                 'created_at' => '2019/05/03 11:00:00',
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
@@ -293,7 +293,7 @@ class UsersTableSeeder extends Seeder
                 'email' => '201601125@iacademy.edu.ph',
                 'password' => Hash::make('userpassword'),
                 'roles' => '1', //0=admin, 1=user, 2=security
-                'user_type' => '3', //0=staff, 1=faculty, 2=college, 3=SHS
+                'user_type' => '4', //1=staff, 2=faculty, 3=college, 4=SHS
                 'isActive' => true,
                 'created_at' => '2019/05/03 11:00:00',
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
@@ -304,7 +304,7 @@ class UsersTableSeeder extends Seeder
                 'email' => '201701019@iacademy.edu.ph',
                 'password' => Hash::make('userpassword'),
                 'roles' => '1', //0=admin, 1=user, 2=security
-                'user_type' => '3', //0=staff, 1=faculty, 2=college, 3=SHS
+                'user_type' => '4', //1=staff, 2=faculty, 3=college, 4=SHS
                 'isActive' => true,
                 'created_at' => '2019/05/03 11:00:00',
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
@@ -315,7 +315,7 @@ class UsersTableSeeder extends Seeder
                 'email' => '201601117@iacademy.edu.ph',
                 'password' => Hash::make('userpassword'),
                 'roles' => '1', //0=admin, 1=user, 2=security
-                'user_type' => '3', //0=staff, 1=faculty, 2=college, 3=SHS
+                'user_type' => '4', //1=staff, 2=faculty, 3=college, 4=SHS
                 'isActive' => true,
                 'created_at' => '2019/05/03 11:00:00',
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
@@ -326,7 +326,7 @@ class UsersTableSeeder extends Seeder
                 'email' => '201603007@iacademy.edu.ph',
                 'password' => Hash::make('userpassword'),
                 'roles' => '1', //0=admin, 1=user, 2=security
-                'user_type' => '2', //0=staff, 1=faculty, 2=college, 3=SHS
+                'user_type' => '3', //1=staff, 2=faculty, 3=college, 4=SHS
                 'isActive' => true,
                 'created_at' => '2019/05/03 11:00:00',
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
@@ -337,7 +337,7 @@ class UsersTableSeeder extends Seeder
                 'email' => '201701076@iacademy.edu.ph',
                 'password' => Hash::make('userpassword'),
                 'roles' => '1', //0=admin, 1=user, 2=security
-                'user_type' => '3', //0=staff, 1=faculty, 2=college, 3=SHS
+                'user_type' => '4', //1=staff, 2=faculty, 3=college, 4=SHS
                 'isActive' => true,
                 'created_at' => '2019/05/03 11:00:00',
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
@@ -348,7 +348,7 @@ class UsersTableSeeder extends Seeder
                 'email' => '201601098@iacademy.edu.ph',
                 'password' => Hash::make('userpassword'),
                 'roles' => '1', //0=admin, 1=user, 2=security
-                'user_type' => '3', //0=staff, 1=faculty, 2=college, 3=SHS
+                'user_type' => '4', //1=staff, 2=faculty, 3=college, 4=SHS
                 'isActive' => true,
                 'created_at' => '2019/05/03 11:00:00',
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
@@ -359,7 +359,7 @@ class UsersTableSeeder extends Seeder
                 'email' => '201701106@iacademy.edu.ph',
                 'password' => Hash::make('userpassword'),
                 'roles' => '1', //0=admin, 1=user, 2=security
-                'user_type' => '3', //0=staff, 1=faculty, 2=college, 3=SHS
+                'user_type' => '4', //1=staff, 2=faculty, 3=college, 4=SHS
                 'isActive' => true,
                 'created_at' => '2019/05/03 11:00:00',
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
@@ -370,7 +370,7 @@ class UsersTableSeeder extends Seeder
                 'email' => '201403250@iacademy.edu.ph',
                 'password' => Hash::make('userpassword'),
                 'roles' => '1', //0=admin, 1=user, 2=security
-                'user_type' => '3', //0=staff, 1=faculty, 2=college, 3=SHS
+                'user_type' => '4', //1=staff, 2=faculty, 3=college, 4=SHS
                 'isActive' => true,
                 'created_at' => '2019/05/03 11:00:00',
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
@@ -381,7 +381,7 @@ class UsersTableSeeder extends Seeder
                 'email' => '201501018@iacademy.edu.ph',
                 'password' => Hash::make('userpassword'),
                 'roles' => '1', //0=admin, 1=user, 2=security
-                'user_type' => '3', //0=staff, 1=faculty, 2=college, 3=SHS
+                'user_type' => '4', //1=staff, 2=faculty, 3=college, 4=SHS
                 'isActive' => true,
                 'created_at' => '2019/05/03 11:00:00',
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
@@ -392,7 +392,7 @@ class UsersTableSeeder extends Seeder
                 'email' => '201501336@iacademy.edu.ph',
                 'password' => Hash::make('userpassword'),
                 'roles' => '1', //0=admin, 1=user, 2=security
-                'user_type' => '2', //0=staff, 1=faculty, 2=college, 3=SHS
+                'user_type' => '3', //1=staff, 2=faculty, 3=college, 4=SHS
                 'isActive' => true,
                 'created_at' => '2019/05/03 11:00:00',
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
@@ -403,7 +403,7 @@ class UsersTableSeeder extends Seeder
                 'email' => '201701020@iacademy.edu.ph',
                 'password' => Hash::make('userpassword'),
                 'roles' => '1', //0=admin, 1=user, 2=security
-                'user_type' => '2', //0=staff, 1=faculty, 2=college, 3=SHS
+                'user_type' => '3', //1=staff, 2=faculty, 3=college, 4=SHS
                 'isActive' => true,
                 'created_at' => '2019/05/03 11:00:00',
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
@@ -414,7 +414,7 @@ class UsersTableSeeder extends Seeder
                 'email' => 'juco.rivera@iacademy.edu.ph',
                 'password' => Hash::make('userpassword'),
                 'roles' => '1', //0=admin, 1=user, 2=security
-                'user_type' => '1', //0=staff, 1=faculty, 2=college, 3=SHS
+                'user_type' => '2', //1=staff, 2=faculty, 3=college, 4=SHS
                 'isActive' => true,
                 'created_at' => '2019/05/03 11:00:00',
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
@@ -425,7 +425,7 @@ class UsersTableSeeder extends Seeder
                 'email' => 'ricky.deguzman@iacademy.edu.ph',
                 'password' => Hash::make('userpassword'),
                 'roles' => '1', //0=admin, 1=user, 2=security
-                'user_type' => '1', //0=staff, 1=faculty, 2=college, 3=SHS
+                'user_type' => '2', //1=staff, 2=faculty, 3=college, 4=SHS
                 'isActive' => true,
                 'created_at' => '2019/05/03 11:00:00',
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
@@ -436,7 +436,7 @@ class UsersTableSeeder extends Seeder
                 'email' => 'victorino.villoria@iacademy.edu.ph',
                 'password' => Hash::make('userpassword'),
                 'roles' => '1', //0=admin, 1=user, 2=security
-                'user_type' => '1', //0=staff, 1=faculty, 2=college, 3=SHS
+                'user_type' => '2', //1=staff, 2=faculty, 3=college, 4=SHS
                 'isActive' => true,
                 'created_at' => '2019/05/03 11:00:00',
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
@@ -447,7 +447,7 @@ class UsersTableSeeder extends Seeder
                 'email' => '201602002@iacademy.edu.ph',
                 'password' => Hash::make('userpassword'),
                 'roles' => '1', //0=admin, 1=user, 2=security
-                'user_type' => '2', //0=staff, 1=faculty, 2=college, 3=SHS
+                'user_type' => '3', //1=staff, 2=faculty, 3=college, 4=SHS
                 'isActive' => true,
                 'created_at' => '2019/05/03 11:00:00',
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
@@ -458,7 +458,7 @@ class UsersTableSeeder extends Seeder
                 'email' => 'raymond.zalameda@iacademy.edu.ph',
                 'password' => Hash::make('userpassword'),
                 'roles' => '1', //0=admin, 1=user, 2=security
-                'user_type' => '1', //0=staff, 1=faculty, 2=college, 3=SHS
+                'user_type' => '2', //1=staff, 2=faculty, 3=college, 4=SHS
                 'isActive' => true,
                 'created_at' => '2019/05/03 11:00:00',
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')

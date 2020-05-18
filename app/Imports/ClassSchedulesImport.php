@@ -3,6 +3,7 @@
 namespace App\Imports;
 
 use Carbon\Carbon;
+use App\Division;
 use App\ClassSchedule;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -34,6 +35,8 @@ class ClassSchedulesImport implements ToModel, WithHeadingRow, WithValidation, W
 
     public function model(array $row)
     {
+        $division_id = Division::where('division_name', $row['division'])->pluck('division_id')[0];
+
         return ClassSchedule::updateOrCreate([
             'subject_code' => $row['subject_code'],
             'user_id' => $row['user_id'],
@@ -42,6 +45,7 @@ class ClassSchedulesImport implements ToModel, WithHeadingRow, WithValidation, W
             'stime_class' => Carbon::parse($row['start_time'])->format('H:i:s'),
             'etime_class' => Carbon::parse($row['end_time'])->format('H:i:s'),
             'day' => strtoupper($row['day']),
+            'division_id' => $division_id,
             'term_number' => $this->termNumber,
             'sdate_term' => Carbon::parse($this->termStartDate)->format('Y-m-d'),
             'edate_term' => Carbon::parse($this->termEndDate)->format('Y-m-d')
@@ -50,6 +54,8 @@ class ClassSchedulesImport implements ToModel, WithHeadingRow, WithValidation, W
 
     public function rules(): array
     {
+        $divisions = Division::pluck('division_name')->toArray();
+
         return [
             'user_id' => 'required|exists:users,user_id',
             '*.user_id' => 'required|exists:users,user_id',
@@ -66,6 +72,14 @@ class ClassSchedulesImport implements ToModel, WithHeadingRow, WithValidation, W
             '*.day' => [
                 'required',
                 Rule::in(['M', 'm', 'T', 't', 'W', 'w', 'TH', 'th', 'Th', 'F', 'f', 'S', 's'])
+            ],
+            'division' => [
+                'required',
+                Rule::in($divisions)
+            ],
+            '*.division' => [
+                'required',
+                Rule::in($divisions)
             ]
         ];
     }
@@ -77,7 +91,8 @@ class ClassSchedulesImport implements ToModel, WithHeadingRow, WithValidation, W
             'room_number.exists' => 'Room number entered not found.',
             'start_time.different' => 'Start time cannot be the same as the end time!',
             'end_time.different' => 'End time cannot be the same as the start time!',
-            'day.in' => 'Day entered invalid! Choose only from M, T, W, TH, F, S.'
+            'day.in' => 'Day entered invalid! Choose only from M, T, W, TH, F, S.',
+            'division.in' => 'Division entered invalid! Values should be either Faculty, College, or Senior High.'
         ];
     }  
 }

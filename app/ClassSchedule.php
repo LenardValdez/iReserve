@@ -20,6 +20,7 @@ class ClassSchedule extends Model
         'stime_class',
         'etime_class',
         'day',
+        'division_id',
         'term_number',
         'sdate_term',
         'edate_term'

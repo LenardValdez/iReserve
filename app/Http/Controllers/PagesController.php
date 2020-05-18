@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\ClassSchedule;
 use Carbon\Carbon;
 use App\RegForm;
+use App\Division;
 use App\User;
 use App\Room;
 
@@ -98,10 +99,10 @@ class PagesController extends Controller
 
     private function getUserTrafficStats() {
         //0=staff, 1=faculty, 2=college, 3=SHS
-        $userTypes = ['Staff', 'Faculty', 'College', 'Senior High'];
+        $userTypes = Division::pluck('division_name')->toArray();
         $userTrafficStats = [];
 
-        for ($userType = 1; $userType <= 3; $userType++) {
+        for ($userType = 2; $userType <= 4; $userType++) {
             for ($month = 3; $month >= 0; $month--) {
                 $week1 = RegForm::whereHas('user', function($q) use($userType) {
                                     $q->where('user_type', $userType);
@@ -134,7 +135,7 @@ class PagesController extends Controller
                                 ->whereDate('created_at', '<', Carbon::now()->subMonths($month)->firstOfMonth()->addWeeks(5)->format('Y-m-d'))
                                 ->whereMonth('created_at', Carbon::now()->subMonths($month)->firstOfMonth()->month)
                                 ->count();
-                $userTrafficStats[$userTypes[$userType]][Carbon::now()->subMonths($month)->firstOfMonth()->shortLocaleMonth] = [$week1, $week2, $week3, $week4];
+                $userTrafficStats[$userTypes[$userType-1]][Carbon::now()->subMonths($month)->firstOfMonth()->shortLocaleMonth] = [$week1, $week2, $week3, $week4];
             }
         }
 

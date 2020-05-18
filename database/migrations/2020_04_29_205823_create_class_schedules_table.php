@@ -22,6 +22,7 @@ class CreateClassSchedulesTable extends Migration
             $table->time('stime_class');
             $table->time('etime_class');
             $table->char('day', 2);
+            $table->unsignedTinyInteger('division_id');
             $table->unsignedTinyInteger('term_number');
             $table->date('sdate_term');
             $table->date('edate_term');
@@ -29,6 +30,7 @@ class CreateClassSchedulesTable extends Migration
 
             $table->foreign('user_id')->references('user_id')->on('users');
             $table->foreign('room_id')->references('room_id')->on('rooms');
+            $table->foreign('division_id')->references('division_id')->on('divisions');
         });
     }
 
