@@ -246,52 +246,42 @@ class RoomController extends Controller
 
     public function approve($id)
     {
-        if(Auth()->user()->roles == 0){
-            $specialRequest = RegForm::find($id);
-            
-            $specialRequest->isApproved = '1';
-            $sameRange = RegForm::where('user_id', '!=', 'admin')
-                                ->where('room_id', $specialRequest->room_id)
-                                ->where('stime_res', '<', $specialRequest->etime_res)
-                                ->where('etime_res', '>', $specialRequest->stime_res)
-                                ->where('isApproved', '0')
-                                ->get();
-            $specialRequest->save();
+        $specialRequest = RegForm::find($id);
+        
+        $specialRequest->isApproved = '1';
+        $sameRange = RegForm::where('user_id', '!=', 'admin')
+                            ->where('room_id', $specialRequest->room_id)
+                            ->where('stime_res', '<', $specialRequest->etime_res)
+                            ->where('etime_res', '>', $specialRequest->stime_res)
+                            ->where('isApproved', '0')
+                            ->get();
+        $specialRequest->save();
 
-            if(!empty($sameRange)){
-                foreach($sameRange as $same){
-                    if($same->user_id != $specialRequest->user_id){
-                        $same->isApproved = '2';
-                        $same->save();
-                        $same->user->notify(new RoomStatus($same));
-                    }
+        if(!empty($sameRange)){
+            foreach($sameRange as $same){
+                if($same->user_id != $specialRequest->user_id){
+                    $same->isApproved = '2';
+                    $same->save();
+                    $same->user->notify(new RoomStatus($same));
                 }
             }
-
-            $specialRequest->user->notify(new RoomStatus($specialRequest));
-
-            return redirect()->back()->with('approvedAlert', ["The request has been approved and added to the scheduler!", 
-            "Any pending requests for this room number with similar reservation period will 
-            automatically be rejected and notified."]);
         }
-        else {
-            abort(403, 'Unauthorized action.');
-        }
+
+        $specialRequest->user->notify(new RoomStatus($specialRequest));
+
+        return redirect()->back()->with('approvedAlert', ["The request has been approved and added to the scheduler!", 
+        "Any pending requests for this room number with similar reservation period will 
+        automatically be rejected and notified."]);
     }
 
     public function reject($id)
     {
-        if(Auth()->user()->roles == 0){
-            $specialRequest = RegForm::find($id);
-            $specialRequest->isApproved = '2';
-            $specialRequest->save();
-            $specialRequest->user->notify(new RoomStatus($specialRequest));
+        $specialRequest = RegForm::find($id);
+        $specialRequest->isApproved = '2';
+        $specialRequest->save();
+        $specialRequest->user->notify(new RoomStatus($specialRequest));
 
-            return redirect()->back()->with('rejectedAlert', ["The request has been rejected.", "User affected will be notified."]);
-        }
-        else {
-            abort(403, 'Unauthorized action.');
-        }
+        return redirect()->back()->with('rejectedAlert', ["The request has been rejected.", "User affected will be notified."]);
     }
 
     public function historyList()
@@ -329,27 +319,22 @@ class RoomController extends Controller
             'reason' => 'required|max:255',
         ]);
 
-        if(Auth()->user()->user_id == $request->get('user_id') || Auth()->user()->roles == 0){
-            $cancelRequest = RegForm::find($request->get('form_id'));
-            $cancelRequest->reasonCancelled = $request->get('reason');
-            $cancelRequest->isCancelled = '1';
-            $cancelRequest->save();
+        $cancelRequest = RegForm::find($request->get('form_id'));
+        $cancelRequest->reasonCancelled = $request->get('reason');
+        $cancelRequest->isCancelled = '1';
+        $cancelRequest->save();
 
-            if (Auth()->user()->user_id != $cancelRequest->user_id){
-                $cancelRequest->user->notify(new RoomStatus($cancelRequest));
-            }
+        if (Auth()->user()->user_id != $cancelRequest->user_id){
+            $cancelRequest->user->notify(new RoomStatus($cancelRequest));
+        }
 
-            if(Auth()->user()->roles == 0) {
-                return redirect()->back()->with('cancelledAlert', ["The request/reservation is now cancelled.", 
-                "User affected will be notified. Reservation details may still be accessed through the over-all reservation history."]);
-            }
-            else {
-                return redirect()->back()->with('cancelledAlert', ["Your request/reservation is now cancelled.", 
-                "Reservation details may still be accessed through your reservation history."]);
-            }
+        if(Auth()->user()->roles == 0) {
+            return redirect()->back()->with('cancelledAlert', ["The request/reservation is now cancelled.", 
+            "User affected will be notified. Reservation details may still be accessed through the over-all reservation history."]);
         }
         else {
-            abort(403, 'Unauthorized action.');
+            return redirect()->back()->with('cancelledAlert', ["Your request/reservation is now cancelled.", 
+            "Reservation details may still be accessed through your reservation history."]);
         }
     }
     /**
