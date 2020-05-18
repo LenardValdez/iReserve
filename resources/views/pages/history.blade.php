@@ -13,28 +13,111 @@
   </script>
 @endif
 
-  <script>    
+  <script>
+    $.fn.dataTable.ext.search.push(
+    function (settings, data, dataIndex) {   
+      var valid = true;
+      [startDate, endDate] = $('#dateRange').val().split(' - ');
+      var min = moment(startDate);
+      if (!min.isValid()) { 
+        min = null; 
+      }
+      var max = moment(endDate);
+      if (!max.isValid()) { 
+        max = null; 
+      }
+      if (min === null && max === null) {
+        valid = true;
+      }
+      else {
+        @if(Auth()->user()->roles == 1)
+        var startIndex = 1;
+        var endIndex = 2;
+        @else
+        var startIndex = 3;
+        var endIndex = 4;
+        @endif
+
+        $.each(settings.aoColumns, function (i) {
+          if (i == startIndex || i == endIndex) {
+            var cDate = moment(data[i]);
+          
+            if (cDate.isValid()) {
+              if (max !== null && max.isBefore(cDate)) {
+                valid = false;
+              }
+              if (min !== null && cDate.isBefore(min)) {
+                valid = false;
+              }
+            }
+            else {
+              valid = false;
+            }
+          }
+        });
+      }
+      return valid;
+    });
+
     $(document).ready(function () {
+      $("#dateRange").on('apply.daterangepicker', function(ev, picker) {
+        $(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+        $('#clearDates').prop('disabled', false);
+        $('#overallHistory').DataTable().draw();
+      });
+
+      $('#clearDates').click(function(e) {
+        $("#dateRange").val('');
+        $('#clearDates').prop('disabled', true);
+        $('#overallHistory').DataTable().draw();
+      });
+
+      $('#dateRange').daterangepicker({
+        opens: 'left',
+        autoUpdateInput: false
+      });
+
       $('#overallHistory').DataTable({
         dom: 'Bfrtip',
-        "order": [[ 0, "desc" ]],
+        order: [[ 0, "desc" ]],
+        language: {
+          "zeroRecords": "Nothing to see here yet!"
+        },
         columnDefs: [
           {
-            @if(Auth()->user()->roles==0)
-              "targets": [ 3,4 ],
-            @elseif(Auth()->user()->roles==1)
-              "targets": [ 3,4,6,8 ],
+            @if(Auth()->user()->roles == 1)
+              "targets": [ 1,2,3,4,6 ],
             @else
-              "targets": [ 3,4,8 ],
+              "targets": [ 3,4,5,6 ],
             @endif
-            "visible": false,
+            "visible": false
+          },
+          {
+            @if(Auth()->user()->roles == 0)
+              "targets": [ 5,6 ],
+            @elseif(Auth()->user()->roles == 1)
+              "targets": [ 3,4,6 ],
+            @else
+              "targets": [ 5,6 ],
+            @endif
             "searchable": false
           },
+          @if(Auth()->user()->roles == 1)
           { 
             "orderable": false, 
-            "targets": 10 
+            "targets": 10
           },
-          { width: 70, targets: 10 },
+          @else
+          { 
+            "orderable": false, 
+            "targets": 12
+          },
+          @endif
+          @if(Auth()->user()->roles == 1)
+          { width: 70, targets: 10 }
+          @else
+          { width: 70, targets: 12 }
+          @endif
         ],
         lengthMenu: [
           [ 10, 25, 50, -1 ],
@@ -43,29 +126,42 @@
         buttons: [
           'pageLength',
           {
-          extend: 'pdfHtml5',
-          text: 'Export as PDF',
-          orientation: 'landscape',
-          exportOptions: {
+            extend: 'pdfHtml5',
+            text: 'Export as PDF',
+            orientation: 'landscape',
+            exportOptions: {
               modifier: {
-                  selected: null
+                selected: null
               },
+              @if(Auth()->user()->roles==1)
               columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ]
+              @else
+              columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 ]
+              @endif
+            },
+            download: 'open'
           },
-          download: 'open'
-          },
+          @if(Auth()->user()->roles == 0)
           {
-          extend: 'csvHtml5',
-          text: 'Export as CSV',
-          exportOptions: {
+            extend: 'csvHtml5',
+            text: 'Export as CSV',
+            exportOptions: {
               modifier: {
-                  search: 'none'
+                search: 'none'
               },
-              columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ]
+              columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 ]
             }
           }
+          @endif
         ],
-        select: true
+        select: true,
+        "fnDrawCallback": function () {
+          var table = $('#overallHistory').DataTable();
+          if (table.data().length === 0)
+            table.buttons('.buttons-html5').disable();
+          else
+            table.buttons('.buttons-html5').enable();
+        }
       });
     });
   </script>
@@ -120,9 +216,7 @@
         <!--ACTUAL CONTENT-->
         <section class="content container-fluid">
           <div class="row">
-            @if(Auth()->User()->roles == 0)
-            <div class="col-md-12">
-            @else
+            @if(Auth()->User()->roles == 1)
             <div class="col-lg-4">
               <div class="box box-widget widget-user-2">
                 <div class="widget-user-header bg-aqua-active">
@@ -149,7 +243,7 @@
                     <p><b>Confirmed</b><br>This Week</p>
                   </div>
                   <div class="icon">
-                    <i class="fa fa-check-square-o"></i>
+                    <i class="ion ion-checkmark-circled"></i>
                   </div>
                   <a href="#" class="small-box-footer">
                   </a>
@@ -163,7 +257,7 @@
                     <p><b>Pending</b><br>Awaiting Approval</p>
                   </div>
                   <div class="icon">
-                    <i class="fa fa-hourglass-half"></i>
+                    <i class="ion ion-clock"></i>
                   </div>
                   <a href="#" class="small-box-footer">
                   </a>
@@ -192,7 +286,7 @@
                       <tbody>
                         @if($upcomingReservations->isEmpty())
                           <tr>
-                            <td colspan="6" class="text-center">No upcoming reservations to monitor so far!</td>
+                            <td colspan="6" class="text-center">No upcoming reservations so far!</td>
                           </tr>
                         @else
                           @foreach($upcomingReservations as $form)
@@ -225,6 +319,8 @@
               </div><!--END OF CONTENT BOX-->
             </div>
             <div class="col-md-8">
+            @else
+            <div class="col-md-12">
             @endif
                 @include('layouts.alerts.successAlert', ['redirectMessageName' => 'cancelledAlert'])
                 @if(Auth()->User()->roles == 1)
@@ -236,6 +332,14 @@
               <div class="box box-primary">
                 <div class="box-header with-border">
                   <h3 class="box-title">Over-all History</h3>
+                    <div class="box-tools">
+                      <div class="input-group input-group-sm pull-right" style="width: 200px">
+                        <input type="text" class="form-control" id="dateRange" placeholder="Filter by start date">
+                        <span class="input-group-btn">
+                          <button class="btn btn-default" type="button" id="clearDates" disabled>Clear</button>
+                        </span>
+                      </div>
+                    </div>
                 </div>
                 <div class="box-body">
                   <div class="table-responsive">
@@ -243,13 +347,12 @@
                       <thead>
                         <tr>
                           <th>Request ID</th>
-                          @if(Auth()->User()->roles == 1)
-                          <th>Start Date and Time</th>
-                          <th>End Date and Time</th>
-                          @else
+                          @if(Auth()->user()->roles != 1)
                           <th>ID</th>
                           <th>Name</th>
                           @endif
+                          <th>Start Date and Time</th>
+                          <th>End Date and Time</th>
                           <th>People Involved</th>
                           <th>Purpose</th>
                           <th>Room</th>
@@ -262,57 +365,48 @@
                       </thead> 
 
                       <tbody>
-                        @if(Auth()->User()->roles == 1)
-                          @if($studentReservations->isEmpty())
+                        @if(Auth()->user()->roles == 1)
+                          @foreach($studentReservations as $reservation)
                             <tr>
-                              <td colspan="10" class="text-center">Oops! Looks like you haven't submitted any requests yet.</td>
+                              <td>{{ sprintf("%07d", $reservation->form_id) }}</td>
+                              <td><time datetime="{{ $reservation->stime_res }}">{{ Carbon::parse($reservation->stime_res)->format('M d, Y h:i A') }}</time></td>
+                              <td><time datetime="{{ $reservation->etime_res }}">{{ Carbon::parse($reservation->etime_res)->format('M d, Y h:i A') }}</time></td>
+                              <td>@if($reservation->users_involved!=NULL){{$reservation->users_involved}} @else N/A @endif</td>
+                              <td>{{$reservation->purpose}}</td>
+                              <td>{{$reservation->room_id}}</td>
+                              @if ($reservation->room->isSpecial)
+                                <td><span class="label label-info">Special Room</span></td>
+                              @else
+                                <td><span class="label label-primary">Normal Room</span></td>
+                              @endif
+                              <td>{{ Carbon::parse($reservation->created_at)->toFormattedDateString() }}</td>
+                              @if ($reservation->isApproved==0)
+                                <td>N/A</td> 
+                              @else
+                                <td>{{ Carbon::parse($reservation->updated_at)->toFormattedDateString() }}</td>
+                              @endif
+                              @if($reservation->isCancelled == 1)
+                                <td><span class="label label-warning">Cancelled</span></td>
+                              @else
+                                @if($reservation->isApproved == 1)
+                                  <td><span class="label label-success">Approved</span></td>
+                                @elseif($reservation->isApproved == 2)
+                                  <td><span class="label label-danger">Rejected</span></td>
+                                @else
+                                  <td><span class="label label-info">Pending</span></td>
+                                @endif
+                              @endif
+                              <td class="text-center"><button class="btn btn-primary btn-xs" data-toggle="modal" data-target="#reqInfo{{$reservation->form_id}}">See More</button></td>
                             </tr>
-                          @else
-                            @foreach($studentReservations as $reservation)
-                              <tr>
-                                <td>{{ sprintf("%07d", $reservation->form_id) }}</td>
-                                <td><time datetime="{{ $reservation->stime_res }}">{{ Carbon::parse($reservation->stime_res)->format('M d, Y h:i A') }}</time></td>
-                                <td><time datetime="{{ $reservation->etime_res }}">{{ Carbon::parse($reservation->etime_res)->format('M d, Y h:i A') }}</time></td>
-                                <td>@if($reservation->users_involved!=NULL){{$reservation->users_involved}} @else N/A @endif</td>
-                                <td>{{$reservation->purpose}}</td>
-                                <td>{{$reservation->room_id}}</td>
-                                  @if ($reservation->room->isSpecial)
-                                    <td><span class="label label-info">Special Room</span></td>
-                                  @else
-                                    <td><span class="label label-primary">Normal Room</span></td>
-                                  @endif
-                                <td>{{ Carbon::parse($reservation->created_at)->toFormattedDateString() }}</td>
-                                @if ($reservation->isApproved==0)
-                                  <td>N/A</td> 
-                                @else
-                                  <td>{{ Carbon::parse($reservation->updated_at)->toFormattedDateString() }}</td>
-                                @endif
-                                @if($reservation->isCancelled == 1)
-                                  <td><span class="label label-warning">Cancelled</span></td>
-                                @else
-                                  @if($reservation->isApproved == 1)
-                                    <td><span class="label label-success">Approved</span></td>
-                                  @elseif($reservation->isApproved == 2)
-                                    <td><span class="label label-danger">Rejected</span></td>
-                                  @else
-                                    <td><span class="label label-info">Pending</span></td>
-                                  @endif
-                                @endif
-                                <td class="text-center"><button class="btn btn-primary btn-xs" data-toggle="modal" data-target="#reqInfo{{$reservation->form_id}}">See More</button></td>
-                              </tr>
                             @endforeach
-                          @endif
-                        @else
-                        @if($reservations->isEmpty())
-                          <tr>
-                            <td colspan="10" class="text-center">Everything is good, no pending requests!</td>
-                          </tr>
                         @else
                           @foreach($reservations as $reservation)
                             <tr>
                               <td>{{ sprintf("%07d", $reservation->form_id) }}</td>
                               <td>{{$reservation->user_id}}</td>
                               <td>{{$reservation->user->name}}</td>
+                              <td><time datetime="{{ $reservation->stime_res }}">{{ Carbon::parse($reservation->stime_res)->format('M d, Y h:i A') }}</time></td>
+                              <td><time datetime="{{ $reservation->etime_res }}">{{ Carbon::parse($reservation->etime_res)->format('M d, Y h:i A') }}</time></td>
                               <td>@if($reservation->users_involved!=NULL){{$reservation->users_involved}} @else N/A @endif</td>
                               <td>{{$reservation->purpose}}</td>
                               <td>{{$reservation->room_id}}</td>
@@ -341,7 +435,6 @@
                               <td class="text-center"><button class="btn btn-primary btn-xs" data-toggle="modal" data-target="#reqInfo{{$reservation->form_id}}">See More</button></td>
                             </tr>
                           @endforeach
-                        @endif
                         @endif
                       </tbody>
                     </table>
