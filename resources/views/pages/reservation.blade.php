@@ -81,7 +81,8 @@
         $('input.termPeriod').daterangepicker({
             locale: {
                 format: 'MMMM DD, YYYY'
-            }
+            },
+            endDate: moment().add(3, 'months')
         });
 
         $('input.reservationPeriod').daterangepicker({
