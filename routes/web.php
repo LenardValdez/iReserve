@@ -13,18 +13,18 @@ use Illuminate\Support\Facades\Route;
 */
 Auth::routes(['register' => false, 'reset' => false, 'verify' => false]);
 
-Route::get('/', 'PagesController@index')->name('home');
+Route::get('/', 'PageController@index')->name('home');
 
 Route::group(['middleware' => ['auth']], function() {
-    Route::get('/dashboard', 'PagesController@index')->name('Dashboard');
-    Route::get('/history', 'RoomController@historyList')->name('History');
-    Route::get('/reserve', 'RoomController@list')->name('Reserve');
+    Route::get('/dashboard', 'PageController@index')->name('Dashboard');
+    Route::get('/history', 'PageController@historyList')->name('History');
+    Route::get('/reserve', 'RoomController@index')->name('Reserve');
 
     Route::post('/reserve/cancel', 'RoomController@cancel')->name('cancelrequest');
     Route::post('/reserve/new', 'RoomController@reserve')->name('reserveroom');
 
-    Route::get('/read/{id}', 'RoomController@readNotif')->name('readnotification');
-    Route::get('/readAll', 'RoomController@readAllNotif')->name('readallnotifs');
+    Route::get('/read/{id}', 'NotificationController@readNotif')->name('readnotification');
+    Route::get('/readAll', 'NotificationController@readAllNotif')->name('readallnotifs');
 
     Route::get('/rooms/6th-floor', 'JsonController@flr6');
     Route::get('/rooms/7th-floor', 'JsonController@flr7');

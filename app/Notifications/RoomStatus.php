@@ -44,12 +44,12 @@ class RoomStatus extends Notification
         return $channels;
     }
 
-    // /**
-    //  * Get the mail representation of the notification.
-    //  *
-    //  * @param  mixed  $notifiable
-    //  * @return \Illuminate\Notifications\Messages\MailMessage
-    //  */
+    /**
+    * Get the mail representation of the notification.
+    *
+    * @param  mixed  $notifiable
+    * @return \Illuminate\Notifications\Messages\MailMessage
+    */
     public function toMail($notifiable)
     {
         $closingRemarks = 'Please do not hesitate to send an e-mail to academics@iacademy.edu.ph for concerns.';
@@ -58,7 +58,7 @@ class RoomStatus extends Notification
         if($this->form->isCancelled) {
             $headerStatus = 'Reservation Cancelled';
             $info = 'We regret to inform you that your reservation for Room '.$this->form->room_id.' ('.Carbon::parse($this->form->stime_res)->format('M d, Y h:i A').
-            ' - '.Carbon::parse($this->form->etime_res)->format('M d, Y h:i A').') has been cancelled.';
+            ' - '.Carbon::parse($this->form->etime_res)->format('M d, Y h:i A').') has been cancelled. Reason: '.$this->form->reasonCancelled;
         }
         elseif($this->form->isApproved == 1) {
             $headerStatus = 'Reservation Approved';

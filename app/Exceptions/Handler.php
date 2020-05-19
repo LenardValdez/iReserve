@@ -47,11 +47,15 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        // registers custom error pages to the Handler
+        $this->registerErrorViewPaths();
+
+        // redirects users to the homepage if error 404 gets encountered
         // if ($exception instanceof NotFoundHttpException) {
         //     return redirect()->route('home');
         // }
-        $this->registerErrorViewPaths();
-        
+
+        // returns an error 401 if MethodNotAllowedHttpException gets encountered
         if ($exception instanceof MethodNotAllowedHttpException) {
             return response()->view('errors.401', [], 401);
         }

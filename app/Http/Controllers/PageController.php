@@ -10,7 +10,7 @@ use App\Division;
 use App\User;
 use App\Room;
 
-class PagesController extends Controller
+class PageController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -88,6 +88,25 @@ class PagesController extends Controller
     }
 
     /**
+     * Returns reservation history
+     *
+     * @param  id form_id assigned to the request
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function historyList()
+    {
+        $reservations = RegForm::get();
+        $users = User::get();
+        $rooms = Room::get();
+        $studentReservations = RegForm::where('user_id', Auth()->User()->user_id)->get();
+
+        return view('pages.history')->with("reservations", $reservations)
+                                    ->with("users", $users)
+                                    ->with("rooms", $rooms)
+                                    ->with("studentReservations", $studentReservations);
+    }
+
+    /**
     * Calculates the percentage change between an old and new value
     * 
     * @param oldNumber The initial value
@@ -97,6 +116,11 @@ class PagesController extends Controller
         return ($oldNumber == 0) ? 0 : (int)(($oldNumber - $newNumber) / $oldNumber) * 100;
     }
 
+    /**
+    * Counts the number of requests made in the last 4 months based on the users' division
+    * 
+    * @return userTrafficStats array to be rendered by ChartJS
+    */
     private function getUserTrafficStats() {
         //0=staff, 1=faculty, 2=college, 3=SHS
         $userTypes = Division::pluck('division_name')->toArray();
@@ -142,6 +166,11 @@ class PagesController extends Controller
         return $userTrafficStats;
     }
 
+    /**
+    * Counts the number of requests made since launch, this month, and a month ago based on status
+    * 
+    * @return formStats array to be rendered by ChartJS
+    */
     private function getFormStats() {
         $receivedCountAll = RegForm::count();
         $approvedCountAll = RegForm::where('isApproved', 1)

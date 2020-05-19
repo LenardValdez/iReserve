@@ -15,7 +15,7 @@ use Maatwebsite\Excel\Concerns\WithChunkReading;
 
 class ClassSchedulesImport implements ToModel, WithHeadingRow, WithValidation, WithChunkReading
 {
-    use Importable;
+    use Importable; // provided trait that makes import classes importable without the need of the facade
 
     private $termNumber;
     private $termStartDate;
@@ -28,11 +28,22 @@ class ClassSchedulesImport implements ToModel, WithHeadingRow, WithValidation, W
         $this->termEndDate = $termEndDate;
     }
 
+    /**
+     * Defines the chunk size for chunk reading (read the spreadsheet in chunks and keep the memory usage under control)
+     *
+     * @return int chunk size
+     */ 
     public function chunkSize(): int
     {
         return 1000;
     }
 
+    /**
+     * Imports the CSV to the ClassSchedule Eloquent model using updateOrCreate() in case of presence of duplicates
+     * 
+     * @param array $row
+     * @return ClassSchedule|null
+     */
     public function model(array $row)
     {
         $division_id = Division::where('division_name', $row['division'])->pluck('division_id')[0];
@@ -52,6 +63,11 @@ class ClassSchedulesImport implements ToModel, WithHeadingRow, WithValidation, W
         ]);
     }
 
+    /**
+     * Indicates the rules that each row need to adhere to
+     *
+     * @return array with Laravel Validation rules to be returned
+     */ 
     public function rules(): array
     {
         $divisions = Division::pluck('division_name')->toArray();
@@ -94,6 +110,11 @@ class ClassSchedulesImport implements ToModel, WithHeadingRow, WithValidation, W
         ];
     }
 
+    /**
+     * Specifies custom messages for each failure
+     *
+     * @return array with custom messages
+     */ 
     public function customValidationMessages()
     {
         return [

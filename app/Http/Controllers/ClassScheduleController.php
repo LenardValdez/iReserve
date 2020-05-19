@@ -13,6 +13,12 @@ use Maatwebsite\Excel\Validators\ValidationException;
 
 class ClassScheduleController extends Controller
 {
+    /**
+     * Stores the csv imported to the class schedule database
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
     public function store(Request $request) {
         $request->validate([
             'term_number' => 'required|between:1,3',
@@ -22,6 +28,7 @@ class ClassScheduleController extends Controller
         ]);
 
         try {
+            // validates the CSV uploaded
             Excel::import(new ClassSchedulesImport($request->term_number, $request->sdate_term, $request->edate_term), $request->file('csv_file'));
         } catch (ValidationException $e) {
             $failures = $e->failures();
@@ -39,7 +46,14 @@ class ClassScheduleController extends Controller
         return redirect()->back()->with('roomAlert',["CSV import successful!", "Corresponding day and time periods will be blocked for reservations."]);
     }
 
+    /**
+     * Deletes the class schedule selected
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
     public function destroy(Request $request) {
+        // creates a custom validator to check if the password entered is correct
         Validator::extend('passwordMatches', function($attribute, $value, $parameters)
         {
             return (Hash::check($value, $parameters[0])) ? true : false;
@@ -50,6 +64,7 @@ class ClassScheduleController extends Controller
             'password' => 'required|passwordMatches:'.Auth()->user()->password
         ]);
 
+        // returns errors to the AJAX request if password entered is incorrect
         if ($validator->errors()->has('password')) {
             return Response::json(['errors' => $validator->errors()]);
         } 
@@ -58,10 +73,16 @@ class ClassScheduleController extends Controller
             $classCode = $class->subject_code . " " . $class->section;
             $class->delete();
 
+            // returns success boolean variable to the AJAX request along with the room number removed for the display message
             return Response::json(['success' => true, 'idRemoved' => $classCode]);
         }
     }
 
+    /**
+     * Returns the CSV import template in XLSX file for downloading
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function download() {
         return Response::download(
             public_path()."/Class Schedule Import Template.xlsx", 
