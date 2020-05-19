@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 */
 Auth::routes(['register' => false, 'reset' => false, 'verify' => false]);
 
-Route::get('/', 'PagesController@index')->name('landing');
+Route::get('/', 'PagesController@index')->name('home');
 
 Route::group(['middleware' => ['auth']], function() {
     Route::get('/dashboard', 'PagesController@index')->name('Dashboard');
