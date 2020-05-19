@@ -143,6 +143,14 @@ class PagesController extends Controller
     }
 
     private function getFormStats() {
+        $receivedCountAll = RegForm::count();
+        $approvedCountAll = RegForm::where('isApproved', 1)
+                                    ->count();
+        $rejectedCountAll = RegForm::where('user_id', '!=', 'admin')
+                                    ->where('isApproved', 2)
+                                    ->count();
+        $cancelledCountAll = RegForm::where('isCancelled', 1)
+                                    ->count();
         $receivedCountNow = RegForm::whereDate('created_at', '>=', Carbon::now()->subMonth())
                                     ->count();
         $approvedCountNow = RegForm::where('isApproved', 1)
@@ -173,10 +181,10 @@ class PagesController extends Controller
                                     ->count();
         
         $formStats = [
-            'received' => [$receivedCountNow, Self::getPercentageChange($receivedCountFormer, $receivedCountNow)],
-            'confirmed' => [$approvedCountNow, Self::getPercentageChange($approvedCountFormer, $approvedCountNow)],
-            'rejected' => [$rejectedCountNow, Self::getPercentageChange($rejectedCountFormer, $rejectedCountNow)],
-            'cancelled' => [$cancelledCountNow, Self::getPercentageChange($cancelledCountFormer, $cancelledCountNow)],
+            'received' => [$receivedCountAll, Self::getPercentageChange($receivedCountFormer, $receivedCountNow)],
+            'confirmed' => [$approvedCountAll, Self::getPercentageChange($approvedCountFormer, $approvedCountNow)],
+            'rejected' => [$rejectedCountAll, Self::getPercentageChange($rejectedCountFormer, $rejectedCountNow)],
+            'cancelled' => [$cancelledCountAll, Self::getPercentageChange($cancelledCountFormer, $cancelledCountNow)],
         ];
 
         return $formStats;
