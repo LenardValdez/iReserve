@@ -18,7 +18,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-danger">Delete</button>
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Revise</button>
+                    <button type="submit" class="btn btn-danger">Cancel</button>
                 </div>
             </form>
         </div>

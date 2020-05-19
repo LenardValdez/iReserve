@@ -61,4 +61,12 @@ class ClassScheduleController extends Controller
             return Response::json(['success' => true, 'idRemoved' => $classCode]);
         }
     }
+
+    public function download() {
+        return Response::download(
+            public_path()."/Class Schedule Import Template.xlsx", 
+            'class_schedule_import_template.xlsx', 
+            ['Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8"']
+        );
+    }
 }

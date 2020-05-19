@@ -41,6 +41,7 @@ Route::group(['middleware' => ['auth', 'admin']], function() {
     Route::get('/dashboard/approve/{id}', 'RoomController@approve')->name('approverequest');
     Route::get('/dashboard/reject/{id}', 'RoomController@reject')->name('rejectrequest');
 
+    Route::get('/schedule/template', 'ClassScheduleController@download')->name('template');
     Route::post('/schedule/new', 'ClassScheduleController@store')->name('insertschedule');
     Route::post('/schedule/del','ClassScheduleController@destroy')->name('deleteschedule');
 });
