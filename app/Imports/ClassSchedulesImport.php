@@ -57,8 +57,18 @@ class ClassSchedulesImport implements ToModel, WithHeadingRow, WithValidation, W
         $divisions = Division::pluck('division_name')->toArray();
 
         return [
-            'user_id' => 'required|exists:users,user_id',
-            '*.user_id' => 'required|exists:users,user_id',
+            'user_id' => [
+                'required',
+                Rule::exists('users')->where(function ($query) {
+                    $query->where('user_type', 2);
+                })
+            ],
+            '*.user_id' => [
+                'required',
+                Rule::exists('users')->where(function ($query) {
+                    $query->where('user_type', 2);
+                })
+            ],
             'room_number' => 'required|exists:rooms,room_id',
             '*.room_number' => 'required|exists:rooms,room_id',
             'start_time' => 'required|different:*.end_time',
@@ -87,7 +97,7 @@ class ClassSchedulesImport implements ToModel, WithHeadingRow, WithValidation, W
     public function customValidationMessages()
     {
         return [
-            'user_id.exists' => 'Specified user does not exist in the database.',
+            'user_id.exists' => 'Specified user either does not exist in the database or is not assigned as part of the faculty.',
             'room_number.exists' => 'Room number entered not found.',
             'start_time.different' => 'Start time cannot be the same as the end time!',
             'end_time.different' => 'End time cannot be the same as the start time!',
