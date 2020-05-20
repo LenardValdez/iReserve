@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Response;
 use Carbon\Carbon;
+use App\User;
 use App\Room;
 use App\RegForm;
 use App\ClassSchedule;
