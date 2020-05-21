@@ -4,13 +4,17 @@ namespace App\Http\Controllers;
 
 use Response;
 use Carbon\Carbon;
+use App\User;
 use App\Room;
 use App\RegForm;
 use App\ClassSchedule;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-use App\Http\Requests\RoomRequest;
 use App\Notifications\RoomStatus;
+use App\Http\Requests\StoreNewRoom;
+use App\Http\Requests\CancelReservation;
+use App\Http\Requests\ProcessReservation;
+use App\Http\Requests\ReceiveReservation;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -84,24 +88,19 @@ class RoomController extends Controller
     /**
      * Stores new room entry to the room database
      *
-     * @param  \App\Http\Requests\RoomRequest $room
+     * @param  \App\Http\Requests\StoreNewRoom $room
      * @return \Illuminate\Http\Response
      */
-    public function store(RoomRequest $request)
+    public function store(StoreNewRoom $request)
     {
-        if($request->validated()) {
             // restores soft-deleted entry if room number previously exists
             if(Room::withTrashed()->find($request->get('room_id'))->trashed()) {
                 $softDeletedRoom = Room::onlyTrashed()
                                         ->where('room_id', $request->get('room_id'))
                                         ->restore();
             }
-            $room = Room::where('room_id', $request->get('room_id'))->first();
-            $room->room_name = $request->get('room_name');
-            $room->room_desc = $request->get('room_desc');
-            $room->isSpecial = $request->get('isSpecial');
-            $room->save();
-            }
+            Room::updateOrCreate($request->validated());
+
         return redirect()->back()->with('roomAlert',["Room ".$request->room_id." has been successfully added!", 
         "This room will be now available for reservation."]);
     }
@@ -109,33 +108,27 @@ class RoomController extends Controller
     /**
      * Processes the room reservation request submitted
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param  \App\Http\Requests\ReceiveReservation $request
      * @return \Illuminate\Http\Response
      */
-    public function reserve(Request $request)
+    public function reserve(ReceiveReservation $request)
     {
-        $request->validate([
-            'room_id' => 'required',
-            'users_involved' => 'nullable',
-            'stime_res' => 'required',
-            'etime_res' => 'required',
-            'purpose' => 'required|max:255'
-        ]);
+        $validatedRequest = $request->validated();
 
-        if($request->has('users_involved')){
-            $usersInvolved = $request->input('users_involved');
+        if(isset($validatedRequest['users_involved'])){
+            $usersInvolved = $validatedRequest['users_involved'];
             $usersInvolved = implode(', ', $usersInvolved);
         }
         else {
             $usersInvolved = NULL;
         }
 
-        $roomSelected = Room::where('room_id', $request->get('room_id'))->first();
+        $roomSelected = Room::where('room_id', $validatedRequest['room_id'])->first();
 
         // checks for similar existing confirmed requests for the room
-        $checkExisting = RegForm::where('room_id', $request->get('room_id'))
-                                ->where('stime_res', '<',  $request->get('etime_res'))
-                                ->where('etime_res', '>', $request->get('stime_res'))
+        $checkExisting = RegForm::where('room_id', $validatedRequest['room_id'])
+                                ->where('stime_res', '<',  $validatedRequest['etime_res'])
+                                ->where('etime_res', '>', $validatedRequest['stime_res'])
                                 ->where('isApproved', '1')
                                 ->where('isCancelled', '0')
                                 ->count();
@@ -143,36 +136,38 @@ class RoomController extends Controller
         $days = ["SUN", "M", "T", "W", "TH", "F", "S"];
 
         // checks if a class schedule is in place for the selected room and reservation period
-        $checkClassExisting = ClassSchedule::where('room_id', $request->get('room_id'))
-                                            ->where(function ($query) use($request, $days) {
-                                                $query->where('day', $days[Carbon::parse($request->get('stime_res'))->dayOfWeek])
-                                                      ->where('stime_class', '<', Carbon::parse($request->get('etime_res'))->format('H:i:s'))
-                                                      ->orWhere(function ($query2) use($request, $days) {
-                                                        $query2->where('day', $days[Carbon::parse($request->get('etime_res'))->dayOfWeek])
-                                                                ->where('etime_class', '>', Carbon::parse($request->get('stime_res'))->format('H:i:s'));
+        $checkClassExisting = ClassSchedule::where('room_id', $validatedRequest['room_id'])
+                                            ->where(function ($query) use($validatedRequest, $days) {
+                                                $query->where('day', $days[Carbon::parse($validatedRequest['stime_res'])->dayOfWeek])
+                                                      ->where('stime_class', '<', Carbon::parse($validatedRequest['etime_res'])->format('H:i:s'))
+                                                      ->where('etime_class', '>', Carbon::parse($validatedRequest['stime_res'])->format('H:i:s'))
+                                                      ->orWhere(function ($query2) use($validatedRequest, $days) {
+                                                        $query2->where('day', $days[Carbon::parse($validatedRequest['etime_res'])->dayOfWeek])
+                                                                ->where('stime_class', '<', Carbon::parse($validatedRequest['etime_res'])->format('H:i:s'))
+                                                                ->where('etime_class', '>', Carbon::parse($validatedRequest['stime_res'])->format('H:i:s'));
                                                         });
                                             })
                                             ->count();
 
         // checks for duplicate request
-        $checkSameUserPending = RegForm::where('user_id', Auth()->user()->user_id)
-                                        ->where('room_id', $request->get('room_id'))
-                                        ->where('stime_res', '<',  $request->get('etime_res'))
-                                        ->where('etime_res', '>', $request->get('stime_res'))
+        $checkSameUserPending = RegForm::where('user_id', $validatedRequest['user_id'])
+                                        ->where('room_id', $validatedRequest['room_id'])
+                                        ->where('stime_res', '<',  $validatedRequest['etime_res'])
+                                        ->where('etime_res', '>', $validatedRequest['stime_res'])
                                         ->where('isApproved', '0')
                                         ->count();
 
         // checks if an admin-hosted reservation is in place for the selected room and reservation period
         $checkAdminExisting = RegForm::where('user_id','admin')
-                                     ->where('room_id', $request->get('room_id'))
-                                     ->where('stime_res', '<',  $request->get('etime_res'))
-                                     ->where('etime_res', '>', $request->get('stime_res'))
+                                     ->where('room_id', $validatedRequest['room_id'])
+                                     ->where('stime_res', '<',  $validatedRequest['etime_res'])
+                                     ->where('etime_res', '>', $validatedRequest['stime_res'])
                                      ->where('isApproved', '1')
                                      ->where('isCancelled', '0')
                                      ->count();
 
         // checks if the user has reached the maximum number of submissions per day (5)
-        $checkMaxReserve = RegForm::where('user_id', auth()->user()->user_id)
+        $checkMaxReserve = RegForm::where('user_id', $validatedRequest['user_id'])
                                   ->whereDate('created_at', Carbon::today())
                                   ->where('isApproved', '!=', '-1')
                                   ->count();
@@ -189,8 +184,11 @@ class RoomController extends Controller
             return redirect()->back()->with('roomErr', ["Duplicate submission detected!",
                 "You've already submitted a request for the same room on the selected period! Please wait for the admin to confirm your request."]);
         }
-        else if($request->get('stime_res')==$request->get('etime_res')){
+        else if($validatedRequest['stime_res']==$validatedRequest['etime_res']){
             return redirect()->back()->with('roomErr', ["Invalid reservation period!", "The start and end of the reservation cannot be the same."]);
+        }
+        else if(Carbon::parse($validatedRequest['stime_res'])->isPast() || Carbon::parse($validatedRequest['etime_res'])->isPast()){
+            return redirect()->back()->with('roomErr', ["Invalid reservation period!", "Date and time entered cannot be from the past."]);
         }
         else if($checkAdminExisting>='1' && Auth()->user()->roles == 0){
             return redirect()->back()->with('roomErr', ["Same confirmed reservation already exists!", 
@@ -205,25 +203,25 @@ class RoomController extends Controller
             // validates form differently if room selected is tagged as special room (i.e. requires approval)
             if($roomSelected->isSpecial=='1'){
                 $form = new RegForm([
-                    'user_id' =>  Auth()->user()->user_id,
-                    'room_id' => $request->get('room_id'),
+                    'user_id' =>  $validatedRequest['user_id'],
+                    'room_id' => $validatedRequest['room_id'],
                     'users_involved' => $usersInvolved,
-                    'stime_res' => $request->get('stime_res'),
-                    'etime_res' => $request->get('etime_res'),
-                    'purpose' => $request->get('purpose')
+                    'stime_res' => $validatedRequest['stime_res'],
+                    'etime_res' => $validatedRequest['etime_res'],
+                    'purpose' => $validatedRequest['purpose']
                 ]);
 
                 if(Auth()->user()->roles == 0){
                     $sameRange = RegForm::where('user_id', '!=', 'admin')
-                                        ->where('room_id', $request->get('room_id'))
-                                        ->where('stime_res', '<', $request->get('etime_res'))
-                                        ->where('etime_res', '>', $request->get('stime_res'))
+                                        ->where('room_id', $validatedRequest['room_id'])
+                                        ->where('stime_res', '<', $validatedRequest['etime_res'])
+                                        ->where('etime_res', '>', $validatedRequest['stime_res'])
                                         ->where('isApproved', '0')
                                         ->get();
                     $cancelSameRange = RegForm::where('user_id', '!=', 'admin')
-                                              ->where('room_id', $request->get('room_id'))
-                                              ->where('stime_res', '<', $request->get('etime_res'))
-                                              ->where('etime_res', '>', $request->get('stime_res'))
+                                              ->where('room_id', $validatedRequest['room_id'])
+                                              ->where('stime_res', '<', $validatedRequest['etime_res'])
+                                              ->where('etime_res', '>', $validatedRequest['stime_res'])
                                               ->where('isApproved', '1')
                                               ->first();
 
@@ -265,20 +263,20 @@ class RoomController extends Controller
             }
             else {
                 $form = new RegForm([
-                    'user_id' =>  Auth()->user()->user_id,
-                    'room_id' => $request->get('room_id'),
+                    'user_id' =>  $validatedRequest['user_id'],
+                    'room_id' => $validatedRequest['room_id'],
                     'users_involved' => $usersInvolved,
-                    'stime_res' => $request->get('stime_res'),
-                    'etime_res' => $request->get('etime_res'),
-                    'purpose' => $request->get('purpose')
+                    'stime_res' => $validatedRequest['stime_res'],
+                    'etime_res' => $validatedRequest['etime_res'],
+                    'purpose' => $validatedRequest['purpose']
                 ]);
                 
                 // overrides confirmed reservation for the same room with similar reservation period if admin-hosted
                 if(Auth()->user()->roles == 0){
                     $cancelSameRange = RegForm::where('user_id', '!=', 'admin')
-                                                ->where('room_id', $request->get('room_id'))
-                                                ->where('stime_res', '<', $request->get('etime_res'))
-                                                ->where('etime_res', '>', $request->get('stime_res'))
+                                                ->where('room_id', $validatedRequest['room_id'])
+                                                ->where('stime_res', '<', $validatedRequest['etime_res'])
+                                                ->where('etime_res', '>', $validatedRequest['stime_res'])
                                                 ->where('isApproved', '1')
                                                 ->first();
                     if(!empty($cancelSameRange)){
@@ -309,12 +307,12 @@ class RoomController extends Controller
     /**
      * Approves a pending special room request
      *
-     * @param  id form_id assigned to the request
+     * @param  \App\Http\Requests\ProcessReservation $request
      * @return \Illuminate\Http\Response
      */
-    public function approve($id)
+    public function approve(ProcessReservation $request)
     {
-        $specialRequest = RegForm::find($id);
+        $specialRequest = RegForm::find($request->validated()['form_id']);
         
         $specialRequest->isApproved = '1';
         $sameRange = RegForm::where('user_id', '!=', 'admin')
@@ -348,18 +346,18 @@ class RoomController extends Controller
     /**
      * Rejects a pending special room request
      *
-     * @param  id form_id assigned to the request
+     * @param  \App\Http\Requests\ProcessReservation $request
      * @return \Illuminate\Http\Response
      */
-    public function reject($id)
+    public function reject(ProcessReservation $request)
     {
-        $specialRequest = RegForm::find($id);
+        $specialRequest = RegForm::find($request->validated()['form_id']);
         $specialRequest->isApproved = '2';
         $specialRequest->save();
         // sends an email and site notification to the user upon rejection of request
         $specialRequest->user->notify(new RoomStatus($specialRequest));
 
-        return redirect()->back()->with('rejectedAlert', ["The request has been rejected.", "User affected will be notified."]);
+        return redirect()->back()->with('rejectedAlert', ["The request has been rejected.", "Schedule booked will remain open for requests. User affected will be notified."]);
     }
 
     /**
@@ -376,22 +374,14 @@ class RoomController extends Controller
     /**
      * Cancels a pending or confirmed room reservation
      *
-     * @param  id form_id assigned to the request
+     * @param  \App\Http\Requests\CancelReservation $request
      * @return \Illuminate\Http\Response
      */
-    public function cancel(Request $request)
+    public function cancel(CancelReservation $request)
     {
-        $request->validate([
-            'user_id' => [
-                'required',
-                Rule::in([Auth()->user()->user_id, 'admin'])
-            ],
-            'form_id' => 'required|exists:reg_forms,form_id',
-            'reason' => 'required|max:255',
-        ]);
-
-        $cancelRequest = RegForm::find($request->get('form_id'));
-        $cancelRequest->reasonCancelled = $request->get('reason');
+        $validatedRequest = $request->validated();
+        $cancelRequest = RegForm::find($validatedRequest['form_id']);
+        $cancelRequest->reasonCancelled = $validatedRequest['reason'];
         $cancelRequest->isCancelled = '1';
         $cancelRequest->save();
 
@@ -409,6 +399,7 @@ class RoomController extends Controller
             "Reservation details may still be accessed through your reservation history."]);
         }
     }
+
     /**
      * Soft deletes the room selected
      *

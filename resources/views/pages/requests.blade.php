@@ -134,6 +134,11 @@
 
         <!--ACTUAL CONTENT-->
         <section class="content container-fluid">
+          @include('layouts.alerts.successAlert', ['redirectMessageName' => 'approvedAlert'])
+          @include('layouts.alerts.dangerAlert', ['redirectMessageName' => 'rejectedAlert'])
+          @include('layouts.alerts.dangerAlert', ['redirectMessageName' => 'cancelledAlert'])
+          @include('layouts.modals.infoModal', ['forms' => $pendingforms, 'isOverall' => true, 'isSchedule' => false, 'isApproval' => true])
+          @include('layouts.modals.infoModal', ['forms' => $upcomingReservations, 'isOverall' => true, 'isSchedule' => false, 'isApproval' => false])
           <div class="row">
             <div class="col-md-5 col-s-12">
               <div class="callout callout-info">
@@ -171,7 +176,7 @@
                           <tr data-toggle="modal" data-target="#reqInfo{{$form->form_id}}" style="cursor: pointer">
                             <td>{{ Carbon::parse($form->stime_res)->format('M d, Y h:i A') }} - {{ Carbon::parse($form->etime_res)->format('M d, Y h:i A') }}</td>
                             <td>{{$form->room_id}} @if($form->room->room_name!=NULL){{$form->room->room_name}}@endif</td>
-                            <td>{{$form->user->name}}</td>
+                            <td>@if($form->user->user_type > 2){{$form->user_id}}@endif {{$form->user->name}}</td>
                             <td>{{ Carbon::parse($form->updated_at)->toFormattedDateString() }}</td>
                             <td>
                               @if(Carbon::parse($form->etime_res)->isFuture())
@@ -219,10 +224,16 @@
                       <span class="info-box-number">{{ $formStats['received'][0] }}</span>
         
                       <div class="progress">
-                        <div class="progress-bar" style="width: {{ $formStats['received'][1] }}%"></div>
+                        <div class="progress-bar" style="width: {{ abs($formStats['received'][1]) }}%"></div>
                       </div>
                       <span class="progress-description">
-                        {{ $formStats['received'][1] }}% Increase in 30 Days
+                        @if($formStats['received'][1] > 0)
+                          {{ $formStats['received'][1] }}% <i class="ion ion-ios-arrow-thin-up"></i> increase in the last 30 days
+                        @elseif($formStats['received'][1] == 0)
+                          {{ $formStats['received'][1] }}% <i class="ion ion-ios-minus-empty"></i> increase in the last 30 days
+                        @else
+                          {{ $formStats['received'][1] }}% <i class="ion ion-ios-arrow-thin-down"></i> decrease in the last 30 days
+                        @endif
                       </span>
                     </div>
                     <!-- /.info-box-content -->
@@ -236,10 +247,16 @@
                       <span class="info-box-number">{{ $formStats['confirmed'][0] }}</span>
         
                       <div class="progress">
-                        <div class="progress-bar" style="width: {{ $formStats['confirmed'][1] }}%"></div>
+                        <div class="progress-bar" style="width: {{ abs($formStats['confirmed'][1]) }}%"></div>
                       </div>
                       <span class="progress-description">
-                        {{ $formStats['confirmed'][1] }}% Increase in 30 Days
+                        @if($formStats['confirmed'][1] > 0)
+                          {{ $formStats['confirmed'][1] }}% <i class="ion ion-ios-arrow-thin-up"></i> increase in the last 30 days
+                        @elseif($formStats['confirmed'][1] == 0)
+                          {{ $formStats['confirmed'][1] }}% <i class="ion ion-ios-minus-empty"></i> increase in the last 30 days
+                        @else
+                          {{ $formStats['confirmed'][1] }}% <i class="ion ion-ios-arrow-thin-down"></i> decrease in the last 30 days
+                        @endif
                       </span>
                     </div>
                     <!-- /.info-box-content -->
@@ -253,27 +270,39 @@
                       <span class="info-box-number">{{ $formStats['rejected'][0] }}</span>
         
                       <div class="progress">
-                        <div class="progress-bar" style="width: {{ $formStats['rejected'][1] }}%"></div>
+                        <div class="progress-bar" style="width: {{ abs($formStats['rejected'][1]) }}%"></div>
                       </div>
                       <span class="progress-description">
-                        {{ $formStats['rejected'][1] }}% Increase in 30 Days
+                        @if($formStats['rejected'][1] > 0)
+                          {{ $formStats['rejected'][1] }}% <i class="ion ion-ios-arrow-thin-up"></i> increase in the last 30 days
+                        @elseif($formStats['rejected'][1] == 0)
+                          {{ $formStats['rejected'][1] }}% <i class="ion ion-ios-minus-empty"></i> increase in the last 30 days
+                        @else
+                          {{ $formStats['rejected'][1] }}% <i class="ion ion-ios-arrow-thin-down"></i> decrease in the last 30 days
+                        @endif
                       </span>
                     </div>
                     <!-- /.info-box-content -->
                   </div>
 
                   <div class="info-box bg-orange">
-                    <span class="info-box-icon"><i class="ion ion-sad-outline"></i></span>
+                    <span class="info-box-icon"><i class="ion ion-ios-trash-outline"></i></span>
         
                     <div class="info-box-content">
                       <span class="info-box-text">Reservations Cancelled</span>
                       <span class="info-box-number">{{ $formStats['cancelled'][0] }}</span>
         
                       <div class="progress">
-                        <div class="progress-bar" style="width: {{ $formStats['cancelled'][1] }}%"></div>
+                        <div class="progress-bar" style="width: {{ abs($formStats['cancelled'][1]) }}%"></div>
                       </div>
                       <span class="progress-description">
-                        {{ $formStats['cancelled'][1] }}% Increase in 30 Days
+                        @if($formStats['cancelled'][1] > 0)
+                          {{ $formStats['cancelled'][1] }}% <i class="ion ion-ios-arrow-thin-up"></i> increase in the last 30 days
+                        @elseif($formStats['cancelled'][1] == 0)
+                          {{ $formStats['cancelled'][1] }}% <i class="ion ion-ios-minus-empty"></i> increase in the last 30 days
+                        @else
+                          {{ $formStats['cancelled'][1] }}% <i class="ion ion-ios-arrow-thin-down"></i> decrease in the last 30 days
+                        @endif
                       </span>
                     </div>
                     <!-- /.info-box-content -->
@@ -281,12 +310,6 @@
                 </div>
                 <!-- /.info-box -->
               </div>
-
-              @include('layouts.alerts.successAlert', ['redirectMessageName' => 'approvedAlert'])
-              @include('layouts.alerts.dangerAlert', ['redirectMessageName' => 'rejectedAlert'])
-              @include('layouts.alerts.dangerAlert', ['redirectMessageName' => 'cancelledAlert'])
-              @include('layouts.modals.infoModal', ['forms' => $pendingforms, 'isOverall' => true, 'isSchedule' => false, 'isApproval' => true])
-              @include('layouts.modals.infoModal', ['forms' => $upcomingReservations, 'isOverall' => true, 'isSchedule' => false, 'isApproval' => false])
               <div class="box box-primary">
                 <div class="box-header with-border">
                   <h3 class="box-title">Pending Requests</h3>
@@ -313,7 +336,7 @@
                         @foreach($pendingforms as $form)
                         <tr data-toggle="modal" data-target="#reqInfo{{$form->form_id}}" style="cursor: pointer">
                           <td>{{ sprintf("%07d", $form->form_id) }}</td>
-                          <td>{{$form->user_id}} {{$form->user->name}}</td>
+                          <td>@if($form->user->user_type > 2){{$form->user_id}}@endif {{$form->user->name}}</td>
                           <td>{{$form->room_id}}</td>
                           <td>{{ Carbon::parse($form->stime_res)->format('M d, Y h:i A') }} - {{ Carbon::parse($form->etime_res)->format('M d, Y h:i A') }}</td>
                           <td>{{$form->purpose}}</span></td>

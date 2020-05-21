@@ -36,19 +36,16 @@
 
 <script>
     var Select2Cascade = (function(window, $) {
-
         function Select2Cascade(parent, child, url, select2Options) {
             var afterActions = [];
             var options = select2Options || {};
 
-            // Register functions to be called after cascading data loading done
             this.then = function(callback) {
                 afterActions.push(callback);
                 return this;
             };
 
             parent.select2(select2Options).on("change", function (e) {
-
                 child.prop("disabled", true);
                 var _this = this;
                 
@@ -67,10 +64,8 @@
                 });
             });
         }
-
         return Select2Cascade;
-
-    })( window, $);
+    })(window, $);
 
     $(document).ready(function() {
         $('.select2').select2({
@@ -89,14 +84,14 @@
             timePicker: true,
             autoUpdateInput: false,
             minDate: function(date) {
-                return ((moment(date).day() === 0) ? moment().add(1, 'days') : moment());
+                return ((moment(date).day() == 0) ? moment().add(1, 'days') : moment());
             },
             maxDate: moment().startOf('hour').add(3, 'months'),
             locale: {
                 format: 'MMMM DD, YYYY hh:mm A'
             },
             isInvalidDate: function(date) {
-                return ((moment(date).day() === 0 || (moment(date).isBefore())) ? true : false);
+                return ((moment(date).day() == 0 || moment(date.format("YYYY-MM-DD")).isBefore(moment().format("YYYY-MM-DD"))) ? true : false);
             },
             timePickerIncrement: 10
         });
@@ -139,14 +134,13 @@
                 $('#addReservationBtn').attr('type','submit');
             }
             else {
-            /* when the button in the form, display the entered values in the modal */
-            $('#addReservationBtn').attr('type','button');
-            $('#addReservationBtn').attr('data-toggle','modal');
-            $('#date').text('{{ Carbon::now()->format("M d, Y h:i A") }}');
-            $('#room').text($('#room_id').val());
-            $('#people').text($('#peopleInvolved').val());
-            $('#range').text($('#resPeriod').val());
-            $('#reason').text($('#purpose').val());
+                $('#addReservationBtn').attr('type','button');
+                $('#addReservationBtn').attr('data-toggle','modal');
+                $('#date').text('{{ Carbon::now()->format("M d, Y h:i A") }}');
+                $('#room').text($('#room_id').val());
+                $('#people').text($('#peopleInvolved').val());
+                $('#range').text($('#resPeriod').val());
+                $('#reason').text($('#purpose').val());
             }
         });
         
@@ -352,8 +346,8 @@
                         endTime: '{{ $schedule->etime_class }}',
                         startRecur: '{{ $schedule->sdate_term }}',
                         endRecur: '{{ $schedule->edate_term }}',
-                        backgroundColor: 'rgb(167, 0, 1)',
-                        borderColor: 'rgb(167, 0, 1)',
+                        backgroundColor: 'rgb(220, 105, 0)',
+                        borderColor: 'rgb(220, 105, 0)',
                         extendedProps: {
                             kind: 'class'
                         },
@@ -462,7 +456,7 @@
                             <h3 class="box-title">Room Availability</h3>
                             <span class="pull-right">
                                 Legend:&nbsp;&nbsp;
-                                <i class="ion ion-record" style="color: rgba(167, 0, 1, 1)"></i>&nbsp;Regular Class 
+                                <i class="ion ion-record" style="color: rgba(220, 105, 0, 1)"></i>&nbsp;Regular Class 
                                 &nbsp;&nbsp;
                                 <i class="ion ion-record" style="color: rgba(0, 91, 150, 1)"></i>&nbsp;Reservation 
                             </span>
@@ -503,9 +497,15 @@
                         <div class="box-body">
                             <form role="form" id="reservationForm" method="POST" action="{{route('reserveroom')}}">
                                 @csrf
-                                <div class="form-group">
+                                <div class="form-group{{ $errors->receive->has('user_id') ? ' has-error' : '' }}">
                                     <label for="formName">Name: </label>
-                                    <input type="text" class="form-control" placeholder="{{Auth::user()->name}}" disabled>
+                                    <input type="text" class="form-control" placeholder="{{Auth()->user()->name}}" disabled>
+                                    <input type="hidden" value="{{ Auth()->user()->user_id }}" name="user_id">
+                                    @if ($errors->receive->has('user_id'))
+                                        <span class="help-block" role="alert">
+                                        {{ $errors->receive->first('user_id') }}
+                                        </span>
+                                    @endif
                                 </div>
 
                                 <div class="form-group">
@@ -521,11 +521,16 @@
                                     </select>
                                 </div>
 
-                                <div class="form-group">
+                                <div class="form-group{{ $errors->receive->has('room_id') ? ' has-error' : '' }}">
                                     <label>Room Number: <span class="text-danger">*</span></label>
                                     <select class="form-control" id="room_id" name="room_id" required>
                                         <option>Select room</option>
                                     </select>
+                                    @if ($errors->receive->has('room_id'))
+                                        <span class="help-block" role="alert">
+                                        {{ $errors->receive->first('room_id') }}
+                                        </span>
+                                    @endif
                                 </div>
 
                                 <div class="form-group">
@@ -539,9 +544,8 @@
                                     </select>
                                 </div>
 
-                                <div class="form-group">
+                                <div class="form-group{{ ($errors->receive->has('stime_res') || $errors->receive->has('etime_res')) ? ' has-error' : '' }}">
                                     <label>Reservation Period: <span class="text-danger">*</span></label>
-                                    <div class="form-group">
                                     <div class="input-group date">
                                         <span class="input-group-addon">
                                             <i class="fa fa-clock-o"></i>
@@ -551,12 +555,25 @@
                                         <input type="hidden" name="etime_res" id="end">
                                     </div>
                                     <small class="text-danger">{{ session('existingErr') }}</small>
-                                    </div>
+                                    @if ($errors->receive->has('stime_res') || $errors->receive->has('etime_res'))
+                                        <span class="help-block" role="alert">
+                                        @if ($errors->receive->has('stime_res'))
+                                        {{ $errors->receive->first('stime_res') }}
+                                        @else
+                                        {{ $errors->receive->first('etime_res') }}
+                                        @endif
+                                        </span>
+                                    @endif
                                 </div>
 
-                                <div class="form-group">
+                                <div class="form-group{{ $errors->receive->has('purpose') ? ' has-error' : '' }}">
                                     <label for="reason">Purpose: <span class="text-danger">*</span></label>
                                     <textarea class="form-control" id="purpose" name="purpose" rows="3" placeholder="Enter purpose here" required></textarea>
+                                    @if ($errors->receive->has('purpose'))
+                                    <span class="help-block" role="alert">
+                                    {{ $errors->receive->first('purpose') }}
+                                    </span>
+                                @endif
                                 </div>
                                 <p class="text-red pull-left"><span class="text-danger">*</span> items are required</p>
                                 <button type="button" data-target="#formReview" value="Submit" id="addReservationBtn" class="btn btn-primary pull-right">Submit</button>
@@ -622,7 +639,7 @@
                             <h3 class="box-title">Room Availability</h3>
                             <span class="pull-right">
                                 Legend:&nbsp;&nbsp;
-                                <i class="ion ion-record" style="color: rgba(167, 0, 1, 1)"></i>&nbsp;Regular Class 
+                                <i class="ion ion-record" style="color: rgba(220, 105, 0, 1)"></i>&nbsp;Regular Class 
                                 &nbsp;&nbsp;
                                 <i class="ion ion-record" style="color: rgba(0, 91, 150, 1)"></i>&nbsp;Reservation 
                             </span>

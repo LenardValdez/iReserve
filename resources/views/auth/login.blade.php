@@ -45,8 +45,13 @@
             </div>
 
             <div class="row">
-            <div class="col-xs-6 pull-left">
+            <div class="col-xs-9 pull-left">
                     <small id="loginError" class="text-danger"></small>
+                    {{-- <div class="checkbox icheck">
+                        <label>
+                        <input type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}> Keep me logged in
+                        </label>
+                    </div> --}}
                 </div>
                 <div class="col-xs-4 pull-right">
                     <button type="submit" class="btn btn-primary btn-block btn-flat">{{ __('Login') }}</button>

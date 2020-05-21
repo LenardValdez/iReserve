@@ -2,10 +2,12 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class RoomRequest extends FormRequest
+class CancelReservation extends FormRequest
 {
+    protected $errorBag = "cancel";
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -13,7 +15,6 @@ class RoomRequest extends FormRequest
      */
     public function authorize()
     {
-	//If the user rule is 0
         return true;
     }
 
@@ -24,12 +25,13 @@ class RoomRequest extends FormRequest
      */
     public function rules()
     {
-	//VALIDATE
-    return [
-        'room_id' => 'required|unique:rooms,room_id,NULL,id,deleted_at,NULL',
-        'room_name' => 'max:50',
-        'room_desc' => 'required',
-        'isSpecial' => 'required|min:0|max:1'
-	];
+        return [
+            'user_id' => [
+                'required',
+                Rule::in([Auth()->user()->user_id, 'admin'])
+            ],
+            'form_id' => 'required|exists:reg_forms,form_id',
+            'reason' => 'required|max:255'
+        ];
     }
 }

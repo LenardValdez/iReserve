@@ -15,55 +15,53 @@
 
   <script>
     $.fn.dataTable.ext.search.push(
-    function (settings, data, dataIndex) {   
-      var valid = true;
-      [startDate, endDate] = $('#dateRange').val().split(' - ');
-      var min = moment(startDate);
-      if (!min.isValid()) { 
-        min = null; 
-      }
-      var max = moment(endDate);
-      if (!max.isValid()) { 
-        max = null; 
-      }
-      if (min === null && max === null) {
-        valid = true;
-      }
-      else {
-        @if(Auth()->user()->roles == 1)
-        var startIndex = 1;
-        var endIndex = 2;
-        @else
-        var startIndex = 3;
-        var endIndex = 4;
-        @endif
+      function (settings, data, dataIndex) {   
+        var valid = true;
+        [startDate, endDate] = ($('#dateRange').val()) ? $('#dateRange').val().split(' - ') : [null, null];
+        var min = moment(startDate);
+        if (!min.isValid()) { 
+          min = null; 
+        }
+        var max = moment(endDate);
+        if (!max.isValid()) { 
+          max = null; 
+        }
+        if (min == null && max == null) {
+          valid = true;
+        }
+        else {
+          var startIndex = ({{ Auth()->user()->roles }} == 1) ? 1 : 3;
 
-        $.each(settings.aoColumns, function (i) {
-          if (i == startIndex || i == endIndex) {
-            var cDate = moment(data[i]);
-          
-            if (cDate.isValid()) {
-              if (max !== null && max.isBefore(cDate)) {
-                valid = false;
+          $.each(settings.aoColumns, function (i) {
+            if (i == startIndex) {
+              var cDate = moment(data[i]);
+            
+              if (cDate.isValid()) {
+                if (max !== null && max.isBefore(cDate)) {
+                  valid = false;
+                }
+                if (min !== null && cDate.isBefore(min)) {
+                  valid = false;
+                }
               }
-              if (min !== null && cDate.isBefore(min)) {
+              else {
                 valid = false;
               }
             }
-            else {
-              valid = false;
-            }
-          }
-        });
+          });
       }
       return valid;
-    });
+      });
 
     $(document).ready(function () {
       $("#dateRange").on('apply.daterangepicker', function(ev, picker) {
         $(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
         $('#clearDates').prop('disabled', false);
         $('#overallHistory').DataTable().draw();
+      });
+
+      $("#dateRange").on('cancel.daterangepicker', function(ev, picker) {
+        $(this).val('');
       });
 
       $('#clearDates').click(function(e) {
@@ -81,7 +79,8 @@
         dom: 'Bfrtip',
         order: [[ 0, "desc" ]],
         language: {
-          "zeroRecords": "Nothing to see here yet!"
+          "zeroRecords": "No records found.",
+          "emptyTable": "Nothing to see here yet!"
         },
         columnDefs: [
           {
@@ -155,12 +154,14 @@
           @endif
         ],
         select: true,
-        "fnDrawCallback": function () {
+        drawCallback: function () {
           var table = $('#overallHistory').DataTable();
-          if (table.data().length === 0)
+          if (table.data().length == 0 ||  table.rows( {search:'applied'} ).count() == 0) {
             table.buttons('.buttons-html5').disable();
-          else
+          }
+          else {
             table.buttons('.buttons-html5').enable();
+          }
         }
       });
     });
@@ -215,6 +216,13 @@
 
         <!--ACTUAL CONTENT-->
         <section class="content container-fluid">
+          @include('layouts.alerts.successAlert', ['redirectMessageName' => 'cancelledAlert'])
+          @if(Auth()->User()->roles == 1)
+            @include('layouts.modals.infoModal', ['forms' => $studentReservations, 'isOverall' => false, 'isSchedule' => false, 'isApproval' => false])
+            @include('layouts.modals.infoModal', ['forms' => $upcomingReservations, 'isOverall' => false, 'isSchedule' => false, 'isApproval' => false])
+          @else
+            @include('layouts.modals.infoModal', ['forms' => $reservations, 'isOverall' => true, 'isSchedule' => false, 'isApproval' => false])
+          @endif
           <div class="row">
             @if(Auth()->User()->roles == 1)
             <div class="col-lg-4">
@@ -322,13 +330,6 @@
             @else
             <div class="col-md-12">
             @endif
-                @include('layouts.alerts.successAlert', ['redirectMessageName' => 'cancelledAlert'])
-                @if(Auth()->User()->roles == 1)
-                  @include('layouts.modals.infoModal', ['forms' => $studentReservations, 'isOverall' => false, 'isSchedule' => false, 'isApproval' => false])
-                  @include('layouts.modals.infoModal', ['forms' => $upcomingReservations, 'isOverall' => false, 'isSchedule' => false, 'isApproval' => false])
-                @else
-                  @include('layouts.modals.infoModal', ['forms' => $reservations, 'isOverall' => true, 'isSchedule' => false, 'isApproval' => false])
-                @endif
               <div class="box box-primary">
                 <div class="box-header with-border">
                   <h3 class="box-title">Over-all History</h3>

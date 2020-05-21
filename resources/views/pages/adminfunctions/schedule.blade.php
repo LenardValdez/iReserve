@@ -11,17 +11,22 @@
           @csrf
           <div class="row gutter-10">
               <div class="col-lg-3">
-                  <div class="form-group">
+                  <div class="form-group{{ $errors->insertSchedule->has('term_number') ? ' has-error' : '' }}">
                       <label for="term_number">Term: <span class="text-danger">*</span></label>
                       <select class="form-control" name="term_number">
                           <option value=1>1</option>
                           <option value=2>2</option>
                           <option value=3>3</option>
                       </select>
+                      @if ($errors->insertSchedule->has('term_number'))
+                        <span class="help-block" role="alert">
+                          {{ $errors->insertSchedule->first('term_number') }}
+                        </span>
+                      @endif
                   </div>
               </div>
               <div class="col-lg-9">
-                  <div class="form-group">
+                  <div class="form-group{{ ($errors->insertSchedule->has('sdate_term') || $errors->insertSchedule->has('edate_term')) ? ' has-error' : '' }}">
                       <label for="termPeriod">Term Period: <span class="text-danger">*</span></label>
                       <div class="input-group date">
                           <span class="input-group-addon">
@@ -31,16 +36,30 @@
                           <input type="hidden" name="sdate_term">
                           <input type="hidden" name="edate_term">
                       </div>
+                      @if ($errors->insertSchedule->has('sdate_term') || $errors->insertSchedule->has('edate_term'))
+                        <span class="help-block" role="alert">
+                            @if($errors->insertSchedule->has('sdate_term'))
+                              {{ $errors->insertSchedule->first('sdate_term') }}
+                            @else
+                              {{ $errors->insertSchedule->first('edate_term') }}
+                            @endif
+                        </span>
+                      @endif
                   </div>
               </div>
           </div>
-          <div class="form-group">
+          <div class="form-group{{ $errors->insertSchedule->has('csv_file') ? ' has-error' : '' }}">
               <label for="csv_file">CSV File: <span class="text-danger">*</span></label>
               <input type="file" id="csvFile" name="csv_file" required>
               <a href="#csvFormatInfo" data-target="#csvFormatInfo" data-toggle="modal" class="text-primary">What should be the format?</a>
-          </div>
+              @if ($errors->insertSchedule->has('csv_file'))
+                <span class="help-block" role="alert">
+                  {{ $errors->insertSchedule->first('csv_file') }}
+                </span>
+              @endif
+            </div>
           <p class="text-red pull-left"><span class="text-danger">*</span> items are required</p>
-          <button type="submit" id="insertScheduleBtn" class="btn btn-primary pull-right">{{ __('Insert') }}</button>
+          <button type="submit" id="insertScheduleBtn" class="btn btn-primary pull-right">Insert</button>
       </form>
   </div>
 </div>

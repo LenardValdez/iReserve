@@ -9,23 +9,28 @@
         <div class="box-body">
           <form role="form" id="roomDataForm" method="POST" action="{{ route('processaddroom') }}">
             @csrf
-              <div class="form-group{{ $errors->has('room_id') ? ' has-error' : '' }}">
+            <div class="form-group{{ $errors->newRoom->has('room_id') ? ' has-error' : '' }}">
                 <label for="room_id">Room Number: <span class="text-danger">*</span></label>
-                <input type="text" class="form-control{{ $errors->has('room_id') ? ' has-error' : '' }}" placeholder="Enter room number" id="newroom_id" name="room_id" value="{{ old('room_id') }}" required>
-                @if ($errors->has('room_id'))
+                <input type="text" class="form-control{{ $errors->newRoom->has('room_id') ? ' has-error' : '' }}" placeholder="Enter room number" id="newroom_id" name="room_id" value="{{ old('room_id') }}" required>
+                @if ($errors->newRoom->has('room_id'))
                   <span class="help-block" role="alert">
-                      <strong>{{ $errors->first('room_id') }}</strong>
+                    {{ $errors->newRoom->first('room_id') }}
                   </span>
                 @endif
               </div>
-              <div class="form-group">
+              <div class="form-group{{ $errors->newRoom->has('room_name') ? ' has-error' : '' }}">
                 <label for="room_name">Room Name: </label>
                 <input type="text" class="form-control" placeholder="Enter room name (ex.: Chemistry Lab)" id="newroom_name" name="room_name" value="{{ old('room_name') }}">
+                @if ($errors->newRoom->has('room_name'))
+                <span class="help-block" role="alert">
+                  {{ $errors->newRoom->first('room_name') }}
+                </span>
+                @endif
               </div>
               <div class="form-group">
-                <label for="room_desc">Room Description: <span class="text-danger">*</span></label>
-                <select id="room_desc" class="form-control{{ $errors->has('room_desc') ? ' has-error' : '' }}" name="room_desc" value="{{ old('room_desc') }}" required>
-                  <option selected disabled>Select room description</option>
+                <label for="room_desc">Floor: <span class="text-danger">*</span></label>
+                <select id="room_desc" class="form-control{{ $errors->newRoom->has('room_desc') ? ' has-error' : '' }}" name="room_desc" value="{{ old('room_desc') }}" required>
+                  <option selected disabled>Select floor</option>
                   <option value="6th Floor">6th Floor</option>
                   <option value="7th Floor">7th Floor</option>
                   <option value="8th Floor">8th Floor</option>
@@ -38,27 +43,27 @@
                   <option value="Ground Floor">Ground Floor</option>
                   <option value="Others">Others</option>
                 </select>
-                  @if ($errors->has('room_desc'))
-                  <span class="invalid-feedback" role="alert">
-                      <strong>{{ $errors->first('room_desc') }}</strong>
-                  </span>
-                  @endif
+                @if ($errors->newRoom->has('room_desc'))
+                <span class="help-block" role="alert">
+                  {{ $errors->newRoom->first('room_desc') }}
+                </span>
+                @endif
               </div>
               <div class="form-group">
                 <label for="isSpecial">Category: <span class="text-danger">*</span></label>
-                  <select class="form-control{{ $errors->has('isSpecial') ? ' has-error' : '' }}" id="isSpecial" name="isSpecial" required>
+                  <select class="form-control{{ $errors->newRoom->has('isSpecial') ? ' has-error' : '' }}" id="isSpecial" name="isSpecial" value="{{ old('isSpecial') }}"required>
                     <option value="" selected disabled>Select room category</option>
                     <option value="0">Ordinary Room</option>
                     <option value="1">Special Room</option>
                   </select>
-                    @if ($errors->has('isSpecial'))
-                      <span class="invalid-feedback" role="alert">
-                          <strong>{{ $errors->first('isSpecial') }}</strong>
+                    @if ($errors->newRoom->has('isSpecial'))
+                      <span class="help-block" role="alert">
+                        {{ $errors->newRoom->first('isSpecial') }}
                       </span>
                     @endif
               </div>
               <p class="text-red pull-left"><span class="text-danger">*</span> items are required</p>
-              <button type="submit" id="addRoomBtn" class="btn btn-primary pull-right">{{ __('Add') }}</button>
+              <button type="submit" id="addRoomBtn" class="btn btn-primary pull-right">Add</button>
           </form>
         </div>
       </div>
@@ -74,7 +79,7 @@
         <div class="box-body">
           <form role="form" id="roomModifyForm" method="POST" action="{{ route('processdelroom') }}">
             @csrf
-            <div class="form-group{{ $errors->has('deleteRoomId') ? ' has-error' : '' }}">
+            <div class="form-group{{ $errors->has('room_id') ? ' has-error' : '' }}">
               <label>Room Number: <span class="text-danger">*</span></label>
               <select class="form-control" id="deleteRoomId" name="room_id" required>
                 <option value="" selected disabled>Select a room to be deleted</option>
@@ -94,6 +99,11 @@
                   </optgroup>
                 @endforeach
               </select>
+              @if ($errors->has('room_id'))
+                <span class="help-block" role="alert">
+                  {{ $errors->first('room_id') }}
+                </span>
+              @endif
             </div>
             <p class="text-red pull-left"><span class="text-danger">*</span> items are required</p>
             <button type="button" id="delRoomBtn" data-target="#confirmRoomDeletion" data-toggle="modal" class="btn btn-danger pull-right">Delete</button>

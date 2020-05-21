@@ -26,7 +26,7 @@
                     <dt>End Time</dt>
                     <dd>must be within campus hours (7:30AM - 9:30PM)</dd>
                     <dt>Day</dt>
-                    <dd>M, T, W, F, S<br>classes of more than once a week must be declared separately</dd>
+                    <dd>M, T, W, TH, F, S<br>classes of more than once a week must be declared separately</dd>
                     <dt>Division</dt>
                     <dd>College or Senior High</dd>
                 </dl>

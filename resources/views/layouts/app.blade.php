@@ -33,6 +33,10 @@
         padding-right: 5px;
         padding-left: 5px;
       }
+
+      .fc-event{
+        cursor: pointer;
+      }
     </style>
 
     <script src="js/adminlte_js/jquery.min.js"></script>

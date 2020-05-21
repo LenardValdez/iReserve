@@ -69,7 +69,7 @@ class RoomStatus extends Notification
         elseif($this->form->isApproved == 2) {
             $headerStatus = 'Reservation Rejected';
             $info = 'We regret to inform you that your reservation for Room '.$this->form->room_id.' ('.Carbon::parse($this->form->stime_res)->format('M d, Y h:i A').
-            ' - '.Carbon::parse($this->form->etime_res)->format('M d, Y h:i A').') has been rejected.';
+            ' - '.Carbon::parse($this->form->etime_res)->format('M d, Y h:i A').') has been rejected. Please make sure your request doesn\'t violate the room usage guidelines.';
         }
         else {
             $headerStatus = 'Request Received';

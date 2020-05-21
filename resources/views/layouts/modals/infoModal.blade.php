@@ -17,7 +17,7 @@
                     @if($isOverall)
                     <tr>
                         <th>User</th>
-                        <td>{{$form->user->name}}</td>
+                        <td>@if($form->user->user_type > 2){{$form->user_id}}@endif {{$form->user->name}}</td>
                     </tr>
                     @endif
                     <tr>

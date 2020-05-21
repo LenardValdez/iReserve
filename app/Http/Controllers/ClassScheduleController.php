@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Response;
 use App\ClassSchedule;
 use Illuminate\Http\Request;
+use App\Http\Requests\InsertSchedule;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Hash;
 use App\Imports\ClassSchedulesImport;
@@ -16,20 +17,14 @@ class ClassScheduleController extends Controller
     /**
      * Stores the csv imported to the class schedule database
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param  \App\Http\Requests\InsertSchedule $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request) {
-        $request->validate([
-            'term_number' => 'required|between:1,3',
-            'sdate_term' => 'required|date',
-            'edate_term' => 'required|date',
-            'csv_file' => 'required|mimes:csv,txt'
-        ]);
-
+    public function store(InsertSchedule $request) {
         try {
             // validates the CSV uploaded
-            Excel::import(new ClassSchedulesImport($request->term_number, $request->sdate_term, $request->edate_term), $request->file('csv_file'));
+            $validatedRequest = $request->validated();
+            Excel::import(new ClassSchedulesImport($validatedRequest['term_number'], $validatedRequest['sdate_term'], $validatedRequest['edate_term']), $validatedRequest['csv_file']);
         } catch (ValidationException $e) {
             $failures = $e->failures();
             $errorMessage = "Problems encountered:\n";

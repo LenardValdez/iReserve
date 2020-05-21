@@ -113,7 +113,22 @@ class PageController extends Controller
     * @param newNumber The value that changed
     */
     private function getPercentageChange($oldNumber, $newNumber){
-        return ($oldNumber == 0) ? 0 : (int)(($oldNumber - $newNumber) / $oldNumber) * 100;
+        $percentage = 100;
+        // return ($oldNumber == 0) ? (($newNumber == 0) ? 0 : 100) : (int)(($oldNumber - $newNumber) / $oldNumber) * 100));
+        if($oldNumber > 0) {
+            if($newNumber < $oldNumber) {
+                $percentage = (int)((($oldNumber - $newNumber) / $oldNumber) * 100) * -1;
+            }
+            else {
+                $percentage = (int)(($oldNumber - $newNumber) / $oldNumber) * 100;
+            }
+        }
+        else {
+            if($newNumber == 0) {
+                $percentage = 0;
+            }
+        }
+        return $percentage;
     }
 
     /**
