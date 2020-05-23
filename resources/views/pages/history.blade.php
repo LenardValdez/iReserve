@@ -1,7 +1,11 @@
 @extends('layouts.app')
+@if(Auth()->user()->roles == 1)
+  @section('title') Dashboard @endsection
+@else
+  @section('title') Reservation History @endsection
+@endif
 
 @section('script')
-
 @if (Auth()->User()->roles == 1)
   <script>
     $(window).on('load',function(){
@@ -195,20 +199,16 @@
         @include('layouts.inc.faq')
         <!--PAGE TITLE AND BREADCRUMB-->
         <section class="content-header">
-          @if(Auth()->user()->roles == 2)
-            <h1>Reservation History</h1>
-          @else
-            <h1>Dashboard</h1>
-          @endif
+            <h1>@yield('title')</h1>
           <ol class="breadcrumb">
             @if (Auth()->user()->roles == 0)
             <li><a href={{ URL::route('Dashboard') }}><i class="fa fa-dashboard"></i> Dashboard</a></li>
-            <li class="active">Reservation History</li>
+            <li class="active"> @yield('title')</li>
             @elseif(Auth()->user()->roles == 2)
             <li><a href={{ URL::route('Dashboard') }}><i class="fa fa-building"></i> Room Overview</a></li>
-            <li class="active">Reservation History</li>
+            <li class="active"> @yield('title')</li>
             @else 
-            <li class="active"><i class="fa fa-building"></i> Room Overview</a></li>
+            <li class="active"><i class="fa fa-building"></i> @yield('title')</a></li>
             <li class="#"><a id="faqBtn" data-toggle="modal" data-target="#welcomeFAQModal">FAQ</a></li>
             @endif
           </ol>

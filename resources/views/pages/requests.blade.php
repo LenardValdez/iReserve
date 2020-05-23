@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@section('title') Dashboard @endsection
 
 @section('script')
   <script>
@@ -124,11 +125,9 @@
         
         <!--PAGE TITLE AND BREADCRUMB-->
         <section class="content-header">
-          <h1>
-            Dashboard
-          </h1>
+          <h1>@yield('title')</h1>
           <ol class="breadcrumb">
-            <li class="active"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+            <li class="active"><i class="fa fa-dashboard"></i> @yield('title')</a></li>
           </ol>
         </section>
 
