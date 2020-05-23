@@ -1,365 +1,372 @@
 @extends('layouts.app')
 
+@if(Auth()->user()->roles == 2)
+    @section('title') Room Overview @endsection
+@elseif(Auth()->user()->roles == 0)
+    @section('title') Room Management @endsection
+@else 
+    @section('title') Room Reservation @endsection
+@endif
+
 @section('menu')
-<div class="collapse navbar-collapse pull-left" id="navbar-collapse">
-    <ul class="nav navbar-nav">
-        @if (Auth()->user()->roles == 0)
-            <li class="#"><a href={{ URL::route('Dashboard') }}>Dashboard</a></li>
-            <li class="active"><a href={{URL::route('Reserve')}}>Room Management</a></li>
-            <li class="#"><a href={{URL::route('History')}}>Reservation History</a></li>
-            <li class="#"><a id="faqBtn" data-toggle="modal" data-target="#welcomeFAQModal">FAQ</a></li>
-        @elseif (Auth()->user()->roles == 1)
-            <li class="#"><a href={{ URL::route('Dashboard') }}>Dashboard</a></li>
-            <li class="active"><a href={{URL::route('Reserve')}}>Room Reservation</a></li>
-            <li class="#"><a id="faqBtn" data-toggle="modal" data-target="#welcomeFAQModal">FAQ</a></li>
-        @else 
-            <li class="active"><a href={{ URL::route('Dashboard') }}>Room Overview</a></li>
-            <li class="#"><a href={{URL::route('History')}}>Reservation History</a></li>
-            <li class="#"><a id="faqBtn" data-toggle="modal" data-target="#welcomeFAQModal">FAQ</a></li>
-        @endif
-    </ul>
-</div>
+    <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
+        <ul class="nav navbar-nav">
+            @if (Auth()->user()->roles == 0)
+                <li class="#"><a href={{ URL::route('Dashboard') }}>Dashboard</a></li>
+                <li class="active"><a href={{URL::route('Reserve')}}>Room Management</a></li>
+                <li class="#"><a href={{URL::route('History')}}>Reservation History</a></li>
+                <li class="#"><a id="faqBtn" data-toggle="modal" data-target="#welcomeFAQModal">FAQ</a></li>
+            @elseif (Auth()->user()->roles == 1)
+                <li class="#"><a href={{ URL::route('Dashboard') }}>Dashboard</a></li>
+                <li class="active"><a href={{URL::route('Reserve')}}>Room Reservation</a></li>
+                <li class="#"><a id="faqBtn" data-toggle="modal" data-target="#welcomeFAQModal">FAQ</a></li>
+            @else 
+                <li class="active"><a href={{ URL::route('Dashboard') }}>Room Overview</a></li>
+                <li class="#"><a href={{URL::route('History')}}>Reservation History</a></li>
+                <li class="#"><a id="faqBtn" data-toggle="modal" data-target="#welcomeFAQModal">FAQ</a></li>
+            @endif
+        </ul>
+    </div>
 @endsection
 
 @section('script')
+    @if (Auth()->User()->roles == 2)
+    <script>
+        $(window).on('load',function(){
+        if (!sessionStorage.getItem('shown-modal')){
+        $('#welcomeFAQModal').modal('show');
+        sessionStorage.setItem('shown-modal', 'true');
+        }
+        });
+    </script>
+    @endif
 
-@if (Auth()->User()->roles == 2)
-<script>
-    $(window).on('load',function(){
-    if (!sessionStorage.getItem('shown-modal')){
-      $('#welcomeFAQModal').modal('show');
-      sessionStorage.setItem('shown-modal', 'true');
-      }
-    });
-</script>
-@endif
+    <script>
+        var Select2Cascade = (function(window, $) {
+            function Select2Cascade(parent, child, url, select2Options) {
+                var afterActions = [];
+                var options = select2Options || {};
 
-<script>
-    var Select2Cascade = (function(window, $) {
-        function Select2Cascade(parent, child, url, select2Options) {
-            var afterActions = [];
-            var options = select2Options || {};
+                this.then = function(callback) {
+                    afterActions.push(callback);
+                    return this;
+                };
 
-            this.then = function(callback) {
-                afterActions.push(callback);
-                return this;
-            };
-
-            parent.select2(select2Options).on("change", function (e) {
-                child.prop("disabled", true);
-                var _this = this;
-                
-                $.getJSON(url.replace(':parentId:', $(this).val()), function(items) {
-                    var newOptions = '<option value="" disabled>Select room</option>';
-                    for(var id in items) {
-                        newOptions += '<option value="'+ id +'">'+ items[id] +'</option>';
-                    }
-
-                    child.select2('destroy').html(newOptions).prop("disabled", false)
-                        .select2(options);
+                parent.select2(select2Options).on("change", function (e) {
+                    child.prop("disabled", true);
+                    var _this = this;
                     
-                    afterActions.forEach(function (callback) {
-                        callback(parent, child, items);
+                    $.getJSON(url.replace(':parentId:', $(this).val()), function(items) {
+                        var newOptions = '<option value="" disabled>Select room</option>';
+                        for(var id in items) {
+                            newOptions += '<option value="'+ id +'">'+ items[id] +'</option>';
+                        }
+
+                        child.select2('destroy').html(newOptions).prop("disabled", false)
+                            .select2(options);
+                        
+                        afterActions.forEach(function (callback) {
+                            callback(parent, child, items);
+                        });
                     });
                 });
+            }
+            return Select2Cascade;
+        })(window, $);
+
+        $(document).ready(function() {
+            $('.select2').select2({
+                tags: true,
+                tokenSeparators: [',']
             });
-        }
-        return Select2Cascade;
-    })(window, $);
 
-    $(document).ready(function() {
-        $('.select2').select2({
-            tags: true,
-            tokenSeparators: [',']
-        });
-
-        $('input.termPeriod').daterangepicker({
-            locale: {
-                format: 'MMMM DD, YYYY'
-            },
-            endDate: moment().add(3, 'months')
-        });
-
-        $('input.reservationPeriod').daterangepicker({
-            timePicker: true,
-            autoUpdateInput: false,
-            minDate: function(date) {
-                return ((moment(date).day() == 0) ? moment().add(1, 'days') : moment());
-            },
-            maxDate: moment().startOf('hour').add(3, 'months'),
-            locale: {
-                format: 'MMMM DD, YYYY hh:mm A'
-            },
-            isInvalidDate: function(date) {
-                return ((moment(date).day() == 0 || moment(date.format("YYYY-MM-DD")).isBefore(moment().format("YYYY-MM-DD"))) ? true : false);
-            },
-            timePickerIncrement: 10
-        });
-
-        $('input.reservationPeriod').on('apply.daterangepicker', function(ev, picker) {
-            $(this).val(picker.startDate.format('MMMM DD, YYYY hh:mm A') + ' - ' + picker.endDate.format('MMMM DD, YYYY hh:mm A'));
-        });
-
-        $('input.reservationPeriod').on('cancel.daterangepicker', function(ev, picker) {
-            $(this).val('');
-        });
-
-        $('#reservationForm').submit(function (ev, picker) {
-            [startDate, endDate] = $('.reservationPeriod').val().split(' - ');
-            startDate = moment(startDate).format("YYYY-MM-DD HH:mm:ss");
-            endDate = moment(endDate).format("YYYY-MM-DD HH:mm:ss");
-            $(this).find('input[name="stime_res"]').val(startDate);
-            $(this).find('input[name="etime_res"]').val(endDate);
-        });
-
-        $('#scheduleDataForm').submit(function (ev, picker) {
-            [termStart, termEnd] = $('.termPeriod').val().split(' - ');
-            termStart = moment(termStart).format("YYYY-MM-DD");
-            termEnd = moment(termEnd).format("YYYY-MM-DD");
-            $(this).find('input[name="sdate_term"]').val(termStart);
-            $(this).find('input[name="edate_term"]').val(termEnd);
-        });
-
-        var select2Options = { width: 'resolve' };
-        var apiUrl = '/rooms/:parentId:';
-        
-        $('select').select2(select2Options);                 
-        var cascadLoading = new Select2Cascade($('#room_floor'), $('#room_id'), apiUrl, select2Options);
-
-        $('#addReservationBtn').click(function(e) {
-            var checkRoom = $.trim($('#room_id').val());
-            var checkPurpose = $.trim($('#purpose').val());
-
-            if(checkRoom === '' || checkPurpose === ''){
-                $('#addReservationBtn').attr('type','submit');
-            }
-            else {
-                $('#addReservationBtn').attr('type','button');
-                $('#addReservationBtn').attr('data-toggle','modal');
-                $('#date').text('{{ Carbon::now()->format("M d, Y h:i A") }}');
-                $('#room').text($('#room_id').val());
-                $('#people').text($('#peopleInvolved').val());
-                $('#range').text($('#resPeriod').val());
-                $('#reason').text($('#purpose').val());
-            }
-        });
-        
-        $('#formConfirmed').click(function () {
-            $('#reservationForm').submit();
-        });
-
-        $('#addRoomBtn').click(function(e) {
-            var checkAddRoom = $.trim($('#addroom_id').val());
-            var checkDesc = $.trim($('#room_desc').val());
-            var checkStat = $.trim($('#isSpecial').val());
-
-            if(checkAddRoom === '' || checkDesc === '' || checkStat === '') {
-                e.stopPropagation();
-            }
-        });
-
-        $('#editRoomBtn, #delRoomBtn').click(function(e) {
-            var checkModifyRoom = $.trim($('#deleteRoomId').val());
-            if(checkModifyRoom === ''){
-                e.stopPropagation();
-            }
-        });
-
-        $('#roomModifyForm, #deleteScheduleForm').submit(function(e) {
-            e.preventDefault();
-            var formData = $(this).serialize();
-            var url = (e.target.id == 'roomModifyForm') ? '{{ route("processdelroom") }}' : '{{ route("deleteschedule") }}';
-            $('#confirmPassword').removeClass('has-error');
-            $('#passwordHelpBlock').text('');
-
-            $.ajax({
-                url:  url,
-                type: 'POST',
-                headers: {
-                    accept: 'application/json'
+            $('input.termPeriod').daterangepicker({
+                locale: {
+                    format: 'MMMM DD, YYYY'
                 },
-                data: formData,
-                success: (response) => {
-                    if(response.errors) {
-                        if(response.errors.password) {
-                            $('#confirmPassword').addClass('has-error');
-                            $('#passwordHelpBlock').text('Password entered was incorrect. Please try again.');
-                        }
-                    }
-                    else if (response.success) {
-                        sessionStorage.delSuccessMessage = true;
-                        sessionStorage.idRemoved = response.idRemoved;
-                        window.location.replace("{{ route('Reserve') }}");
-
-                        if(e.target.id == 'roomModifyForm') {
-                            sessionStorage.roomDeletion = true;
-                        }
-                    }
-                }
+                endDate: moment().add(3, 'months')
             });
-        });
 
-        if (sessionStorage.getItem('delSuccessMessage') != null) {
-            if (sessionStorage.getItem('roomDeletion') != null) {
-                $('#delSuccessTitle').append('<i class="icon fa fa-check"></i>Room '+ sessionStorage.idRemoved + ' has been successfully deleted.');
-                $('#delSuccessMessage').text('Any confirmed and pending reservations are now automatically cancelled. Users affected will be notified.');
-            }
-            else {
-                $('#delSuccessTitle').append('<i class="icon fa fa-check"></i>Class schedule for '+ sessionStorage.idRemoved + ' has been successfully deleted.');
-                $('#delSuccessMessage').text('Corresponding room and time period are now unblocked.');
-                sessionStorage.removeItem('scheduleDeletionMessage');
-            }
-            $('#delSuccess').show();
-            sessionStorage.removeItem('delSuccessMessage');
-            sessionStorage.removeItem('roomRemoved');
-        }
+            $('input.reservationPeriod').daterangepicker({
+                timePicker: true,
+                autoUpdateInput: false,
+                minDate: function(date) {
+                    return ((moment(date).day() == 0) ? moment().add(1, 'days') : moment());
+                },
+                maxDate: moment().startOf('hour').add(3, 'months'),
+                locale: {
+                    format: 'MMMM DD, YYYY hh:mm A'
+                },
+                isInvalidDate: function(date) {
+                    return ((moment(date).day() == 0 || moment(date.format("YYYY-MM-DD")).isBefore(moment().format("YYYY-MM-DD"))) ? true : false);
+                },
+                timePickerIncrement: 10
+            });
 
-        $('#delScheduleBtn').click(function(e) {
-            var checkDelSchedule = $.trim($('#class_id').val());
+            $('input.reservationPeriod').on('apply.daterangepicker', function(ev, picker) {
+                $(this).val(picker.startDate.format('MMMM DD, YYYY hh:mm A') + ' - ' + picker.endDate.format('MMMM DD, YYYY hh:mm A'));
+            });
+
+            $('input.reservationPeriod').on('cancel.daterangepicker', function(ev, picker) {
+                $(this).val('');
+            });
+
+            $('#reservationForm').submit(function (ev, picker) {
+                [startDate, endDate] = $('.reservationPeriod').val().split(' - ');
+                startDate = moment(startDate).format("YYYY-MM-DD HH:mm:ss");
+                endDate = moment(endDate).format("YYYY-MM-DD HH:mm:ss");
+                $(this).find('input[name="stime_res"]').val(startDate);
+                $(this).find('input[name="etime_res"]').val(endDate);
+            });
+
+            $('#scheduleDataForm').submit(function (ev, picker) {
+                [termStart, termEnd] = $('.termPeriod').val().split(' - ');
+                termStart = moment(termStart).format("YYYY-MM-DD");
+                termEnd = moment(termEnd).format("YYYY-MM-DD");
+                $(this).find('input[name="sdate_term"]').val(termStart);
+                $(this).find('input[name="edate_term"]').val(termEnd);
+            });
+
+            var select2Options = { width: 'resolve' };
+            var apiUrl = '/rooms/:parentId:';
             
-            if(checkDelSchedule === ''){
-                e.stopPropagation();
-            }
-        });
-    });
+            $('select').select2(select2Options);                 
+            var cascadLoading = new Select2Cascade($('#room_floor'), $('#room_id'), apiUrl, select2Options);
 
-    document.addEventListener('DOMContentLoaded', function() {
-        @if(Auth()->user()->roles == 2)
-        var classCalendarEl = document.getElementById('classCalendar');
+            $('#addReservationBtn').click(function(e) {
+                var checkRoom = $.trim($('#room_id').val());
+                var checkPurpose = $.trim($('#purpose').val());
 
-        var classCalendar = new FullCalendar.Calendar(classCalendarEl, {
-            plugins: [ 'list' ],
-            themeSystem: 'standard',
-            timeZone: 'local',
-            defaultView: 'listDay',
-            noEventsMessage: 'No classes scheduled for today!',
-            nowIndicator: 'true',
-            views: {
-                listDay: { buttonText: 'day' },
-                listWeek: { buttonText: 'week' },
-                listMonth: { buttonText: 'month' }
-            },
-            header: {
-                left: 'title',
-                center: '',
-                right: 'listDay,listWeek,listMonth'
-            },
-            height: 'auto',
-            events: [
-                @foreach($classSchedules as $schedule)
-                {
-                    @php
-                        $days = ["M", "T", "W", "TH", "F", "S"];
-                        $dayInDigit = array_search($schedule->day, $days)+1;
-                    @endphp
-                    title: '{{ $schedule->subject_code }} {{ $schedule->section }} | {{ $schedule->user->name }}',
-                    daysOfWeek: [ '{{ $dayInDigit }}' ],
-                    startTime: '{{ $schedule->stime_class }}',
-                    endTime: '{{ $schedule->etime_class }}',
-                    startRecur: '{{ $schedule->sdate_term }}',
-                    endRecur: '{{ $schedule->edate_term }}',
-                    extendedProps: {
-                        division: '{{ $schedule->division->division_name }}'
-                    }
-                },
-                @endforeach
-            ],
-            eventRender: function(info) {
-                var dotEl = info.el.getElementsByClassName('fc-event-dot')[0];
-                dotEl.style.backgroundColor = (info.event.extendedProps.division == 'College') ? 'rgba(167, 0, 1, 1)' : 'rgba(0, 91, 150, 1)';
-            }
-        });
-        classCalendar.render();
-        @endif
-
-        var roomCalendarEl = document.getElementById('calendar');
-
-        var roomCalendar = new FullCalendar.Calendar(roomCalendarEl, {
-            plugins: [ 'resourceTimeline' ],
-            schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
-            themeSystem: 'standard',
-            timeZone: 'local',
-            nowIndicator: 'true',
-            header: {
-                left: 'today,prev,next',
-                center: 'title',
-                right: 'resourceTimelineDay,resourceTimelineWeek,resourceTimelineMonth'
-            },
-            businessHours: {
-                daysOfWeek: [ 1, 2, 3, 4 ,5, 6],
-                startTime: '07:30',
-                endTime: '21:00',
-            },
-            eventClick: function(info){
-                if (info.event.extendedProps.kind == 'reservation') {
-                    $('#reqInfo'+info.event.id).modal('show');
+                if(checkRoom === '' || checkPurpose === ''){
+                    $('#addReservationBtn').attr('type','submit');
                 }
                 else {
-                    $('#classInfo'+info.event.id).modal('show');
+                    $('#addReservationBtn').attr('type','button');
+                    $('#addReservationBtn').attr('data-toggle','modal');
+                    $('#date').text('{{ Carbon::now()->format("M d, Y h:i A") }}');
+                    $('#room').text($('#room_id').val());
+                    $('#people').text($('#peopleInvolved').val());
+                    $('#range').text($('#resPeriod').val());
+                    $('#reason').text($('#purpose').val());
                 }
-            },
-            height: 'auto',
-            defaultView: 'resourceTimelineDay',
-            resourceLabelText: 'Rooms',
-            resourceGroupField: 'floorNum',
-            resources: [
-                @foreach($rooms as $room)
-                    @if(isset($room->room_name))
-                        { id: '{{ $room->room_id }}', floorNum: '{{ $room->room_desc }}', title: '{{ $room->room_id }} ({{ $room->room_name}})' },
-                    @else
-                        { id: '{{ $room->room_id }}', floorNum: '{{ $room->room_desc }}', title: '{{ $room->room_id }}' },
-                    @endif
-                @endforeach
-            ],
-            events: [
-                @if(isset($forms))
-                    @foreach($forms as $form)
-                        @if($form->isCancelled != 1)
-                        {
-                        id: '{{ $form->form_id }}',
-                        title: '{{ sprintf("%07d", $form->form_id) }} | {{ $form->user->name }}', 
-                        resourceId: '{{ $form->room_id }}', 
-                        start: moment('{{ $form->stime_res }}').format(), 
-                        end: moment('{{ $form->etime_res }}').format(),
-                        backgroundColor: 'rgb(0, 91, 150)',
-                        borderColor: 'rgb(0, 91, 150)',
-                        extendedProps: {
-                            kind: 'reservation'
-                        },
-                        people: @if($form->users_involved!=NULL) '{{ $form->users_involved }}' @else 'N/A' @endif
-                        },
-                        @endif
-                    @endforeach
-                @endif
-                @if(isset($classSchedules))
+            });
+            
+            $('#formConfirmed').click(function () {
+                $('#reservationForm').submit();
+            });
+
+            $('#addRoomBtn').click(function(e) {
+                var checkAddRoom = $.trim($('#addroom_id').val());
+                var checkDesc = $.trim($('#room_desc').val());
+                var checkStat = $.trim($('#isSpecial').val());
+
+                if(checkAddRoom === '' || checkDesc === '' || checkStat === '') {
+                    e.stopPropagation();
+                }
+            });
+
+            $('#editRoomBtn, #delRoomBtn').click(function(e) {
+                var checkModifyRoom = $.trim($('#deleteRoomId').val());
+                if(checkModifyRoom === ''){
+                    e.stopPropagation();
+                }
+            });
+
+            $('#roomModifyForm, #deleteScheduleForm').submit(function(e) {
+                e.preventDefault();
+                var formData = $(this).serialize();
+                var url = (e.target.id == 'roomModifyForm') ? '{{ route("processdelroom") }}' : '{{ route("deleteschedule") }}';
+                $('#confirmPassword').removeClass('has-error');
+                $('#passwordHelpBlock').text('');
+
+                $.ajax({
+                    url:  url,
+                    type: 'POST',
+                    headers: {
+                        accept: 'application/json'
+                    },
+                    data: formData,
+                    success: (response) => {
+                        if(response.errors) {
+                            if(response.errors.password) {
+                                $('#confirmPassword').addClass('has-error');
+                                $('#passwordHelpBlock').text('Password entered was incorrect. Please try again.');
+                            }
+                        }
+                        else if (response.success) {
+                            sessionStorage.delSuccessMessage = true;
+                            sessionStorage.idRemoved = response.idRemoved;
+                            window.location.replace("{{ route('Reserve') }}");
+
+                            if(e.target.id == 'roomModifyForm') {
+                                sessionStorage.roomDeletion = true;
+                            }
+                        }
+                    }
+                });
+            });
+
+            if (sessionStorage.getItem('delSuccessMessage') != null) {
+                if (sessionStorage.getItem('roomDeletion') != null) {
+                    $('#delSuccessTitle').append('<i class="icon fa fa-check"></i>Room '+ sessionStorage.idRemoved + ' has been successfully deleted.');
+                    $('#delSuccessMessage').text('Any confirmed and pending reservations are now automatically cancelled. Users affected will be notified.');
+                }
+                else {
+                    $('#delSuccessTitle').append('<i class="icon fa fa-check"></i>Class schedule for '+ sessionStorage.idRemoved + ' has been successfully deleted.');
+                    $('#delSuccessMessage').text('Corresponding room and time period are now unblocked.');
+                    sessionStorage.removeItem('scheduleDeletionMessage');
+                }
+                $('#delSuccess').show();
+                sessionStorage.removeItem('delSuccessMessage');
+                sessionStorage.removeItem('roomRemoved');
+            }
+
+            $('#delScheduleBtn').click(function(e) {
+                var checkDelSchedule = $.trim($('#class_id').val());
+                
+                if(checkDelSchedule === ''){
+                    e.stopPropagation();
+                }
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            @if(Auth()->user()->roles == 2)
+            var classCalendarEl = document.getElementById('classCalendar');
+
+            var classCalendar = new FullCalendar.Calendar(classCalendarEl, {
+                plugins: [ 'list' ],
+                themeSystem: 'standard',
+                timeZone: 'local',
+                defaultView: 'listDay',
+                noEventsMessage: 'No classes scheduled for today!',
+                nowIndicator: 'true',
+                views: {
+                    listDay: { buttonText: 'day' },
+                    listWeek: { buttonText: 'week' },
+                    listMonth: { buttonText: 'month' }
+                },
+                header: {
+                    left: 'title',
+                    center: '',
+                    right: 'listDay,listWeek,listMonth'
+                },
+                height: 'auto',
+                events: [
                     @foreach($classSchedules as $schedule)
+                    {
                         @php
                             $days = ["M", "T", "W", "TH", "F", "S"];
                             $dayInDigit = array_search($schedule->day, $days)+1;
                         @endphp
-                        {
-                        id: '{{ $schedule->class_id }}',
-                        title: '{{ $schedule->subject_code }} | {{ $schedule->section }}', 
-                        resourceId: '{{ $schedule->room_id }}',
+                        title: '{{ $schedule->subject_code }} {{ $schedule->section }} RM. {{ $schedule->room_id }} | {{ $schedule->user->name }}',
                         daysOfWeek: [ '{{ $dayInDigit }}' ],
                         startTime: '{{ $schedule->stime_class }}',
                         endTime: '{{ $schedule->etime_class }}',
                         startRecur: '{{ $schedule->sdate_term }}',
                         endRecur: '{{ $schedule->edate_term }}',
-                        backgroundColor: 'rgb(220, 105, 0)',
-                        borderColor: 'rgb(220, 105, 0)',
                         extendedProps: {
-                            kind: 'class'
-                        },
-                        people: '{{ $schedule->user_id }}'
-                        },
+                            division: '{{ $schedule->division->division_name }}'
+                        }
+                    },
                     @endforeach
-                @endif
-            ]
+                ],
+                eventRender: function(info) {
+                    var dotEl = info.el.getElementsByClassName('fc-event-dot')[0];
+                    dotEl.style.backgroundColor = (info.event.extendedProps.division == 'College') ? 'rgba(167, 0, 1, 1)' : 'rgba(0, 91, 150, 1)';
+                }
+            });
+            classCalendar.render();
+            @endif
+
+            var roomCalendarEl = document.getElementById('calendar');
+
+            var roomCalendar = new FullCalendar.Calendar(roomCalendarEl, {
+                plugins: [ 'resourceTimeline' ],
+                schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
+                themeSystem: 'standard',
+                timeZone: 'local',
+                nowIndicator: 'true',
+                header: {
+                    left: 'today,prev,next',
+                    center: 'title',
+                    right: 'resourceTimelineDay,resourceTimelineWeek,resourceTimelineMonth'
+                },
+                businessHours: {
+                    daysOfWeek: [ 1, 2, 3, 4 ,5, 6],
+                    startTime: '07:30',
+                    endTime: '21:00',
+                },
+                eventClick: function(info){
+                    if (info.event.extendedProps.kind == 'reservation') {
+                        $('#reqInfo'+info.event.id).modal('show');
+                    }
+                    else {
+                        $('#classInfo'+info.event.id).modal('show');
+                    }
+                },
+                height: 'auto',
+                defaultView: 'resourceTimelineDay',
+                resourceLabelText: 'Rooms',
+                resourceGroupField: 'floorNum',
+                resources: [
+                    @foreach($rooms as $room)
+                        @if(isset($room->room_name))
+                            { id: '{{ $room->room_id }}', floorNum: '{{ $room->room_desc }}', title: '{{ $room->room_id }} ({{ $room->room_name}})' },
+                        @else
+                            { id: '{{ $room->room_id }}', floorNum: '{{ $room->room_desc }}', title: '{{ $room->room_id }}' },
+                        @endif
+                    @endforeach
+                ],
+                events: [
+                    @if(isset($forms))
+                        @foreach($forms as $form)
+                            @if($form->isCancelled != 1)
+                            {
+                            id: '{{ $form->form_id }}',
+                            title: '{{ sprintf("%07d", $form->form_id) }} | {{ $form->user->name }}', 
+                            resourceId: '{{ $form->room_id }}', 
+                            start: moment('{{ $form->stime_res }}').format(), 
+                            end: moment('{{ $form->etime_res }}').format(),
+                            backgroundColor: 'rgb(0, 91, 150)',
+                            borderColor: 'rgb(0, 91, 150)',
+                            extendedProps: {
+                                kind: 'reservation'
+                            },
+                            people: @if($form->users_involved!=NULL) '{{ $form->users_involved }}' @else 'N/A' @endif
+                            },
+                            @endif
+                        @endforeach
+                    @endif
+                    @if(isset($classSchedules))
+                        @foreach($classSchedules as $schedule)
+                            @php
+                                $days = ["M", "T", "W", "TH", "F", "S"];
+                                $dayInDigit = array_search($schedule->day, $days)+1;
+                            @endphp
+                            {
+                            id: '{{ $schedule->class_id }}',
+                            title: '{{ $schedule->subject_code }} | {{ $schedule->section }}', 
+                            resourceId: '{{ $schedule->room_id }}',
+                            daysOfWeek: [ '{{ $dayInDigit }}' ],
+                            startTime: '{{ $schedule->stime_class }}',
+                            endTime: '{{ $schedule->etime_class }}',
+                            startRecur: '{{ $schedule->sdate_term }}',
+                            endRecur: '{{ $schedule->edate_term }}',
+                            backgroundColor: 'rgb(220, 105, 0)',
+                            borderColor: 'rgb(220, 105, 0)',
+                            extendedProps: {
+                                kind: 'class'
+                            },
+                            people: '{{ $schedule->user_id }}'
+                            },
+                        @endforeach
+                    @endif
+                ]
+            });
+            roomCalendar.render();
         });
-        roomCalendar.render();
-    });
-</script>
+    </script>
 @endsection
 
 @section('content')
@@ -368,22 +375,16 @@
         @include('layouts.inc.faq')
         <!--PAGE TITLE AND BREADCRUMB-->
         <section class="content-header">
-            @if(Auth()->user()->roles == 2)
-                <h1>Room Overview</h1>
-            @elseif(Auth()->user()->roles == 0)
-                <h1>Room Management</h1>
-            @else 
-                <h1>Room Reservation</h1>
-            @endif
+            <h1>@yield('title')</h1>
             <ol class="breadcrumb">
             @if(Auth()->user()->roles == 2)
-                <li class="active"><i class="fa fa-building"></i>Room Overview</a></li>
+                <li class="active"><i class="fa fa-building"></i>@yield('title')</a></li>
             @elseif(Auth()->user()->roles == 0)
                 <li><a href={{URL::route('Dashboard')}}><i class="fa fa-dashboard"></i> Dashboard</a></li>
-                <li class="active">Room Management</li>
+                <li class="active"> @yield('title')</li>
             @else
                 <li><a href={{URL::route('Dashboard')}}><i class="fa fa-dashboard"></i> Dashboard</a></li>
-                <li class="active">Room Reservation</li>
+                <li class="active"> @yield('title')</li>
             @endif
             </ol>
         </section>
