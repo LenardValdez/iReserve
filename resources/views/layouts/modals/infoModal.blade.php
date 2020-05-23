@@ -42,7 +42,7 @@
                     </tr>
                 </table>
             </div>
-            @if (Auth()->user()->roles == 0 or (Auth()->user()->roles == 1 && Auth()->user()->user_id == $form->user_id && $form->isCancelled== 0 && $form->isApproved != 2))
+            @if (Auth()->user()->roles == 0 or (Auth()->user()->roles == 1 && Auth()->user()->user_id == $form->user_id && $form->isCancelled == 0 && $form->isApproved != 2))
                 <div class="modal-footer">
                     @if(Auth()->user()->roles == 0 && $isApproval)
                         <a type="button" href="{{ route('rejectrequest', $form->form_id) }}" class="btn btn-danger pull-left">Reject</a>
@@ -50,13 +50,12 @@
                     @elseif(Carbon::parse($form->etime_res)->isPast())
                         <button type="button" class="btn btn-danger" disabled>Cancel Reservation</button>
                     @else
-                        {{-- <a type="button" class="btn btn-danger" href="{{ route('cancelrequest', $form->form_id) }}">Cancel Reservation</a> --}}
-                        <a type="button" class="btn btn-danger" data-target="#cancelModal"  data-toggle="modal" data-dismiss="modal">Cancel Reservation</a>
+                        <a type="button" class="btn btn-danger" data-target="#cancelModal{{ $form->form_id }}"  data-toggle="modal" data-dismiss="modal">Cancel Reservation</a>
                     @endif
                 </div>
             @endif
         </div>
     </div>
 </div>
-@include('layouts.modals.cancelModal', ['formId' => $form->form_id])
+@include('layouts.modals.cancelModal')
 @endforeach
