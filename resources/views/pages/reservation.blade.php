@@ -92,8 +92,10 @@
             $('input.reservationPeriod').daterangepicker({
                 timePicker: true,
                 autoUpdateInput: false,
-                minDate: moment().add(1, 'days'),
-                maxDate: moment().startOf('hour').add(3, 'months'),
+                minDate: moment().startOf('month'),
+                maxDate: moment().startOf('day').add(3, 'months'),
+                startDate: moment().add(1, 'days').set({'hours': 7, 'minutes': 30}),
+                endDate:  moment().add(1, 'days').set({'hours': 11, 'minutes': 00}),
                 locale: {
                     format: 'MMMM DD, YYYY hh:mm A'
                 },
@@ -391,7 +393,7 @@
     
         <!--ACTUAL CONTENT-->
         <section class="content">
-            @include('layouts.modals.infoModal', ['forms' => $forms, 'isOverall' => false, 'isSchedule' => false, 'isApproval' => false])
+            @include('layouts.modals.infoModal', ['forms' => $forms, 'isOverall' => false, 'isApproval' => false])
             <!--CLASS SCHEDULE INFORMATION MODAL-->
             @foreach($classSchedules as $schedule)
             <div class="modal fade" id="classInfo{{$schedule->class_id}}">

@@ -218,10 +218,10 @@
         <section class="content container-fluid">
           @include('layouts.alerts.successAlert', ['redirectMessageName' => 'cancelledAlert'])
           @if(Auth()->User()->roles == 1)
-            @include('layouts.modals.infoModal', ['forms' => $studentReservations, 'isOverall' => false, 'isSchedule' => false, 'isApproval' => false])
-            @include('layouts.modals.infoModal', ['forms' => $upcomingReservations, 'isOverall' => false, 'isSchedule' => false, 'isApproval' => false])
+            @include('layouts.modals.infoModal', ['forms' => $studentReservations, 'isOverall' => false, 'isApproval' => false])
+            @include('layouts.modals.infoModal', ['forms' => $upcomingReservations, 'isOverall' => false, 'isApproval' => false])
           @else
-            @include('layouts.modals.infoModal', ['forms' => $reservations, 'isOverall' => true, 'isSchedule' => false, 'isApproval' => false])
+            @include('layouts.modals.infoModal', ['forms' => $reservations, 'isOverall' => true, 'isApproval' => true])
           @endif
           <div class="row">
             @if(Auth()->User()->roles == 1)

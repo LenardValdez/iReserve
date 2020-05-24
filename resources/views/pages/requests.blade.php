@@ -136,8 +136,8 @@
           @include('layouts.alerts.successAlert', ['redirectMessageName' => 'approvedAlert'])
           @include('layouts.alerts.dangerAlert', ['redirectMessageName' => 'rejectedAlert'])
           @include('layouts.alerts.dangerAlert', ['redirectMessageName' => 'cancelledAlert'])
-          @include('layouts.modals.infoModal', ['forms' => $pendingforms, 'isOverall' => true, 'isSchedule' => false, 'isApproval' => true])
-          @include('layouts.modals.infoModal', ['forms' => $upcomingReservations, 'isOverall' => true, 'isSchedule' => false, 'isApproval' => false])
+          @include('layouts.modals.infoModal', ['forms' => $pendingforms, 'isOverall' => true, 'isApproval' => true])
+          @include('layouts.modals.infoModal', ['forms' => $upcomingReservations, 'isOverall' => true, 'isApproval' => false])
           <div class="row">
             <div class="col-md-5 col-s-12">
               <div class="callout callout-info">
@@ -175,7 +175,7 @@
                           <tr data-toggle="modal" data-target="#reqInfo{{$form->form_id}}" style="cursor: pointer">
                             <td>{{ Carbon::parse($form->stime_res)->format('M d, Y h:i A') }} - {{ Carbon::parse($form->etime_res)->format('M d, Y h:i A') }}</td>
                             <td>{{$form->room_id}} @if($form->room->room_name!=NULL){{$form->room->room_name}}@endif</td>
-                            <td>@if($form->user->user_type > 2){{$form->user_id}}@endif {{$form->user->name}}</td>
+                            <td>{{$form->user_id}}</td>
                             <td>{{ Carbon::parse($form->updated_at)->toFormattedDateString() }}</td>
                             <td>
                               @if(Carbon::parse($form->etime_res)->isFuture())
