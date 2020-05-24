@@ -189,6 +189,9 @@ class RoomController extends Controller
         else if($validatedRequest['stime_res']==$validatedRequest['etime_res']){
             return redirect()->back()->with('roomErr', ["Invalid reservation period!", "The start and end of the reservation cannot be the same."]);
         }
+        else if(auth()->user()->roles == 1 && (Carbon::parse($validatedRequest['etime_res'])->toDateString() > Carbon::parse($validatedRequest['stime_res'])->addDays(5)->toDateString())){
+            return redirect()->back()->with('roomErr', ["Maximum number of days per reservation surpassed!", "Users can only reserve for up to 5 days per submission."]);
+        }
         else if(Carbon::parse($validatedRequest['stime_res'])->isPast() || Carbon::parse($validatedRequest['etime_res'])->isPast()){
             return redirect()->back()->with('roomErr', ["Invalid reservation period!", "Date and time entered cannot be from the past."]);
         }

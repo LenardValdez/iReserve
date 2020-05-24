@@ -96,6 +96,11 @@
                 maxDate: moment().startOf('day').add(3, 'months'),
                 startDate: moment().add(1, 'days').set({'hours': 7, 'minutes': 30}),
                 endDate:  moment().add(1, 'days').set({'hours': 11, 'minutes': 00}),
+                @if(auth()->user()->roles == 1)
+                maxSpan: {
+                    "days": 5
+                },
+                @endif
                 locale: {
                     format: 'MMMM DD, YYYY hh:mm A'
                 },
@@ -548,7 +553,7 @@
                                 </div>
 
                                 <div class="form-group{{ ($errors->receive->has('stime_res') || $errors->receive->has('etime_res')) ? ' has-error' : '' }}">
-                                    <label>Reservation Period: <span class="text-danger">*</span></label>
+                                    <label>Reservation Period{{ (auth()->user()->roles == 1) ? ' (max. 5 days)' : '' }}: <span class="text-danger">*</span></label>
                                     <div class="input-group date">
                                         <span class="input-group-addon">
                                             <i class="fa fa-clock-o"></i>
