@@ -391,6 +391,13 @@ class RoomController extends Controller
         if (Auth()->user()->user_id != $cancelRequest->user_id){
             $cancelRequest->user->notify(new RoomStatus($cancelRequest));
         }
+        else {
+            // sends a site notification to the admin if a user has cancelled a confirmed reservation
+            if($cancelRequest->user_id != 'admin' && $cancelRequest->isApproved == 1) {
+                $admin = User::where('user_id', 'admin')->first();
+                $admin->notify(new RoomStatus($cancelRequest));
+            }
+        }
 
         if(Auth()->user()->roles == 0) {
             return redirect()->back()->with('cancelledAlert', ["The request/reservation is now cancelled.", 
@@ -430,7 +437,7 @@ class RoomController extends Controller
             if(ClassSchedule::where('room_id', $request->room_id)->exists()){
                 ClassSchedule::where('room_id', $request->room_id)->delete();
             }
-            
+
             $existingForms = RegForm::where('room_id', $request->room_id)
                                     ->where('isCancelled', 0)
                                     ->where('etime_res', '>=', Carbon::today())

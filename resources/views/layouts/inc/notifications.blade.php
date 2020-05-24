@@ -23,11 +23,11 @@
               @foreach (Auth::user()->unreadNotifications as $notification)
               <li>
                 <a href="{{ route('readnotification', $notification->id) }}">
-                  @if ($notification->data['cancel_status'] == 1)
+                  @if($notification->data['cancel_status'] == 1)
                     Your reservation {{sprintf("%07d", $notification->data['form_id'])}} has been cancelled.
                     <small class="pull-right text-muted"><i class="fa fa-calendar-minus-o text-orange"></i> {{$notification->updated_at->diffForHumans()}}</small>
                   @else
-                    @if ($notification->data['status'] == 1)
+                    @if($notification->data['status'] == 1)
                       Your reservation {{sprintf("%07d", $notification->data['form_id'])}} has been approved.
                       <small class="pull-right text-muted"><i class="fa fa-calendar-check-o text-success"></i> {{$notification->updated_at->diffForHumans()}}</small>
                     @else
@@ -46,8 +46,13 @@
                   @foreach (Auth::user()->unreadNotifications as $notification)
                   <li>
                     <a href="{{ route('readnotification', $notification->id) }}">
-                      Student {{$notification->data['user_id']}} has a new reservation.
+                      @if($notification->data['cancel_status'] == 1)
+                      Confirmed reservation {{sprintf("%07d", $notification->data['form_id'])}} has been cancelled by the user.
                       <small class="pull-right text-muted"><i class="fa fa-clock-o text-orange"></i> {{$notification->updated_at->diffForHumans()}}</small>
+                      @else
+                      You have a new room request from {{$notification->data['user_id']}}.
+                      <small class="pull-right text-muted"><i class="fa fa-clock-o text-orange"></i> {{$notification->updated_at->diffForHumans()}}</small>
+                      @endif
                     </a>
                   </li>
                   @endforeach
