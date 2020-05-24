@@ -426,12 +426,17 @@ class RoomController extends Controller
             return Response::json(['errors' => $validator->errors()]);
         } 
         else {
+            // automatically deletes class schedules for the room to be removed
+            if(ClassSchedule::where('room_id', $request->room_id)->exists()){
+                ClassSchedule::where('room_id', $request->room_id)->delete();
+            }
+            
             $existingForms = RegForm::where('room_id', $request->room_id)
                                     ->where('isCancelled', 0)
                                     ->where('etime_res', '>=', Carbon::today())
                                     ->where('isApproved', '!=', 2)
                                     ->get();
-            
+
             // automatically cancels existing requests and reservations for the room to be removed
             if(!empty($existingForms)){
                 foreach($existingForms as $form){

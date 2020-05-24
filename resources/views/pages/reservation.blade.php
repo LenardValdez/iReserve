@@ -211,7 +211,7 @@
             if (sessionStorage.getItem('delSuccessMessage') != null) {
                 if (sessionStorage.getItem('roomDeletion') != null) {
                     $('#delSuccessTitle').append('<i class="icon fa fa-check"></i>Room '+ sessionStorage.idRemoved + ' has been successfully deleted.');
-                    $('#delSuccessMessage').text('Any confirmed and pending reservations are now automatically cancelled. Users affected will be notified.');
+                    $('#delSuccessMessage').text('Assigned class schedules have been deleted. Any confirmed and pending reservations are now automatically cancelled. Users affected will be notified.');
                 }
                 else {
                     $('#delSuccessTitle').append('<i class="icon fa fa-check"></i>Class schedule for '+ sessionStorage.idRemoved + ' has been successfully deleted.');
