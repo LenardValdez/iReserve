@@ -93,15 +93,17 @@ class RoomController extends Controller
      */
     public function store(StoreNewRoom $request)
     {
-            // restores soft-deleted entry if room number previously exists
-            if(Room::withTrashed()->find($request->get('room_id'))->exists()) {
-                $softDeletedRoom = Room::onlyTrashed()
-                                        ->where('room_id', $request->get('room_id'))
-                                        ->restore();
-            }
-            Room::updateOrCreate($request->validated());
+        $validatedRequest = $request->validated();
 
-        return redirect()->back()->with('roomAlert',["Room ".$request->room_id." has been successfully added!", 
+        // restores soft-deleted entry if room number previously exists
+        if(Room::onlyTrashed()->where('room_id', $validatedRequest['room_id'])->exists()) {
+            Room::onlyTrashed()->where('room_id', $validatedRequest['room_id'])->restore();
+        }
+
+        // details will get updated if the entry was restored, and will be created if the entry is new
+        Room::updateOrCreate($validatedRequest);
+
+        return redirect()->back()->with('roomAlert',["Room ".$validatedRequest['room_id']." has been successfully added!", 
         "This room will be now available for reservation."]);
     }
 
