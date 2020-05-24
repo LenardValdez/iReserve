@@ -216,12 +216,17 @@
 
         <!--ACTUAL CONTENT-->
         <section class="content container-fluid">
-          @include('layouts.alerts.successAlert', ['redirectMessageName' => 'cancelledAlert'])
-          @if(Auth()->User()->roles == 1)
+          @if(Auth()->User()->roles == 0)
+            @include('layouts.alerts.successAlert', ['redirectMessageName' => 'approvedAlert'])
+            @include('layouts.alerts.dangerAlert', ['redirectMessageName' => 'rejectedAlert'])
+            @include('layouts.alerts.dangerAlert', ['redirectMessageName' => 'cancelledAlert'])
+            @include('layouts.modals.infoModal', ['forms' => $reservations, 'isOverall' => true, 'isApproval' => true])
+          @elseif(Auth()->User()->roles == 1)
             @include('layouts.modals.infoModal', ['forms' => $studentReservations, 'isOverall' => false, 'isApproval' => false])
             @include('layouts.modals.infoModal', ['forms' => $upcomingReservations, 'isOverall' => false, 'isApproval' => false])
+            @include('layouts.alerts.dangerAlert', ['redirectMessageName' => 'cancelledAlert'])
           @else
-            @include('layouts.modals.infoModal', ['forms' => $reservations, 'isOverall' => true, 'isApproval' => true])
+            @include('layouts.modals.infoModal', ['forms' => $reservations, 'isOverall' => true, 'isApproval' => false])
           @endif
           <div class="row">
             @if(Auth()->User()->roles == 1)

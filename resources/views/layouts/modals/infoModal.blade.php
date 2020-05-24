@@ -44,7 +44,7 @@
             </div>
             @if ((Auth()->user()->roles == 0 or (Auth()->user()->roles == 1 && Auth()->user()->user_id == $form->user_id)) && $form->isCancelled == 0 && $form->isApproved != 2)
                 <div class="modal-footer">
-                    @if(Auth()->user()->roles == 0 && $isApproval)
+                    @if($isApproval)
                         <a type="button" href="{{ route('rejectrequest', $form->form_id) }}" class="btn btn-danger pull-left">Reject</a>
                         <a type="button" href="{{ route('approverequest', $form->form_id) }}" class="btn btn-success">Approve</a>
                     @elseif(Carbon::parse($form->etime_res)->isPast())
