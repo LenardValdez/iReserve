@@ -24,10 +24,12 @@ class ClassScheduleController extends Controller
     public function store(InsertSchedule $request) {
         // validates the CSV uploaded
         $validatedRequest = $request->validated();
+        // validates the column names of the CSV uploaded
         $requiredHeadings = ["subject_code", "user_id", "room_number", "section", "start_time", "end_time", "day", "division"];
         $headingRows = (new HeadingRowImport)->toArray($validatedRequest['csv_file']);
         $headingDifferences = (array_diff($requiredHeadings, $headingRows[0][0])) ? implode(", ", array_diff($requiredHeadings, $headingRows[0][0])) : false;
 
+        // checks if column count of the CSV uploaded matches the requirement and if all the required column names are present
         if ((count($requiredHeadings) == count($headingRows[0][0])) && !$headingDifferences) {
             try {
                 Excel::import(new ClassSchedulesImport($validatedRequest['term_number'], $validatedRequest['sdate_term'], $validatedRequest['edate_term']), $validatedRequest['csv_file']);
@@ -47,7 +49,11 @@ class ClassScheduleController extends Controller
             return redirect()->back()->with('roomAlert',["CSV import successful!", "Corresponding day and time periods will be blocked for reservations."]);
         }
         else {
-            return redirect()->back()->with('classErr', ["Error importing CSV!", "Column name/count requirement was not met. Missing column/s: ".$headingDifferences]);
+            $errorMessage = ($headingDifferences) 
+            ? "Column count and name requirements were not met. Number of Rows Provided: ".count($headingRows[0][0])."/".count($requiredHeadings).". Missing column/s: ".$headingDifferences 
+            : "Column count requirement was not met. Number of Rows Provided: ".count($headingRows[0][0])."/".count($requiredHeadings);
+
+            return redirect()->back()->with('classErr', ["Error importing CSV!", $errorMessage]);
         }
     }
 
