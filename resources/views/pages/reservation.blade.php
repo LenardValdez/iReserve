@@ -84,21 +84,21 @@
                 locale: {
                     format: 'MMMM DD, YYYY'
                 },
+                minDate: moment().startOf('year').subtract(5, 'months'),
+                maxDate: moment().startOf('year').add(1, 'years').add(7, 'months'),
                 endDate: moment().add(3, 'months')
             });
 
             $('input.reservationPeriod').daterangepicker({
                 timePicker: true,
                 autoUpdateInput: false,
-                minDate: function(date) {
-                    return ((moment(date).day() == 0) ? moment().add(1, 'days') : moment());
-                },
+                minDate: moment().add(1, 'days'),
                 maxDate: moment().startOf('hour').add(3, 'months'),
                 locale: {
                     format: 'MMMM DD, YYYY hh:mm A'
                 },
                 isInvalidDate: function(date) {
-                    return ((moment(date).day() == 0 || moment(date.format("YYYY-MM-DD")).isBefore(moment().format("YYYY-MM-DD"))) ? true : false);
+                    return ((moment(date).day() == 0 || moment(date.format("YYYY-MM-DD")).isBefore(moment().add(1, 'days').format("YYYY-MM-DD"))) ? true : false);
                 },
                 timePickerIncrement: 10
             });
