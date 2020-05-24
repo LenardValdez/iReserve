@@ -10,6 +10,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Hash;
 use App\Imports\ClassSchedulesImport;
 use Illuminate\Support\Facades\Validator;
+use Maatwebsite\Excel\HeadingRowImport;
 use Maatwebsite\Excel\Validators\ValidationException;
 
 class ClassScheduleController extends Controller
@@ -21,24 +22,33 @@ class ClassScheduleController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(InsertSchedule $request) {
-        try {
-            // validates the CSV uploaded
-            $validatedRequest = $request->validated();
-            Excel::import(new ClassSchedulesImport($validatedRequest['term_number'], $validatedRequest['sdate_term'], $validatedRequest['edate_term']), $validatedRequest['csv_file']);
-        } catch (ValidationException $e) {
-            $failures = $e->failures();
-            $errorMessage = "Problems encountered:\n";
-            foreach ($failures as $failure) {
-                // $failure->row(); // row that went wrong
-                // $failure->attribute(); // either heading key (if using heading row concern) or column index
-                // $failure->errors(); // Actual error messages from Laravel validator
-                // $failure->values(); // The values of the row that has failed.
-                $errorMessage .= "- Row " .$failure->row(). ": [" .$failure->attribute(). "] " .implode (' ', $failure->errors()). 
-                " (Given value: " .$failure->values()[$failure->attribute()]. ")\n";
+        // validates the CSV uploaded
+        $validatedRequest = $request->validated();
+        $requiredHeadings = ["subject_code", "user_id", "room_number", "section", "start_time", "end_time", "day", "division"];
+        $headingRows = (new HeadingRowImport)->toArray($validatedRequest['csv_file']);
+        $headingDifferences = (array_diff($requiredHeadings, $headingRows[0][0])) ? implode(", ", array_diff($requiredHeadings, $headingRows[0][0])) : false;
+
+        if ((count($requiredHeadings) == count($headingRows[0][0])) && !$headingDifferences) {
+            try {
+                Excel::import(new ClassSchedulesImport($validatedRequest['term_number'], $validatedRequest['sdate_term'], $validatedRequest['edate_term']), $validatedRequest['csv_file']);
+            } catch (ValidationException $e) {
+                $failures = $e->failures();
+                $errorMessage = "Problems encountered:\n";
+                foreach ($failures as $failure) {
+                    // $failure->row(); // row that went wrong
+                    // $failure->attribute(); // either heading key (if using heading row concern) or column index
+                    // $failure->errors(); // Actual error messages from Laravel validator
+                    // $failure->values(); // The values of the row that has failed.
+                    $errorMessage .= "- Row " .$failure->row(). ": [" .$failure->attribute(). "] " .implode (' ', $failure->errors()). 
+                    " (Given value: " .$failure->values()[$failure->attribute()]. ")\n";
+                }
+                return redirect()->back()->with('classErr', ["Error importing CSV!", $errorMessage]);
             }
-            return redirect()->back()->with('classErr', ["Error importing CSV!", $errorMessage]);
+            return redirect()->back()->with('roomAlert',["CSV import successful!", "Corresponding day and time periods will be blocked for reservations."]);
         }
-        return redirect()->back()->with('roomAlert',["CSV import successful!", "Corresponding day and time periods will be blocked for reservations."]);
+        else {
+            return redirect()->back()->with('classErr', ["Error importing CSV!", "Column name/count requirement was not met. Missing column/s: ".$headingDifferences]);
+        }
     }
 
     /**
