@@ -94,7 +94,7 @@ class RoomController extends Controller
     public function store(StoreNewRoom $request)
     {
             // restores soft-deleted entry if room number previously exists
-            if(Room::withTrashed()->find($request->get('room_id'))->trashed()) {
+            if(Room::withTrashed()->find($request->get('room_id'))->exists()) {
                 $softDeletedRoom = Room::onlyTrashed()
                                         ->where('room_id', $request->get('room_id'))
                                         ->restore();
