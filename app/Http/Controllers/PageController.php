@@ -33,12 +33,14 @@ class PageController extends Controller
         $role = auth()->user()->roles;
 
         if ($role == 0){
-            $pendingforms = RegForm::where('isApproved', 0)->orderBy('created_at', 'asc')->get();
+            $pendingforms = RegForm::where('isApproved', 0)
+                                    ->where('isCancelled', 0)
+                                    ->orderBy('created_at', 'asc')
+                                    ->get();
             $upcomingReservations = RegForm::where('isApproved', 1)
                                             ->where('isCancelled', 0)
-                                            ->where('stime_res', '>=', Carbon::now())
-                                            ->where('stime_res', '<=', Carbon::now()->endOfWeek()->format('Y-m-d'))
-                                            ->where('etime_res', '<', Carbon::now())
+                                            ->whereDate('stime_res', '>=', Carbon::now()->toDateString())
+                                            ->whereDate('stime_res', '<=', Carbon::now()->endOfWeek(Carbon::SATURDAY)->toDateString())
                                             ->orderBy('stime_res', 'asc')
                                             ->get();
             $formStats = Self::getFormStats();
@@ -53,8 +55,8 @@ class PageController extends Controller
             $upcomingReservations = RegForm::where('user_id', Auth()->user()->user_id)
                                             ->where('isApproved', 1)
                                             ->where('isCancelled', 0)
-                                            ->whereDate('stime_res', '>=', Carbon::now())
-                                            ->whereDate('stime_res', '<=', Carbon::now()->endOfWeek()->format('Y-m-d'))
+                                            ->whereDate('stime_res', '>=', Carbon::now()->toDateString())
+                                            ->whereDate('stime_res', '<=', Carbon::now()->endOfWeek(Carbon::SATURDAY)->toDateString())
                                             ->orderBy('stime_res', 'asc')
                                             ->get();
             $pendingCount = RegForm::where('user_id', Auth()->user()->user_id)
