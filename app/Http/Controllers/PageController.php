@@ -140,10 +140,11 @@ class PageController extends Controller
     */
     private function getUserTrafficStats() {
         //0=staff, 1=faculty, 2=college, 3=SHS
-        $userTypes = Division::pluck('division_name')->toArray();
+        $userTypes = Division::orderBy('division_id', 'asc')->pluck('division_name')->toArray();
+        $userTypes[0] = "Admin";
         $userTrafficStats = [];
 
-        for ($userType = 2; $userType <= 4; $userType++) {
+        for ($userType = 1; $userType <= 4; $userType++) {
             for ($month = 3; $month >= 0; $month--) {
                 $week1 = RegForm::whereHas('user', function($q) use($userType) {
                                     $q->where('user_type', $userType);

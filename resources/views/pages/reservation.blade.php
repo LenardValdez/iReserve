@@ -280,7 +280,7 @@
                 ],
                 eventRender: function(info) {
                     var dotEl = info.el.getElementsByClassName('fc-event-dot')[0];
-                    dotEl.style.backgroundColor = (info.event.extendedProps.division == 'College') ? 'rgba(167, 0, 1, 1)' : 'rgba(0, 91, 150, 1)';
+                    dotEl.style.backgroundColor = (info.event.extendedProps.division == 'College') ? 'rgba(250, 128, 114, 1)' : 'rgba(0, 91, 150, 1)';
                 }
             });
             classCalendar.render();
@@ -446,7 +446,7 @@
                             <h3 class="box-title">Class Schedules</h3>
                             <span class="pull-right">
                                 Legend:&nbsp;&nbsp;
-                                <i class="ion ion-record" style="color: rgba(167, 0, 1, 1)"></i>&nbsp;College 
+                                <i class="ion ion-record" style="color: rgba(250, 128, 114, 1)"></i>&nbsp;College 
                                 &nbsp;&nbsp;
                                 <i class="ion ion-record" style="color: rgba(0, 91, 150, 1)"></i>&nbsp;Senior High 
                             </span>

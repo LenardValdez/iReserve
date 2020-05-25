@@ -13,6 +13,9 @@
 
     window.onload = function() {
       var ctx = document.getElementById('userChart');
+      var dataAdmin = @json($userStats['Admin']);
+      dataAdmin = Object.values(dataAdmin);
+      dataAdmin = dataAdmin[0].concat(dataAdmin[1], dataAdmin[2], dataAdmin[3]);
       var dataCollege = @json($userStats['College']);
       dataCollege = Object.values(dataCollege);
       dataCollege = dataCollege[0].concat(dataCollege[1], dataCollege[2], dataCollege[3]);
@@ -32,11 +35,18 @@
           "1", ["2", '\t\t\t\t\t\t\t\t\t'+labelMonths[2]], "3", "4", 
           "1", ["2", '\t\t\t\t\t\t\t\t\t'+labelMonths[3]], "3", "4"
         ],
-        datasets: [{
+        datasets: [{ 
+          data: dataAdmin,
+          label: "Admin",
+          borderColor: 'rgba(8, 109, 68, 1)',
+          backgroundColor: 'rgba(8, 109, 68, 0.2)',
+          fill: true
+        },
+        {
           data: dataCollege,
           label: "College",
-          borderColor: 'rgba(167, 0, 1, 1)',
-          backgroundColor: 'rgba(167, 0, 1, 0.2)',
+          borderColor: 'rgba(250, 128, 114, 1)',
+          backgroundColor: 'rgba(250, 128, 114, 0.2)',
           fill: true
         }, { 
           data: dataFaculty,
@@ -46,7 +56,7 @@
           fill: true
         }, { 
           data: dataSeniorHigh,
-          label: "Senior High",
+          label: "SHS",
           borderColor: 'rgba(0, 91, 150, 1)',
           backgroundColor: 'rgba(0, 91, 150, 0.2)',
           fill: true
@@ -88,7 +98,7 @@
                 },
                 scaleLabel: {
                      display: true,
-                     labelString: 'Number of Requests',
+                     labelString: 'Number of Submissions',
                      fontSize: 11
                   }
             }]
