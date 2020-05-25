@@ -254,14 +254,14 @@ class RoomController extends Controller
                 else{
                     $form->save();
                     // sends a site notification to the admin if a request has been submitted
-                    $admin = User::where('user_id', 'admin')->first();
-                    if($roomSelected->isSpecial=='1') {
+                    if($form->user_id != 'admin') {
+                        $admin = User::where('user_id', 'admin')->first();
                         $admin->notify(new RoomStatus($form));
-                    }
-                    else {
-                        // sends an email notification to the user if a request has been received by the admin
+
+                        // sends an email notification to the user once the request has been received
                         $form->user->notify(new RoomStatus($form));
                     }
+                    
                     return redirect()->back()->with('roomAlert',["Your special room request has been received.",
                     "Sit back and relax! Your request is now subject for approval. You will receive a notification once its status has been updated."]);
                 }
