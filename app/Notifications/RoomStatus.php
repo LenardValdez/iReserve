@@ -53,7 +53,7 @@ class RoomStatus extends Notification
     public function toMail($notifiable)
     {
         $closingRemarks = 'Please do not hesitate to send an e-mail to academics@iacademy.edu.ph for concerns.';
-        $viewUrl = url('/history');
+        $viewUrl = route('home');
 
         if($this->form->isCancelled) {
             $headerStatus = 'Reservation Cancelled';
