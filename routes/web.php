@@ -45,6 +45,6 @@ Route::group(['middleware' => ['auth', 'admin']], function() {
     Route::post('/schedule/del','ClassScheduleController@destroy')->name('deleteschedule');
 });
 
-Route::group(['middleware' => ['auth', 'admin', 'security']], function() {
+Route::group(['middleware' => ['auth', 'staff']], function() {
     Route::get('/history', 'PageController@historyList')->name('History');
 });
