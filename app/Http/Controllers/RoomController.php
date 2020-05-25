@@ -386,6 +386,12 @@ class RoomController extends Controller
     {
         $validatedRequest = $request->validated();
         $cancelRequest = RegForm::find($validatedRequest['form_id']);
+
+        // automatically rejects the request if still pending to allow same user rebooking
+        if($cancelRequest->isApproved == 0) {
+            $cancelRequest->isApproved = '2';
+        }
+
         $cancelRequest->reasonCancelled = $validatedRequest['reason'];
         $cancelRequest->isCancelled = '1';
         $cancelRequest->save();
