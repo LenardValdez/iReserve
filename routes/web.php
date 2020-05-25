@@ -15,6 +15,8 @@ Auth::routes(['register' => false, 'reset' => false, 'verify' => false]);
 
 Route::get('/', 'PageController@index')->name('home');
 
+Route::view('/js-error', 'errors.noscript');
+
 Route::group(['middleware' => ['auth']], function() {
     Route::get('/dashboard', 'PageController@index')->name('Dashboard');
     Route::get('/reserve', 'RoomController@index')->name('Reserve');

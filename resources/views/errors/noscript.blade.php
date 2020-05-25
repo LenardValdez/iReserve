@@ -3,9 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-
-        <title>iReserve | @yield('title')</title>
-
+        <title>iReserve | Please Enable Javascript</title>
         <!-- Fonts -->
         <link rel="dns-prefetch" href="//fonts.gstatic.com">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
@@ -52,17 +50,6 @@
                 color: rgba(0, 91, 150, 1);
             }
         </style>
-        <script type="text/javascript">
-            var redirectSeconds = 5;
-            var redirectCountdown = setInterval(function() {
-                redirectSeconds--;
-                document.getElementById("countdown").innerHTML = (redirectSeconds != 1) ? redirectSeconds + " seconds" : "1 second";
-                if (redirectSeconds == 0) {
-                    clearInterval(redirectCountdown);
-                    window.location = "{{ route('home') }}";
-                }
-            }, 1000);
-        </script>
     </head>
     <body>
         <div class="flex-center position-ref full-height">
@@ -71,10 +58,8 @@
             </div>
 
             <div class="message" style="padding: 10px;">
-                @yield('code')
-                @yield('message')
-                <br>
-                <small style="text-align: left">Redirecting to home in <span id="countdown">5 seconds</span> (or <a href="/">click here</a>)...</small>
+                Uh-oh! Looks like Javascript is currently disabled in your browser. 
+                Please check your settings then refresh the page or <a href="/">click here</a>.
             </div>
         </div>
     </body>
