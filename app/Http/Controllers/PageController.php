@@ -37,12 +37,24 @@ class PageController extends Controller
                                     ->where('isCancelled', 0)
                                     ->orderBy('created_at', 'asc')
                                     ->get();
+
             $upcomingReservations = RegForm::where('isApproved', 1)
                                             ->where('isCancelled', 0)
                                             ->whereDate('stime_res', '>=', Carbon::now()->toDateString())
                                             ->whereDate('stime_res', '<=', Carbon::now()->endOfWeek(Carbon::SATURDAY)->toDateString())
                                             ->orderBy('stime_res', 'asc')
                                             ->get();
+
+            $pastEntries = [];
+            foreach ($upcomingReservations as $reservation) {
+                if(Carbon::parse($reservation->etime_res)->isPast()) {
+                    $pastEntries[] = $reservation->form_id;
+                }
+            }
+
+            if(!empty($pastEntries)) {
+                $upcomingReservations = $upcomingReservations->except($pastEntries);
+            }
             
             $formStats = Self::getFormStats();
             $userStats = Self::getUserTrafficStats();
@@ -60,6 +72,18 @@ class PageController extends Controller
                                             ->whereDate('stime_res', '<=', Carbon::now()->endOfWeek(Carbon::SATURDAY)->toDateString())
                                             ->orderBy('stime_res', 'asc')
                                             ->get();
+                                            
+            $pastEntries = [];
+            foreach ($upcomingReservations as $reservation) {
+                if(Carbon::parse($reservation->etime_res)->isPast()) {
+                    $pastEntries[] = $reservation->form_id;
+                }
+            }
+
+            if(!empty($pastEntries)) {
+                $upcomingReservations = $upcomingReservations->except($pastEntries);
+            }
+
             $pendingCount = RegForm::where('user_id', Auth()->user()->user_id)
                                     ->where('isApproved', 0)
                                     ->where('isCancelled', 0)

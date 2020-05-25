@@ -181,7 +181,6 @@
                           </tr>
                         @else
                           @foreach($upcomingReservations as $form)
-                          @if(Carbon::parse($form->etime_res)->isFuture())
                           <tr data-toggle="modal" data-target="#reqInfo{{$form->form_id}}" style="cursor: pointer">
                             <td>{{ Carbon::parse($form->stime_res)->format('M d, Y h:i A') }} - {{ Carbon::parse($form->etime_res)->format('M d, Y h:i A') }}</td>
                             <td>{{$form->room_id}} @if($form->room->room_name!=NULL){{$form->room->room_name}}@endif</td>
@@ -195,7 +194,6 @@
                               @endif
                             </td>
                           </tr>
-                          @endif
                           @endforeach
                         @endif
                       </tbody>
