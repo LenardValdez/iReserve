@@ -16,8 +16,8 @@
                     <div class="form-group{{ ($errors->cancel->has('user_id') || $errors->cancel->has('form_id') || $errors->cancel->has('reason')) ? ' has-error' : '' }}">
                         <input type="hidden" name="user_id" value="{{ Auth()->user()->user_id }}">
                         <input type="hidden" name="form_id" value="{{ $form->form_id }}">
-                        <input type="text" class="form-control" placeholder="Enter reason for cancellation" id="cancelReason" name="reason" value="{{ old('reason') }}" maxlength="140" required>
-                        <small class="pull-right text-muted"><span id="characterCount">140</span>/140</small>
+                        <input type="text" class="form-control cancelReason" placeholder="Enter reason for cancellation" name="reason" value="{{ old('reason') }}" maxlength="140" required>
+                        <small class="pull-right text-muted"><span class="characterCount">140</span>/140</small>
                         @if ($errors->cancel->has('user_id') || $errors->cancel->has('form_id') || $errors->cancel->has('reason'))
                             <span class="help-block" role="alert">
                             @if($errors->cancel->has('user_id'))

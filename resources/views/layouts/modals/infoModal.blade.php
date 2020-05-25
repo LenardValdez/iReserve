@@ -57,5 +57,5 @@
         </div>
     </div>
 </div>
-@include('layouts.modals.cancelModal')
 @endforeach
+@include('layouts.modals.cancelModal')

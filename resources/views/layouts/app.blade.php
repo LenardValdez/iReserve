@@ -75,17 +75,17 @@
         });
 
         @if(auth()->user()->roles != 2)
-        $('#cancelReason').on("input", function(){
-          var maxLength = $(this).attr('maxlength');
-          var currentCount = $(this).val().length;
+          $('.cancelReason').on('input', function(){
+            var maxLength = $(this).attr('maxlength');
+            var currentCount = $(this).val().length;
 
-          if (currentCount < maxLength) {
-            $('#characterCount').text(maxLength-currentCount);
-          }
-          else {
-            $('#characterCount').text('0');
-          }
-        });
+            if (currentCount < maxLength) {
+              $('.characterCount').text(maxLength-currentCount);
+            }
+            else {
+              $('.characterCount').text('0');
+            }
+          });
         @endif
       });
 

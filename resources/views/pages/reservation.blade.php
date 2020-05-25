@@ -416,7 +416,11 @@
     
         <!--ACTUAL CONTENT-->
         <section class="content">
-            @include('layouts.modals.infoModal', ['forms' => $forms, 'isOverall' => false, 'isApproval' => false])
+            @if(auth()->user()->roles != 1)
+                @include('layouts.modals.infoModal', ['forms' => $forms, 'isOverall' => true, 'isApproval' => false])
+            @else
+                @include('layouts.modals.infoModal', ['forms' => $forms, 'isOverall' => false, 'isApproval' => false])
+            @endif
             <!--CLASS SCHEDULE INFORMATION MODAL-->
             @foreach($classSchedules as $schedule)
             <div class="modal fade" id="classInfo{{$schedule->class_id}}">
