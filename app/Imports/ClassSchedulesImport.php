@@ -67,7 +67,6 @@ class ClassSchedulesImport implements OnEachRow, WithHeadingRow, WithValidation,
         if($similarTimeslot > 0) {
             $errorMessage = "Overlapping timeslot detected in the CSV file/scheduler after checking availability of Room ".$row['room_number'].
             " for ".$row['subject_code']." ".$row['section'].". Please check your file and scheduler.";
-            // return redirect()->back()->with('classErr', ["CSV Import Aborted!", $errorMessage]);
             $error = ['timeslot' => $errorMessage];
             $data = ['timeslot' => strtoupper($row['day'])." ".Carbon::parse($row['start_time'])->format('h:i A')." - ".Carbon::parse($row['end_time'])->format('h:i A')];
             $failures[] = new Failure($this->rowCount, 'timeslot', $error, $data);
