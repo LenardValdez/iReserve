@@ -43,6 +43,7 @@ class PageController extends Controller
                                             ->whereDate('stime_res', '<=', Carbon::now()->endOfWeek(Carbon::SATURDAY)->toDateString())
                                             ->orderBy('stime_res', 'asc')
                                             ->get();
+            
             $formStats = Self::getFormStats();
             $userStats = Self::getUserTrafficStats();
 

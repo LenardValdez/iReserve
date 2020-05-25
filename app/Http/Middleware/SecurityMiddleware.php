@@ -4,7 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 
-class AdminMiddleware
+class SecurityMiddleware
 {
     /**
      * Handle an incoming request.
@@ -15,6 +15,6 @@ class AdminMiddleware
      */
     public function handle($request, Closure $next)
     {
-        return ($request->user()->roles != '0') ? redirect()->route('home') : $next($request);
+        return ($request->user()->roles != '2') ? redirect()->route('home') : $next($request);
     }
 }

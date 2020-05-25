@@ -181,19 +181,17 @@
                           </tr>
                         @else
                           @foreach($upcomingReservations as $form)
-                          @if(!Carbon::parse($form->etime_res)->isPast())
+                          @if(Carbon::parse($form->etime_res)->isFuture())
                           <tr data-toggle="modal" data-target="#reqInfo{{$form->form_id}}" style="cursor: pointer">
                             <td>{{ Carbon::parse($form->stime_res)->format('M d, Y h:i A') }} - {{ Carbon::parse($form->etime_res)->format('M d, Y h:i A') }}</td>
                             <td>{{$form->room_id}} @if($form->room->room_name!=NULL){{$form->room->room_name}}@endif</td>
                             <td>{{$form->user_id}}</td>
                             <td>{{ Carbon::parse($form->updated_at)->toFormattedDateString() }}</td>
                             <td>
-                              @if(Carbon::parse($form->etime_res)->isFuture())
-                                @if(Carbon::parse($form->stime_res)->isPast())
-                                  <span class="label label-success">Ongoing</span>
-                                @else
-                                  <span class="label label-warning">Upcoming</span>
-                                @endif
+                              @if(Carbon::parse($form->stime_res)->isPast())
+                                <span class="label label-success">Ongoing</span>
+                              @else
+                                <span class="label label-warning">Upcoming</span>
                               @endif
                             </td>
                           </tr>

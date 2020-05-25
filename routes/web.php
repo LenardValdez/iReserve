@@ -17,7 +17,6 @@ Route::get('/', 'PageController@index')->name('home');
 
 Route::group(['middleware' => ['auth']], function() {
     Route::get('/dashboard', 'PageController@index')->name('Dashboard');
-    Route::get('/history', 'PageController@historyList')->name('History');
     Route::get('/reserve', 'RoomController@index')->name('Reserve');
 
     Route::post('/reserve/cancel', 'RoomController@cancel')->name('cancelrequest');
@@ -44,4 +43,8 @@ Route::group(['middleware' => ['auth', 'admin']], function() {
     Route::get('/schedule/template', 'ClassScheduleController@download')->name('template');
     Route::post('/schedule/new', 'ClassScheduleController@store')->name('insertschedule');
     Route::post('/schedule/del','ClassScheduleController@destroy')->name('deleteschedule');
+});
+
+Route::group(['middleware' => ['auth', 'admin', 'security']], function() {
+    Route::get('/history', 'PageController@historyList')->name('History');
 });
