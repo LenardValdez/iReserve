@@ -7,19 +7,24 @@ use App\Division;
 use App\ClassSchedule;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-use Maatwebsite\Excel\Concerns\ToModel;
+use Maatwebsite\Excel\Row;
+use Illuminate\Validation\ValidationException;
+use Maatwebsite\Excel\Validators\ValidationException as LaravelExcelException;
+use Maatwebsite\Excel\Validators\Failure;
+use Maatwebsite\Excel\Concerns\OnEachRow;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\WithValidation;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
 
-class ClassSchedulesImport implements ToModel, WithHeadingRow, WithValidation, WithChunkReading
+class ClassSchedulesImport implements OnEachRow, WithHeadingRow, WithValidation, WithChunkReading
 {
     use Importable; // provided trait that makes import classes importable without the need of the facade
 
     private $termNumber;
     private $termStartDate;
     private $termEndDate;
+    private $rowCount = 0;
 
     public function __construct($termNumber, $termStartDate, $termEndDate)
     {
@@ -41,26 +46,48 @@ class ClassSchedulesImport implements ToModel, WithHeadingRow, WithValidation, W
     /**
      * Imports the CSV to the ClassSchedule Eloquent model using updateOrCreate() in case of presence of duplicates
      * 
-     * @param array $row
-     * @return ClassSchedule|null
+     * @param \Maatwebsite\Excel\Row $row
+     * @return \Maatwebsite\Excel\Validators\ValidationException if timeslot error has been detected
      */
-    public function model(array $row)
+    public function onRow(Row $row)
     {
+        $row = $row->toArray();
         $division_id = Division::where('division_name', $row['division'])->pluck('division_id')[0];
 
-        return ClassSchedule::updateOrCreate([
-            'subject_code' => $row['subject_code'],
-            'user_id' => $row['user_id'],
-            'room_id' => $row['room_number'],
-            'section' => $row['section'],
-            'stime_class' => Carbon::parse($row['start_time'])->format('H:i:s'),
-            'etime_class' => Carbon::parse($row['end_time'])->format('H:i:s'),
-            'day' => strtoupper($row['day']),
-            'division_id' => $division_id,
-            'term_number' => $this->termNumber,
-            'sdate_term' => Carbon::parse($this->termStartDate)->format('Y-m-d'),
-            'edate_term' => Carbon::parse($this->termEndDate)->format('Y-m-d')
-        ]);
+        //keeps track of the row number being traversed
+        ++$this->rowCount;
+
+        // checks if the row will overlap with an existing class schedule
+        $similarTimeslot = ClassSchedule::where('room_id', $row['room_number'])
+                                        ->where('stime_class', '<', Carbon::parse($row['end_time'])->format('H:i:s'))
+                                        ->where('etime_class', '>', Carbon::parse($row['start_time'])->format('H:i:s'))
+                                        ->where('day', strtoupper($row['day']))
+                                        ->count();
+
+        if($similarTimeslot > 0) {
+            $errorMessage = "Overlapping timeslot detected in the CSV file/scheduler after checking availability of Room ".$row['room_number'].
+            " for ".$row['subject_code']." ".$row['section'].". Please check your file and scheduler.";
+            // return redirect()->back()->with('classErr', ["CSV Import Aborted!", $errorMessage]);
+            $error = ['timeslot' => $errorMessage];
+            $data = ['timeslot' => strtoupper($row['day'])." ".Carbon::parse($row['start_time'])->format('h:i A')." - ".Carbon::parse($row['end_time'])->format('h:i A')];
+            $failures[] = new Failure($this->rowCount, 'timeslot', $error, $data);
+            throw new LaravelExcelException(ValidationException::withMessages($error), $failures);
+        }
+        else {
+            ClassSchedule::updateOrCreate([
+                'subject_code' => $row['subject_code'],
+                'user_id' => $row['user_id'],
+                'room_id' => $row['room_number'],
+                'section' => $row['section'],
+                'stime_class' => Carbon::parse($row['start_time'])->format('H:i:s'),
+                'etime_class' => Carbon::parse($row['end_time'])->format('H:i:s'),
+                'day' => strtoupper($row['day']),
+                'division_id' => $division_id,
+                'term_number' => $this->termNumber,
+                'sdate_term' => Carbon::parse($this->termStartDate)->format('Y-m-d'),
+                'edate_term' => Carbon::parse($this->termEndDate)->format('Y-m-d')
+            ]);
+        }
     }
 
     /**
