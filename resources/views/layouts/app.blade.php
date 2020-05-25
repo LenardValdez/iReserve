@@ -72,6 +72,18 @@
           $('#faqtitle2').text('Frequently Asked Questions');
           $('#faqsubtitle').text('');
         });
+
+        $('#cancelReason').on("input", function(){
+          var maxLength = $(this).attr('maxlength');
+          var currentCount = $(this).val().length;
+
+          if (currentCount < maxLength) {
+            $('#characterCount').text(maxLength-currentCount);
+          }
+          else {
+            $('#characterCount').text('0');
+          }
+        });
       });
 
       function removeNotifCount() {

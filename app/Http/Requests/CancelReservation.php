@@ -31,7 +31,7 @@ class CancelReservation extends FormRequest
                 Rule::in([Auth()->user()->user_id, 'admin'])
             ],
             'form_id' => 'required|exists:reg_forms,form_id',
-            'reason' => 'required|max:255'
+            'reason' => 'required|max:140'
         ];
     }
 }

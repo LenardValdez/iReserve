@@ -142,9 +142,10 @@
 
             $('#addReservationBtn').click(function(e) {
                 var checkRoom = $.trim($('#room_id').val());
+                var checkDateTime = $.trim($('.reservationPeriod').val());
                 var checkPurpose = $.trim($('#purpose').val());
 
-                if(checkRoom === '' || checkPurpose === ''){
+                if(checkRoom === '' || checkPurpose === '' || checkDateTime === ''){
                     $('#addReservationBtn').attr('type','submit');
                 }
                 else {
@@ -152,9 +153,26 @@
                     $('#addReservationBtn').attr('data-toggle','modal');
                     $('#date').text('{{ Carbon::now()->format("M d, Y h:i A") }}');
                     $('#room').text($('#room_id').val());
-                    $('#people').text($('#peopleInvolved').val());
+                    if($.trim($('#peopleInvolved').val()) === '') {
+                        $('#people').text('N/A');
+                    }
+                    else {
+                        $('#people').text($('#peopleInvolved').val());
+                    }
                     $('#range').text($('#resPeriod').val());
                     $('#reason').text($('#purpose').val());
+                }
+            });
+
+            $('#purpose').on("input", function(){
+                var maxLength = $(this).attr('maxlength');
+                var currentCount = $(this).val().length;
+
+                if (currentCount < maxLength) {
+                    $('#purposeCount').text(maxLength-currentCount);
+                }
+                else {
+                    $('#purposeCount').text('0');
                 }
             });
             
@@ -575,8 +593,8 @@
                                 </div>
 
                                 <div class="form-group{{ $errors->receive->has('purpose') ? ' has-error' : '' }}">
-                                    <label for="reason">Purpose: <span class="text-danger">*</span></label>
-                                    <textarea class="form-control" id="purpose" name="purpose" rows="3" placeholder="Enter purpose here" required></textarea>
+                                    <label for="reason">Purpose: <span class="text-danger">*</span></label><small class="pull-right text-muted"><span id="purposeCount">255</span>/255</small>
+                                    <textarea class="form-control" id="purpose" name="purpose" rows="3" placeholder="Enter purpose here" maxlength="255" required></textarea>
                                     @if ($errors->receive->has('purpose'))
                                     <span class="help-block" role="alert">
                                     {{ $errors->receive->first('purpose') }}
