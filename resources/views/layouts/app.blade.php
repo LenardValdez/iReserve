@@ -74,6 +74,7 @@
           $('#faqsubtitle').text('');
         });
 
+        @if(auth()->user()->roles != 2)
         $('#cancelReason').on("input", function(){
           var maxLength = $(this).attr('maxlength');
           var currentCount = $(this).val().length;
@@ -85,6 +86,7 @@
             $('#characterCount').text('0');
           }
         });
+        @endif
       });
 
       function removeNotifCount() {

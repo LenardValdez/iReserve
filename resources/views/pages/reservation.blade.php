@@ -42,6 +42,7 @@
     @endif
 
     <script>
+        @if(auth()->user()->roles != 2)
         var Select2Cascade = (function(window, $) {
             function Select2Cascade(parent, child, url, select2Options) {
                 var afterActions = [];
@@ -233,17 +234,17 @@
 
             if (sessionStorage.getItem('delSuccessMessage') != null) {
                 if (sessionStorage.getItem('roomDeletion') != null) {
-                    $('#delSuccessTitle').append('<i class="icon fa fa-check"></i>Room '+ sessionStorage.idRemoved + ' has been successfully deleted.');
+                    $('#delSuccessTitle').append('<i class="icon fa fa-check"></i>Room ' + sessionStorage.idRemoved + ' has been successfully deleted.');
                     $('#delSuccessMessage').text('Assigned class schedules have been deleted. Any confirmed and pending reservations are now automatically cancelled. Users affected will be notified.');
                 }
                 else {
                     $('#delSuccessTitle').append('<i class="icon fa fa-check"></i>Class schedule for '+ sessionStorage.idRemoved + ' has been successfully deleted.');
                     $('#delSuccessMessage').text('Corresponding room and time period are now unblocked.');
-                    sessionStorage.removeItem('scheduleDeletionMessage');
+                    sessionStorage.removeItem('roomDeletion');
                 }
                 $('#delSuccess').show();
                 sessionStorage.removeItem('delSuccessMessage');
-                sessionStorage.removeItem('roomRemoved');
+                sessionStorage.removeItem('idRemoved');
             }
 
             $('#delScheduleBtn').click(function(e) {
@@ -254,11 +255,11 @@
                 }
             });
         });
-
+        @endif
+        
         document.addEventListener('DOMContentLoaded', function() {
             @if(Auth()->user()->roles == 2)
             var classCalendarEl = document.getElementById('classCalendar');
-
             var classCalendar = new FullCalendar.Calendar(classCalendarEl, {
                 plugins: [ 'list' ],
                 themeSystem: 'standard',
@@ -305,7 +306,6 @@
             @endif
 
             var roomCalendarEl = document.getElementById('calendar');
-
             var roomCalendar = new FullCalendar.Calendar(roomCalendarEl, {
                 plugins: [ 'resourceTimeline' ],
                 schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
