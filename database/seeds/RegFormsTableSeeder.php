@@ -3,12 +3,13 @@
 use Illuminate\Database\Seeder;
 use Carbon\Carbon;
 use App\RegForm;
+use Illuminate\Support\Facades\Log;
 
 class RegFormsTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
-     *            $table->string('form_id')->primary();
+     *
      * @return void
      */
     public function run()
@@ -28,6 +29,8 @@ class RegFormsTableSeeder extends Seeder
         //         'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
         //     ]
         // ]);
+
+        Log::info('Seeding RegForms using RegFormFactory...');
 
         // 20 reservations for the 4th week of January 2020
         factory(RegForm::class, 3)->states('faculty', 'approved', 'specialRoom', 'januaryWeek4')->create();
@@ -131,5 +134,7 @@ class RegFormsTableSeeder extends Seeder
         factory(RegForm::class, 3)->states('faculty', 'approved', 'specialRoom', 'mayWeek4')->create();
         factory(RegForm::class, 4)->states('college', 'approved', 'specialRoom', 'mayWeek4')->create();
         factory(RegForm::class, 2)->states('seniorHigh', 'approved', 'normalRoom', 'mayWeek4')->create();
+
+        Log::info('Seeding completed.');
     }
 }

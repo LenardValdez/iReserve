@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Exception;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
@@ -57,6 +58,7 @@ class Handler extends ExceptionHandler
 
         // returns an error 401 if MethodNotAllowedHttpException gets encountered
         if ($exception instanceof MethodNotAllowedHttpException) {
+            Log::notice("Unauthorized route/method access attempt detected. Redirecting to homepage.");
             return response()->view('errors.401', [], 401);
         }
 

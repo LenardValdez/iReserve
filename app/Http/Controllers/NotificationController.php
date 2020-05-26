@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Notifications\DatabaseNotification;
 
 class NotificationController extends Controller
@@ -18,7 +19,7 @@ class NotificationController extends Controller
     {
         $notification = DatabaseNotification::where('id',$id)->first();
         $notification->markAsRead();
-
+        Log::info('Notification '.$id.' for '.auth()->user()->user_id.' marked as read.');
         return redirect()->back();
     }
 
@@ -29,9 +30,9 @@ class NotificationController extends Controller
      */
     public function readAllNotif()
     {
-        $user = User::where('user_id', Auth()->user()->user_id)->first();
+        $user = User::where('user_id', auth()->user()->user_id)->first();
         $user->unreadNotifications->markAsRead();
-
+        Log::info('All notifications for '.auth()->user()->user_id.' marked as read.');
         return redirect()->back();
     }
 }

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Log;
 
 class DivisionsSeeder extends Seeder
 {
@@ -11,6 +12,8 @@ class DivisionsSeeder extends Seeder
      */
     public function run()
     {
+        Log::info('Seeding Divisions...');
+
         DB::table('divisions')->insert([
             [
                 'division_id' => '1',
@@ -29,5 +32,7 @@ class DivisionsSeeder extends Seeder
                 'division_name' => 'Senior High'
             ]
         ]);
+
+        Log::info('Seeding completed.');
     }
 }

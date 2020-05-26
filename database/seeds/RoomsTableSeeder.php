@@ -2,6 +2,8 @@
 
 use Illuminate\Database\Seeder;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
+
 class RoomsTableSeeder extends Seeder
 {
     /**
@@ -11,6 +13,7 @@ class RoomsTableSeeder extends Seeder
      */
     public function run()
     {
+        Log::info('Seeding Rooms...');
         DB::table('rooms')->insert([
             [
                 'room_id' => '901',
@@ -381,5 +384,6 @@ class RoomsTableSeeder extends Seeder
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
             ],
         ]);
+        Log::info('Seeding completed.');
     }
 }

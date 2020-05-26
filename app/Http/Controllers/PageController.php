@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use App\ClassSchedule;
 use Carbon\Carbon;
@@ -37,7 +38,6 @@ class PageController extends Controller
                                     ->where('isCancelled', 0)
                                     ->orderBy('created_at', 'asc')
                                     ->get();
-
             $upcomingReservations = RegForm::where('isApproved', 1)
                                             ->where('isCancelled', 0)
                                             ->whereDate('stime_res', '>=', Carbon::now()->toDateString())
@@ -56,9 +56,10 @@ class PageController extends Controller
                 $upcomingReservations = $upcomingReservations->except($pastEntries);
             }
             
+            Log::info('Rendering results for data visualization.');
             $formStats = Self::getFormStats();
             $userStats = Self::getUserTrafficStats();
-
+            Log::info('Displaying admin dashboard for '.Auth()->user()->user_id.'.');
             return view('pages.requests')->with('pendingforms', $pendingforms)
                                          ->with('upcomingReservations', $upcomingReservations)
                                          ->with('formStats', $formStats)
@@ -95,6 +96,7 @@ class PageController extends Controller
                                     ->where('isCancelled', 1)
                                     ->count();
 
+            Log::info('Displaying faculty/student dashboard for '.Auth()->user()->user_id.'.');
             return view('pages.history')->with('studentReservations', $studentReservations)
                                         ->with('upcomingReservations', $upcomingReservations)
                                         ->with('pendingCount', $pendingCount)
@@ -106,11 +108,11 @@ class PageController extends Controller
                     ->orderBy('room_desc', 'asc')
                     ->get();
             $classSchedules = ClassSchedule::get();
-            $users = User::get(); //User::where('isActive', true)->get();
+
+            Log::info('Displaying security dashboard for '.Auth()->user()->user_id.'.');
             return view('pages.reservation')->with('classSchedules', $classSchedules)
                                             ->with('forms', $forms)
-                                            ->with('rooms', $rooms)
-                                            ->with('users', $users);
+                                            ->with('rooms', $rooms);
         }
     }
 
@@ -123,39 +125,23 @@ class PageController extends Controller
     public function historyList()
     {
         $reservations = RegForm::get();
-        $users = User::get();
         $rooms = Room::get();
         $studentReservations = RegForm::where('user_id', Auth()->User()->user_id)->get();
 
+        Log::info('Displaying history page for '.Auth()->user()->user_id.'. Rendering entries to DataTables.');
         return view('pages.history')->with("reservations", $reservations)
-                                    ->with("users", $users)
                                     ->with("rooms", $rooms)
                                     ->with("studentReservations", $studentReservations);
     }
 
     /**
-    * Calculates the percentage change between an old and new value
+    * Calculates the percentage of the number of requests this month out of the total
     * 
-    * @param oldNumber The initial value
-    * @param newNumber The value that changed
+    * @param total The total count of requests
+    * @param thisMonth The total count of requests for the last 30 days
     */
-    private function getPercentageChange($oldNumber, $newNumber){
-        $percentage = 100;
-        // return ($oldNumber == 0) ? (($newNumber == 0) ? 0 : 100) : (int)(($oldNumber - $newNumber) / $oldNumber) * 100));
-        if($oldNumber > 0) {
-            if($newNumber < $oldNumber) {
-                $percentage = (int)((($oldNumber - $newNumber) / $oldNumber) * 100) * -1;
-            }
-            else {
-                $percentage = (int)(($oldNumber - $newNumber) / $oldNumber) * 100;
-            }
-        }
-        else {
-            if($newNumber == 0) {
-                $percentage = 0;
-            }
-        }
-        return $percentage;
+    private function getPercentage($total, $thisMonth){
+        return ($total == 0) ? 0 : $thisMonth * (100/$total);
     }
 
     /**
@@ -210,7 +196,7 @@ class PageController extends Controller
     }
 
     /**
-    * Counts the number of requests made since launch, this month, and a month ago based on status
+    * Counts the number of requests made since launch and a month ago based on status
     * 
     * @return formStats array to be rendered by ChartJS
     */
@@ -235,28 +221,28 @@ class PageController extends Controller
         $cancelledCountNow = RegForm::where('isCancelled', 1)
                                     ->whereDate('created_at', '>=', Carbon::now()->subMonth())
                                     ->count();
-        $receivedCountFormer = RegForm::whereDate('created_at', '>=', Carbon::now()->subMonths(2))
-                                    ->whereDate('created_at', '<', Carbon::now()->subMonth())
-                                    ->count();
-        $approvedCountFormer = RegForm::where('isApproved', 1)
-                                    ->whereDate('created_at', '>=', Carbon::now()->subMonths(2))
-                                    ->whereDate('created_at', '<', Carbon::now()->subMonth())
-                                    ->count();
-        $rejectedCountFormer = RegForm::where('user_id', '!=', 'admin')
-                                    ->where('isApproved', 2)
-                                    ->whereDate('created_at', '>=', Carbon::now()->subMonths(2))
-                                    ->whereDate('created_at', '<', Carbon::now()->subMonth())
-                                    ->count();
-        $cancelledCountFormer = RegForm::where('isCancelled', 1)
-                                    ->whereDate('created_at', '>=', Carbon::now()->subMonths(2))
-                                    ->whereDate('created_at', '<', Carbon::now()->subMonth())
-                                    ->count();
+        // $receivedCountFormer = RegForm::whereDate('created_at', '>=', Carbon::now()->subMonths(2))
+        //                             ->whereDate('created_at', '<', Carbon::now()->subMonth())
+        //                             ->count();
+        // $approvedCountFormer = RegForm::where('isApproved', 1)
+        //                             ->whereDate('created_at', '>=', Carbon::now()->subMonths(2))
+        //                             ->whereDate('created_at', '<', Carbon::now()->subMonth())
+        //                             ->count();
+        // $rejectedCountFormer = RegForm::where('user_id', '!=', 'admin')
+        //                             ->where('isApproved', 2)
+        //                             ->whereDate('created_at', '>=', Carbon::now()->subMonths(2))
+        //                             ->whereDate('created_at', '<', Carbon::now()->subMonth())
+        //                             ->count();
+        // $cancelledCountFormer = RegForm::where('isCancelled', 1)
+        //                             ->whereDate('created_at', '>=', Carbon::now()->subMonths(2))
+        //                             ->whereDate('created_at', '<', Carbon::now()->subMonth())
+        //                             ->count();
         
         $formStats = [
-            'received' => [$receivedCountAll, Self::getPercentageChange($receivedCountFormer, $receivedCountNow)],
-            'confirmed' => [$approvedCountAll, Self::getPercentageChange($approvedCountFormer, $approvedCountNow)],
-            'rejected' => [$rejectedCountAll, Self::getPercentageChange($rejectedCountFormer, $rejectedCountNow)],
-            'cancelled' => [$cancelledCountAll, Self::getPercentageChange($cancelledCountFormer, $cancelledCountNow)],
+            'received' => [$receivedCountAll, $receivedCountNow, Self::getPercentage($receivedCountAll, $receivedCountNow)],
+            'confirmed' => [$approvedCountAll, $approvedCountNow, Self::getPercentage($approvedCountAll, $approvedCountNow)],
+            'rejected' => [$rejectedCountAll, $rejectedCountNow, Self::getPercentage($rejectedCountAll, $rejectedCountNow)],
+            'cancelled' => [$cancelledCountAll, $cancelledCountNow, Self::getPercentage($cancelledCountAll, $cancelledCountNow)]
         ];
 
         return $formStats;

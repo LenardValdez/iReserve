@@ -170,7 +170,6 @@
                           <th>Reservation Period</th>
                           <th>Room</th>
                           <th>User</th>
-                          <th>Date Approved</th>
                           <th>Status</th>
                         </tr>
                       </thead>
@@ -185,8 +184,7 @@
                             <td>{{ Carbon::parse($form->stime_res)->format('M d, Y h:i A') }} - {{ Carbon::parse($form->etime_res)->format('M d, Y h:i A') }}</td>
                             <td>{{$form->room_id}} @if($form->room->room_name!=NULL){{$form->room->room_name}}@endif</td>
                             <td>{{$form->user_id}}</td>
-                            <td>{{ Carbon::parse($form->updated_at)->toFormattedDateString() }}</td>
-                            <td>
+                            <td class="text-center">
                               @if(Carbon::parse($form->stime_res)->isPast())
                                 <span class="label label-success">Ongoing</span>
                               @else
@@ -229,16 +227,10 @@
                       <span class="info-box-number">{{ $formStats['received'][0] }}</span>
         
                       <div class="progress">
-                        <div class="progress-bar" style="width: {{ abs($formStats['received'][1]) }}%"></div>
+                        <div class="progress-bar" style="width: {{ round($formStats['received'][2]) }}%"></div>
                       </div>
                       <span class="progress-description">
-                        @if($formStats['received'][1] > 0)
-                          {{ $formStats['received'][1] }}% <i class="ion ion-ios-arrow-thin-up"></i> increase in the last 30 days
-                        @elseif($formStats['received'][1] == 0)
-                          {{ $formStats['received'][1] }}% <i class="ion ion-ios-minus-empty"></i> increase in the last 30 days
-                        @else
-                          {{ $formStats['received'][1] }}% <i class="ion ion-ios-arrow-thin-down"></i> decrease in the last 30 days
-                        @endif
+                        {{ $formStats['received'][1] }} submissions in the last 30 days
                       </span>
                     </div>
                     <!-- /.info-box-content -->
@@ -252,16 +244,10 @@
                       <span class="info-box-number">{{ $formStats['confirmed'][0] }}</span>
         
                       <div class="progress">
-                        <div class="progress-bar" style="width: {{ abs($formStats['confirmed'][1]) }}%"></div>
+                        <div class="progress-bar" style="width: {{ round($formStats['confirmed'][2]) }}%"></div>
                       </div>
                       <span class="progress-description">
-                        @if($formStats['confirmed'][1] > 0)
-                          {{ $formStats['confirmed'][1] }}% <i class="ion ion-ios-arrow-thin-up"></i> increase in the last 30 days
-                        @elseif($formStats['confirmed'][1] == 0)
-                          {{ $formStats['confirmed'][1] }}% <i class="ion ion-ios-minus-empty"></i> increase in the last 30 days
-                        @else
-                          {{ $formStats['confirmed'][1] }}% <i class="ion ion-ios-arrow-thin-down"></i> decrease in the last 30 days
-                        @endif
+                        {{ $formStats['confirmed'][1] }} approvals in the last 30 days
                       </span>
                     </div>
                     <!-- /.info-box-content -->
@@ -275,16 +261,10 @@
                       <span class="info-box-number">{{ $formStats['rejected'][0] }}</span>
         
                       <div class="progress">
-                        <div class="progress-bar" style="width: {{ abs($formStats['rejected'][1]) }}%"></div>
+                        <div class="progress-bar" style="width: {{ round($formStats['rejected'][2]) }}%"></div>
                       </div>
                       <span class="progress-description">
-                        @if($formStats['rejected'][1] > 0)
-                          {{ $formStats['rejected'][1] }}% <i class="ion ion-ios-arrow-thin-up"></i> increase in the last 30 days
-                        @elseif($formStats['rejected'][1] == 0)
-                          {{ $formStats['rejected'][1] }}% <i class="ion ion-ios-minus-empty"></i> increase in the last 30 days
-                        @else
-                          {{ $formStats['rejected'][1] }}% <i class="ion ion-ios-arrow-thin-down"></i> decrease in the last 30 days
-                        @endif
+                          {{ $formStats['rejected'][1] }} rejections in the last 30 days
                       </span>
                     </div>
                     <!-- /.info-box-content -->
@@ -298,16 +278,10 @@
                       <span class="info-box-number">{{ $formStats['cancelled'][0] }}</span>
         
                       <div class="progress">
-                        <div class="progress-bar" style="width: {{ abs($formStats['cancelled'][1]) }}%"></div>
+                        <div class="progress-bar" style="width: {{ round($formStats['cancelled'][2]) }}%"></div>
                       </div>
                       <span class="progress-description">
-                        @if($formStats['cancelled'][1] > 0)
-                          {{ $formStats['cancelled'][1] }}% <i class="ion ion-ios-arrow-thin-up"></i> increase in the last 30 days
-                        @elseif($formStats['cancelled'][1] == 0)
-                          {{ $formStats['cancelled'][1] }}% <i class="ion ion-ios-minus-empty"></i> increase in the last 30 days
-                        @else
-                          {{ $formStats['cancelled'][1] }}% <i class="ion ion-ios-arrow-thin-down"></i> decrease in the last 30 days
-                        @endif
+                        {{ $formStats['cancelled'][1] }} cancellations in the last 30 days
                       </span>
                     </div>
                     <!-- /.info-box-content -->

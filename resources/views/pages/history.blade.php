@@ -309,7 +309,7 @@
                             @if(Auth()->user()->roles == 2)
                             <td>{{$form->user->name}}</td>
                             @endif
-                            <td>
+                            <td class="text-center">
                               @if(Carbon::parse($form->stime_res)->isPast())
                                 <span class="label label-success">Ongoing</span>
                               @else

@@ -1,7 +1,9 @@
 <?php
 
+use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Seeder;
 use Carbon\Carbon;
+
 class UsersTableSeeder extends Seeder
 {
     /**
@@ -11,6 +13,7 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
+        Log::info('Seeding Users...');
         DB::table('users')->insert([
             [
                 'user_id' => 'admin',
@@ -464,5 +467,6 @@ class UsersTableSeeder extends Seeder
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
             ]
         ]);
+        Log::info('Seeding completed.');
     }
 }
