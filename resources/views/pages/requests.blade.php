@@ -63,12 +63,30 @@
         }]
       };
 
+      $month1 = moment(labelMonths[0], "MMM").format("MMMM");
+      $month2 = moment(labelMonths[1], "MMM").format("MMMM");
+      $month3 = moment(labelMonths[2], "MMM").format("MMMM");
+      $month4 = moment(labelMonths[3], "MMM").format("MMMM");
+
+      var tooltipTitles = [
+        $month1 + ", Week 1", $month1 + ", Week 2", $month1 + ", Week 3", $month1 + ", Week 4",
+        $month2 + ", Week 1", $month2 + ", Week 2", $month2 + ", Week 3", $month2 + ", Week 4",
+        $month3 + ", Week 1", $month3 + ", Week 2", $month3 + ", Week 3", $month3 + ", Week 4",
+        $month4 + ", Week 1", $month4 + ", Week 2", $month4 + ", Week 3", $month4 + ", Week 4"
+      ];
+
       var options = {
         responsive: true,
         maintainAspectRatio: false,
         tooltips: {
-            titleFontSize: 0,
-            bodyFontSize: 12,
+          mode: 'point',
+          intersect: true,
+          callbacks: {
+            title: function(tooltipItem, data) {
+                return tooltipTitles[tooltipItem[0].index];
+            }
+          },
+          bodyFontSize: 12,
         },
         scales: {
           xAxes : [{
