@@ -11,6 +11,7 @@ class User extends Authenticatable
     use Notifiable;
 
     protected $primaryKey = 'user_id';
+    protected $keyType = 'string';
     public $incrementing = false;
     
     /**

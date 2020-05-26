@@ -12,6 +12,7 @@ class Room extends Model
   protected $table ='rooms';
   //Primary Key
   public $primaryKey = 'room_id';
+  protected $keyType = 'string';
   public $incrementing = false;
   //Timestamps
   public $timestamps = true;
