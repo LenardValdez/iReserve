@@ -64,6 +64,6 @@
         </form>
 
     <div class="login-box-body">
-        <a href="#" class="pull-right" data-toggle="popover" data-content="Please visit the IT Department at the Mezzanine, iACADEMY Nexus.">Forgot your password?</a>
+        <a href="#" class="pull-right" data-toggle="popover" data-placement="bottom" data-content="Please visit the IT Department at the Mezzanine, iACADEMY Nexus.">Forgot your password?</a>
     </div>
 @endsection
