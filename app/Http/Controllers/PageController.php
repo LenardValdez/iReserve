@@ -40,7 +40,7 @@ class PageController extends Controller
                                     ->get();
             $upcomingReservations = RegForm::where('isApproved', 1)
                                             ->where('isCancelled', 0)
-                                            ->whereDate('stime_res', '>=', Carbon::now()->toDateString())
+                                            ->whereDate('stime_res', '>=', Carbon::now()->startOfWeek(Carbon::MONDAY)->toDateString())
                                             ->whereDate('stime_res', '<=', Carbon::now()->endOfWeek(Carbon::SATURDAY)->toDateString())
                                             ->orderBy('stime_res', 'asc')
                                             ->get();
@@ -69,7 +69,7 @@ class PageController extends Controller
             $upcomingReservations = RegForm::where('user_id', Auth()->user()->user_id)
                                             ->where('isApproved', 1)
                                             ->where('isCancelled', 0)
-                                            ->whereDate('stime_res', '>=', Carbon::now()->toDateString())
+                                            ->whereDate('stime_res', '>=', Carbon::now()->startOfWeek(Carbon::MONDAY)->toDateString())
                                             ->whereDate('stime_res', '<=', Carbon::now()->endOfWeek(Carbon::SATURDAY)->toDateString())
                                             ->orderBy('stime_res', 'asc')
                                             ->get();
