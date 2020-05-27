@@ -98,7 +98,7 @@
       </div>
       <p class="text-red pull-left"><span class="text-danger">*</span> items are required</p>
       <button type="button" id="delScheduleBtn" data-target="#confirmScheduleDeletion" data-toggle="modal" class="btn btn-danger pull-right">Delete</button>
-      @include('layouts.modals.deleteModal', ['deleteModalId' => 'confirmScheduleDeletion', 'deleteActionTitle' => 'Schedule Deletion Confirmation', 'formId' => '#deleteScheduleForm'])
+      @include('layouts.modals.deleteModal', ['deleteModalId' => 'confirmScheduleDeletion', 'deleteActionTitle' => 'Schedule Deletion Confirmation', 'formId' => '#deleteScheduleForm', 'isRoom' => false])
     </form>
    </div><!--END OF BOX-BODY-->
 </div><!--END OF CONTENT BOX-->

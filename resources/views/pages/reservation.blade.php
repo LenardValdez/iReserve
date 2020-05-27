@@ -201,9 +201,9 @@
                 }
             });
 
-            $('#editRoomBtn, #delRoomBtn').click(function(e) {
-                var checkModifyRoom = $.trim($('#deleteRoomId').val());
-                if(checkModifyRoom === ''){
+            $('#delRoomBtn').click(function(e) {
+                var checkDelRoom = $.trim($('#deleteRoomId').val());
+                if(checkDelRoom === ''){
                     e.stopPropagation();
                 }
             });
