@@ -26,7 +26,7 @@
         if (!min.isValid()) { 
           min = null; 
         }
-        var max = moment(endDate);
+        var max = moment(endDate).add(1, 'days');
         if (!max.isValid()) { 
           max = null; 
         }
@@ -39,7 +39,7 @@
           $.each(settings.aoColumns, function (i) {
             if (i == startIndex) {
               var cDate = moment(data[i]);
-            
+
               if (cDate.isValid()) {
                 if (max !== null && max.isBefore(cDate)) {
                   valid = false;
@@ -55,7 +55,7 @@
           });
       }
       return valid;
-      });
+    });
 
     $(document).ready(function () {
       $("#dateRange").on('apply.daterangepicker', function(ev, picker) {
@@ -133,9 +133,6 @@
             text: 'Export as PDF',
             orientation: 'landscape',
             exportOptions: {
-              modifier: {
-                selected: null
-              },
               @if(Auth()->user()->roles==1)
               columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ]
               @else
@@ -149,9 +146,6 @@
             extend: 'csvHtml5',
             text: 'Export as CSV',
             exportOptions: {
-              modifier: {
-                search: 'none'
-              },
               columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 ]
             }
           }
