@@ -95,9 +95,12 @@
                 autoUpdateInput: false,
                 minDate: moment().startOf('month'),
                 maxDate: moment().startOf('day').add(3, 'months'),
+                @if(auth()->user()->roles == 0)
+                startDate: moment().startOf('hour').add(1, 'hours'),
+                endDate:  moment().add(3, 'hours'),
+                @else
                 startDate: moment().add(1, 'days').set({'hours': 7, 'minutes': 30}),
                 endDate:  moment().add(1, 'days').set({'hours': 11, 'minutes': 00}),
-                @if(auth()->user()->roles == 1)
                 maxSpan: {
                     "days": 5
                 },
@@ -105,10 +108,17 @@
                 locale: {
                     format: 'MMMM DD, YYYY hh:mm A'
                 },
+                @if(auth()->user()->roles == 0)
+                isInvalidDate: function(date) {
+                    return ((moment(date).day() == 0 || moment(date.format("YYYY-MM-DD")).isBefore(moment().format("YYYY-MM-DD"))) ? true : false);
+                    
+                },
+                @else
                 isInvalidDate: function(date) {
                     return ((moment(date).day() == 0 || moment(date.format("YYYY-MM-DD")).isBefore(moment().add(1, 'days').format("YYYY-MM-DD"))) ? true : false);
                 },
-                timePickerIncrement: 10
+                @endif
+                timePickerIncrement: 5
             });
 
             $('input.reservationPeriod').on('apply.daterangepicker', function(ev, picker) {
