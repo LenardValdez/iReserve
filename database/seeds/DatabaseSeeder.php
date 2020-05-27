@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
         $this->call(DivisionsSeeder::class);
         $this->call(UsersTableSeeder::class);
         $this->call(RoomsTableSeeder::class);
+        $this->call(ClassScheduleSeeder::class);
         $this->call(RegFormsTableSeeder::class);
         Log::info('Database seeding completed.');
     }
