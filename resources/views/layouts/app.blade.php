@@ -35,7 +35,7 @@
         padding-left: 5px;
       }
 
-      .fc-event{
+      .fc-event {
         cursor: pointer;
       }
     </style>
