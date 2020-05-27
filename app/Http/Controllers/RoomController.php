@@ -202,12 +202,12 @@ class RoomController extends Controller
                 "You've already submitted a request for the same room on the selected period! Please wait for the admin to confirm your request."]);
         }
         else if($validatedRequest['stime_res']==$validatedRequest['etime_res']){
-            Log::info('Checking for validity of daterange span.');
+            Log::info('Checking for validity of daterange input.');
             Log::info('Validation detected conflict in the request. Action aborted.');
             return redirect()->back()->with('roomErr', ["Invalid reservation period!", "The start and end of the reservation cannot be the same."]);
         }
         else if(auth()->user()->roles == 1 && (Carbon::parse($validatedRequest['etime_res'])->toDateString() > Carbon::parse($validatedRequest['stime_res'])->addDays(5)->toDateString())){
-            Log::info('Checking for validity of daterange order.');
+            Log::info('Checking for validity of daterange span.');
             Log::info('Validation detected conflict in the request. Action aborted.');
             return redirect()->back()->with('roomErr', ["Maximum number of days per reservation surpassed!", "Users can only reserve for up to 5 days per submission."]);
         }
