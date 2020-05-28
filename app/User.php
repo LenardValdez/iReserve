@@ -11,14 +11,16 @@ class User extends Authenticatable
     use Notifiable;
 
     protected $primaryKey = 'user_id';
+    protected $keyType = 'string';
     public $incrementing = false;
+    
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'user_id','name', 'email', 'password','isActive', 'roles'
+        'user_id','name', 'email', 'password','isActive', 'roles', 'user_type'
     ];
 
     /**
@@ -38,4 +40,24 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * Route notifications for the mail channel.
+     *
+     * @param  \Illuminate\Notifications\Notification  $notification
+     * @return array|string
+     */
+    public function routeNotificationForMail($notification)
+    {
+        // return $this->email;
+        return 'user@iacademy.edu.ph';
+    }
+
+    public function regform(){
+        return $this->hasMany('App\RegForm', 'user_id');
+    }
+
+    public function schedule(){
+        return $this->hasMany('App\ClassSchedule', 'user_id');
+    }
 }

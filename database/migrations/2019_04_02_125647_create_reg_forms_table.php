@@ -16,11 +16,12 @@ class CreateRegFormsTable extends Migration
         Schema::create('reg_forms', function (Blueprint $table) {
             $table->bigIncrements('form_id')->unique();
             $table->string('user_id');
-            $table->string('room_id');
+            $table->string('room_id')->nullable();
             $table->string('users_involved')->nullable();
             $table->dateTime('stime_res');
             $table->dateTime('etime_res');
             $table->string('purpose');
+            $table->string('reasonCancelled')->nullable();
             $table->integer('isApproved')->default(0);
             $table->boolean('isCancelled')->default(false);
             $table->timestamps();
