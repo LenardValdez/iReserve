@@ -367,7 +367,7 @@ class RoomController extends Controller
                             ->where('isApproved', '0')
                             ->get();
         $specialRequest->save();
-        Log::info('Reservation approved and updated. Request ID: '.$form->form_id);
+        Log::info('Reservation approved and updated. Request ID: '.$specialRequest->form_id);
 
         // automatically rejects other pending requests for the same room with similar reservation period
         if(!empty($sameRange)){
@@ -383,7 +383,7 @@ class RoomController extends Controller
         }
 
         // sends an email and site notification to the user upon approval of request
-        Log::info('Sending notification of request approval to user. Request ID: '.$form->form_id);
+        Log::info('Sending notification of request approval to user. Request ID: '.$specialRequest->form_id);
         $specialRequest->user->notify(new RoomStatus($specialRequest));
 
         return redirect()->back()->with('approvedAlert', ["The request has been approved and added to the scheduler!", 
@@ -404,10 +404,10 @@ class RoomController extends Controller
         Log::info('Initial request validation passed.');
         $specialRequest->isApproved = '2';
         $specialRequest->save();
-        Log::info('Reservation rejected and updated. Request ID: '.$form->form_id);
+        Log::info('Reservation rejected and updated. Request ID: '.$specialRequest->form_id);
 
         // sends an email and site notification to the user upon rejection of request
-        Log::info('Sending notification of request rejection to user. Request ID: '.$form->form_id);
+        Log::info('Sending notification of request rejection to user. Request ID: '.$specialRequest->form_id);
         $specialRequest->user->notify(new RoomStatus($specialRequest));
 
         return redirect()->back()->with('rejectedAlert', ["The request has been rejected.", "Schedule booked will remain open for requests. User affected will be notified."]);
@@ -439,25 +439,25 @@ class RoomController extends Controller
 
         // automatically rejects the request if still pending to allow same user rebooking
         if($cancelRequest->isApproved == 0) {
-            Log::info('Pending request automatically rejected. Request ID: '.$form->form_id);
+            Log::info('Pending request automatically rejected. Request ID: '.$cancelRequest->form_id);
             $cancelRequest->isApproved = '2';
         }
 
         $cancelRequest->reasonCancelled = $validatedRequest['reason'];
         $cancelRequest->isCancelled = '1';
         $cancelRequest->save();
-        Log::info('Reservation cancelled and updated. Request ID: '.$form->form_id);
+        Log::info('Reservation cancelled and updated. Request ID: '.$cancelRequest->form_id);
 
         // sends an email and site notification to the user if cancellation was done by the admin
         if (Auth()->user()->user_id != $cancelRequest->user_id){
-            Log::info('Sending notification of admin\'s request cancellation to user. Request ID: '.$form->form_id);
+            Log::info('Sending notification of admin\'s request cancellation to user. Request ID: '.$cancelRequest->form_id);
             $cancelRequest->user->notify(new RoomStatus($cancelRequest));
         }
         else {
             // sends a site notification to the admin if a user has cancelled a confirmed reservation
             if($cancelRequest->user_id != 'admin' && $cancelRequest->isApproved == 1) {
                 $admin = User::where('user_id', 'admin')->first();
-                Log::info('Sending notification of user\'s request cancellation to admin. Request ID: '.$form->form_id);
+                Log::info('Sending notification of user\'s request cancellation to admin. Request ID: '.$cancelRequest->form_id);
                 $admin->notify(new RoomStatus($cancelRequest));
             }
         }
